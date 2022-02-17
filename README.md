@@ -10,7 +10,7 @@ Developed thanks to the contribution of following projects:
 It is distributed for research use only under the GNU General Public License v3.0. 
 
 ## **Credit**
-If you use GeaVR for your research, please acknowledge it in your papers by citing the following paper:
+If you use GeaVR for your research, please acknowledge it by citing the following paper:
 - XXX
 - YYY
 - ZZZ
