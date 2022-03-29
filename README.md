@@ -20,7 +20,7 @@ GeaVR requires a compatible Windows PC and Oculus VR headset.
 To compile the code you will need [Unity platform](https://unity.com) and the following Unity plugins:
 
 1) [UnitySimpleFileBrowser (v1.3.0)](https://github.com/yasirkula/UnitySimpleFileBrowser/releases/download/v1.3.0/SimpleFileBrowser.unitypackage)
-2) [VR Capture (1.1.6)] (https://assetstore.unity.com/packages/tools/video/vr-capture-75654)
+2) [VR Capture (1.1.6)](https://assetstore.unity.com/packages/tools/video/vr-capture-75654)
 3) TextMeshPro
 
 
