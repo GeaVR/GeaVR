@@ -1,0 +1,7 @@
+Outputs/*
+Library/metadata/*
+sceneList.txt
+obj/*
+Library/shadercompiler-UnityShaderCompiler.*.log
+Library/ShaderCache/*
+Library/ShaderCache.db
