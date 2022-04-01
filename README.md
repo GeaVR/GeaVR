@@ -37,9 +37,11 @@ UAV-based surveying in volcano-tectonics: An example from the Iceland rift. Jour
 GeaVR requires a compatible Windows PC and Oculus VR headset.
 To compile the code you will need [Unity platform (2018.2.21f)](https://unity3d.com/get-unity/download/archive) and the following Unity plugins:
 
-1) [UnitySimpleFileBrowser (v1.3.0)](https://github.com/yasirkula/UnitySimpleFileBrowser/releases/download/v1.3.0/SimpleFileBrowser.unitypackage)
-2) [VR Capture (1.1.6)](https://assetstore.unity.com/packages/tools/video/vr-capture-75654)
-3) TextMeshPro (1.2.4)
-
+1) [Oculus Integration](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022)
+2) [TextMeshPro](https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html))
+3) [SharpKML](https://github.com/samcragg/sharpkml)
+4) [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2018-4-32351)
+5) [Skybox Series Free](https://assetstore.unity.com/packages/2d/textures-materials/sky/skybox-series-free-103633)
+6) [UnitySimpleFileBrowser](https://github.com/yasirkula/UnitySimpleFileBrowser/)
 
 Remember to exit and relaunch the project in the Unity Editor after installing the plugins the first time.
