@@ -38,7 +38,7 @@ GeaVR requires a compatible Windows PC and Oculus VR headset.
 To compile the code you will need [Unity platform (2018.2.21f)](https://unity3d.com/get-unity/download/archive) and the following Unity plugins:
 
 1) [Oculus Integration](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022)
-2) [TextMeshPro](https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html))
+2) [TextMeshPro](https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html)
 3) [SharpKML](https://github.com/samcragg/sharpkml)
 4) [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2018-4-32351)
 5) [Skybox Series Free](https://assetstore.unity.com/packages/2d/textures-materials/sky/skybox-series-free-103633)
