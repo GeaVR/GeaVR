@@ -1,0 +1,234 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class RulerTool : Tool
+{
+    [HideInInspector]
+    public static List<GameObject> instanceList = new List<GameObject>();
+
+    public override IEnumerator ToolCoroutine()
+    {
+        WaitForEndOfFrame wfeof = new WaitForEndOfFrame();
+        ToolController.ToolIsCurrentlyRunning = true;
+        ToolController.ToolControllerInterfaceIsCurrentlyRunning = false;
+
+        toolControllerComponent.MeasurementControlUI.gameObject.SetActive(false);
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
+
+        // hold until trigger is released
+        // this avoids instant placement 
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
+        {
+            while (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
+            {
+                yield return wfeof;
+            }
+        }
+
+        // temporary objects
+        GameObject TempPlacemark = null, TempPlacemarkInfo = null;
+        List<GameObject> placemarks = new List<GameObject>();
+        Vector3Decimal realPosition;
+
+        // Place 2 markers
+        for (int times = 0; times < 2; times++)
+        {
+            //Instantiate placemark
+            TempPlacemark = Instantiate(toolControllerComponent.PlacemarkObject);
+            TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
+            TempPlacemark.name = "distance placemark";
+
+            //boolean flags
+            bool placemarkConfirmed = false;
+            bool legalPlacemarkPlace = false;
+            bool wasHolding = true;
+
+            //Handling Placemark
+            RaycastHit hit;
+            while (placemarkConfirmed == false)
+            {
+                if (checkIfToolShouldQuit())
+                {
+                 
+
+                    placemarkConfirmed = true;
+                    Destroy(TempPlacemark);
+                    foreach (var p in placemarks)
+                    {
+                        Destroy(p);
+                    }
+                    ToolController.ToolIsCurrentlyRunning = false;
+                    ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
+                    toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
+
+                    toolControllerComponent.MeasurementControlUI.gameObject.SetActive(true);
+                    if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+                        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(true);
+
+                    yield break; // end coroutine early 
+                }
+
+                if (StateSingleton.stateView != StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView != StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
+                {
+                    if (wasHolding == true && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) < 0.2f)
+                        wasHolding = false;
+                }
+                //Trailing Waypoint
+                if (Physics.Raycast(master.transform.position, directionMaster.transform.forward, out hit, 100000))
+                {
+                      TempPlacemark.transform.position = hit.point;
+                    TempPlacemark.transform.eulerAngles = new Vector3(0f, directionMaster.transform.eulerAngles.y, directionMaster.transform.eulerAngles.z);
+                    legalPlacemarkPlace = true;
+
+                    //Showing info on toolInfo
+                    realPosition = VirtualMeter.CalculateGPSPosition(TempPlacemark.transform.position);
+                  	toolControllerComponent.updateGUIMenus(
+                        ((times == 0) ? "First " : "Second ") + "Placemark",
+                        "Northing (m): " + realPosition.z.ToString("0.000") +
+                        "\nEasting (m): " + realPosition.x.ToString("0.000") +
+                        "\nAltitude (m): " + realPosition.y.ToString("0.000")
+                        );
+
+                }
+                else
+                {
+                    //If not well placed then invalidate
+                    TempPlacemark.transform.position = master.transform.position + directionMaster.transform.forward * 100000;
+                    toolControllerComponent.updateGUIMenus(
+                        ((times == 0) ? "First " : "Second ") + "Placemark", 
+                        "Northing (m): undefined \nEasting (m): undefined \nAltitude (m): undefined");
+                    legalPlacemarkPlace = false;                    
+                }
+                                
+                if (
+                (
+                Input.GetMouseButton(0) ||
+                    (
+                        (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS) &&
+                        OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.5f && wasHolding == false
+                    )
+                )
+                && legalPlacemarkPlace)
+                {                    
+                    placemarkConfirmed = true;
+                    placemarks.Add(TempPlacemark);
+                    //ToolController.ToolIsCurrentlyRunning = false;
+
+                }
+                yield return wfeof;
+            }
+            while (Input.GetMouseButton(0))
+                yield return wfeof;
+        }
+
+        if (placemarks.Count == 2)
+        {
+            // create line renderer
+            LineRenderer lr = TempPlacemark.AddComponent<LineRenderer>() as LineRenderer;
+            lr.startWidth = lr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.5f);
+            lr.material = toolControllerComponent.MeasurementMaterial;
+            lr.SetPosition(0, placemarks[0].transform.position + Vector3.up * (float)(toolControllerComponent.MarkerScale * 0.5f));
+            lr.SetPosition(1, placemarks[1].transform.position + Vector3.up * (float)(toolControllerComponent.MarkerScale * 0.5f));
+
+
+            //do calculations
+            Vector3 uPos1 = placemarks[1].transform.position;
+            Vector3 uPos2 = placemarks[0].transform.position;
+
+            decimal profileDistance = VirtualMeter.CalculateRealDistance(uPos1, uPos2);
+            decimal GroundDistance = VirtualMeter.CalculateGroundDistance(uPos1, uPos2, null);
+            float heading = VirtualMeter.CalculateHeadingFromPositions(uPos1, uPos2);
+            float inclination = VirtualMeter.CalculateInclinationFromPositions(uPos1, uPos2);
+            toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
+
+            // create value dictionary 
+            // create tool instance        
+            toolControllerComponent.CreateToolInstance("Ruler",
+                "\nLine Length (m): " + profileDistance.ToString("0.000") +
+                "\nGround Distance (m): " + GroundDistance.ToString("0.000") +
+                "\nHeading (°): " + heading.ToString("0.0") +
+                "\nInclination (°): " + inclination.ToString("0.0"),
+				Tool.toolType.RULER,
+                null, placemarks, true);
+            /*
+            Destroy(lr);
+            foreach (var p in placemarks)
+            {
+                Destroy(p);
+            }
+            */
+        }
+        else
+        {
+            foreach (var p in placemarks)
+            {
+                Destroy(p);
+            }
+            ToolController.ToolIsCurrentlyRunning = false;
+        }
+    }
+
+    public void startToolInterface()
+    {
+
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Ruler tool";
+
+
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(false);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(false);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(true);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(false);
+
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool").gameObject.GetComponent<Button>().onClick.AddListener(CancelButton);
+
+        toolControllerComponent.MeasurementControlUI.SetActive(true);
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+        {
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Ruler tool";
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(true);
+
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(false);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(false);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(true);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(false);
+
+
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool").gameObject.GetComponent<Button>().onClick.AddListener(CancelButton);
+
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.localPosition = new Vector3(0.0f, -400.0f, 0.0f);
+
+        }
+        PauseAndGUIBehaviour.isToolMenu = false;
+        ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
+
+        //  StartCoroutine(this.OnUse());
+    }
+
+    public void CancelButton()
+    {
+        // toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 1;
+
+        // StopGPSTracking(false);
+        toolControllerComponent.MeasurementControlUI.SetActive(false);
+
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+        {
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
+        }
+
+
+        if (PauseAndGUIBehaviour.isPause)
+            PauseAndGUIBehaviour.isPause = false;
+        ToolController.ToolIsCurrentlyRunning = false;
+        ToolController.ToolControllerInterfaceIsCurrentlyRunning = false;
+
+
+    }
+
+
+}

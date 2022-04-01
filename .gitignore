@@ -5,5 +5,9 @@ obj/*
 Library/shadercompiler-UnityShaderCompiler.*.log
 Library/ShaderCache/*
 Library/ShaderCache.db
-Assets/Plugins/SimpleFileBrowser
 Import/*
+.vs/*
+*.csproj
+Temp/*
+Library/EditorInstance*
+Library/ScriptAssemblies/*

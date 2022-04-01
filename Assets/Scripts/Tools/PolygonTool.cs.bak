@@ -1,0 +1,770 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+using mattatz.Triangulation2DSystem; //https://github.com/mattatz/unity-triangulation2D
+using SharpKml;
+using SharpKml.Base;
+using SharpKml.Dom;
+using SharpKml.Engine;
+using System.Globalization;
+
+
+public class PolygonTool : Tool
+{
+    [HideInInspector]
+    public static List<GameObject> instanceList = new List<GameObject>();
+
+    static Mesh TriangulatePlacemarkLine(List<GameObject> placemarks)
+    {
+        // input points for a polygon2D contor
+        List<Vector2> points = new List<Vector2>();
+
+        for (int i = 0; i < placemarks.Count; i++)
+        {
+            points.Add(new Vector2(placemarks[i].transform.position.x, placemarks[i].transform.position.z));
+        }
+
+        // construct Polygon2D 
+        Polygon2D polygon = Polygon2D.Contour(points.ToArray());
+
+        // construct Triangulation2D with Polygon2D and threshold angle (18f ~ 27f recommended)
+        Triangulation2D triangulation = new Triangulation2D(polygon, 22.5f);
+
+        // build a mesh from triangles in a Triangulation2D instance
+        return triangulation.Build();
+    }
+
+    public override IEnumerator ToolCoroutine()
+    {
+        // a List to store all created placemarks in the line
+        //List<Vector3> placemarks = new List<Vector3>();
+        List<GameObject> placemarks = new List<GameObject>();
+
+        WaitForEndOfFrame wfeof = new WaitForEndOfFrame();
+        ToolController.ToolIsCurrentlyRunning = true;
+        ToolController.ToolControllerInterfaceIsCurrentlyRunning = false;
+
+
+
+        toolControllerComponent.MeasurementControlUI.gameObject.SetActive(false);
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
+
+/*
+        // hold until trigger is released
+        // this avoids instant placement 
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
+        {
+            while (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.8f)
+            {
+                yield return wfeof;
+            }
+        }
+*/
+        // temporary objects
+        GameObject TempPlacemark, LastPlaceMark = null, TempPlacemarkInfo = null;
+        LineRenderer lr = null, firstLr = null;
+        Vector3Decimal realPosition;
+
+        // loop until a user chooses to cancel the tool 
+        bool shouldStopPlacing = false;
+        while (!shouldStopPlacing)
+        {
+            //Instantiate placemark
+            TempPlacemark = Instantiate(toolControllerComponent.PlacemarkObject2);
+            TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
+            TempPlacemark.name = "distance placemark";
+
+
+            bool placemarkConfirmed = false, legalPlacemarkPlace = false;
+            bool wasHolding = true;
+
+            if (LastPlaceMark != null)
+            {
+                lr = TempPlacemark.AddComponent<LineRenderer>() as LineRenderer;
+                lr.startWidth = lr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.2f);
+
+                lr.material = toolControllerComponent.LineMaterial;
+
+                lr.SetPosition(1, TempPlacemark.transform.position);
+                lr.SetPosition(0, LastPlaceMark.transform.position);
+
+            }
+
+            //Handling Placemark
+            RaycastHit hit;
+            while (placemarkConfirmed == false && shouldStopPlacing == false)
+            {
+                if (StateSingleton.stateView != StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView != StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
+                {
+                    if (wasHolding == true && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) < 0.2f)
+                        wasHolding = false;
+                }
+
+                //Trailing Waypoint
+                if (Physics.Raycast(master.transform.position, directionMaster.transform.forward, out hit, 100000))
+                {
+                    TempPlacemark.transform.position = hit.point;
+                    TempPlacemark.transform.eulerAngles = new Vector3(
+                            0f,
+                            directionMaster.transform.eulerAngles.y,
+                            directionMaster.transform.eulerAngles.z
+                            );
+                    legalPlacemarkPlace = true;
+
+                    //Showing info on toolInfo
+                    realPosition = VirtualMeter.CalculateRealPositionOfPoint(TempPlacemark.transform.position);
+                    toolControllerComponent.updateGUIMenus("Current Placemark",
+                        "Northing (m): " + realPosition.z.ToString("0.000") +
+                        "\nEasting (m): " + realPosition.x.ToString("0.000") +
+                        "\nAltitude (m): " + realPosition.y.ToString("0.000")
+                        );
+                }
+                else
+                {
+                    //If not well placed then invalidate
+                    TempPlacemark.transform.position = master.transform.position + directionMaster.transform.forward * 100000;
+                    toolControllerComponent.updateGUIMenus("Current Placemark", "Northing (m): undefined \nEasting (m): undefined \nAltitude (m): undefined");
+                    legalPlacemarkPlace = false;
+                }
+
+                if (lr)
+                {
+                    lr.SetPosition(1, TempPlacemark.transform.position);
+                }
+
+                if (firstLr)
+                {
+                    firstLr.SetPosition(1, TempPlacemark.transform.position);
+                }
+
+                //confirm waypoint
+                if (
+            (
+            Input.GetMouseButton(0) ||
+                (
+                    (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS) &&
+                    OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.5f && wasHolding == false
+                )
+            )
+            && legalPlacemarkPlace)
+                {
+                    placemarkConfirmed = true;
+                    placemarks.Add(TempPlacemark);
+                    LastPlaceMark = TempPlacemark;
+
+                    if (firstLr == null)
+                    {
+                        firstLr = TempPlacemark.AddComponent<LineRenderer>() as LineRenderer;
+                        firstLr.startWidth = firstLr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.5f);
+
+                        firstLr.material = toolControllerComponent.LineMaterial;
+
+                        firstLr.SetPosition(0, TempPlacemark.transform.position);
+                        firstLr.SetPosition(1, Vector3.up);
+                    }
+                    //ToolController.ToolIsCurrentlyRunning = false;
+                }
+                // whether to cancel out of tool
+                // this should also remove potential placemarks
+                if (checkIfToolShouldQuit() )//|| OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0.90f)
+                {
+                    shouldStopPlacing = true;
+                    Destroy(TempPlacemark);
+
+                    if (LastPlaceMark)
+                    {
+                        firstLr.SetPosition(1, LastPlaceMark.transform.position);
+                    }
+
+                    toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
+
+
+                    if (placemarks.Count < 3)
+                    {
+                        ToolController.ToolIsCurrentlyRunning = false;
+                        ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
+
+                        toolControllerComponent.MeasurementControlUI.gameObject.SetActive(true);
+                        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+                            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(true);
+                    }
+
+
+                }
+
+                yield return wfeof;
+            }
+        }
+
+        if (placemarks.Count > 2)
+        {
+            //do calculations
+            Vector3 uPos1;
+            Vector3 uPos2;
+
+            decimal totalDistance = 0m;
+            Vector3Decimal meanPosition = new Vector3Decimal(0m, 0m, 0m);
+
+            for (int i = 0; i < placemarks.Count; i++)
+            {
+                uPos1 = placemarks[i].transform.position;
+                if (i < placemarks.Count - 1)
+                {
+                    uPos2 = placemarks[i + 1].transform.position;
+                    totalDistance += VirtualMeter.CalculateRealDistance(uPos1, uPos2);
+                }
+                meanPosition += VirtualMeter.CalculateRealPositionOfPoint(uPos1);
+            }
+
+            meanPosition /= placemarks.Count;
+
+            Mesh polyMesh = TriangulatePlacemarkLine(placemarks);
+
+            float area = 0.0f;
+            for (int i = 0; i < polyMesh.triangles.Length / 3; i += 3)
+            {
+                int v1 = polyMesh.triangles[i];
+                int v2 = polyMesh.triangles[i + 1];
+                int v3 = polyMesh.triangles[i + 2];
+
+                Vector3 p1 = polyMesh.vertices[v1];
+                Vector3 p2 = polyMesh.vertices[v2];
+                Vector3 p3 = polyMesh.vertices[v3];
+
+                float numerator = p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y);
+                area += Mathf.Abs(numerator * 0.5f);
+            }
+
+            Vector3[] newVertices = polyMesh.vertices;
+            Vector3 translation = new Vector3(0.0f, placemarks[0].transform.position.y, 0.0f);
+            Vector3 eulerAngles = Vector3.right * 90;
+            Vector3 scale = new Vector3(1, 1, 1);
+
+            Quaternion rotation = Quaternion.Euler(eulerAngles);
+            Matrix4x4 m = Matrix4x4.TRS(translation, rotation, scale);
+
+            for (int i = 0; i < polyMesh.vertices.Length; i++)
+            {
+                Vector3 pos = m.MultiplyPoint3x4(newVertices[i]);
+
+                RaycastHit hit;
+                if (Physics.Raycast(pos + Vector3.up*10, Vector3.down, out hit, 10000))
+                {
+                    pos = hit.point;
+                }
+                newVertices[i] = pos;
+            }
+
+            polyMesh.vertices = newVertices;
+            polyMesh.RecalculateBounds();
+
+            GameObject newMeshObject = new GameObject("PolygonMesh");
+            newMeshObject.AddComponent<MeshFilter>();
+            newMeshObject.AddComponent<MeshRenderer>();
+            newMeshObject.GetComponent<MeshFilter>().sharedMesh = polyMesh;
+            newMeshObject.GetComponent<MeshRenderer>().material = toolControllerComponent.PolyMaterial;
+
+            //newMeshObject.transform.Rotate(Vector3.right * 90, Space.World);
+            //newMeshObject.transform.position = new Vector3(0.0f, placemarks[0].transform.position.y, 0.0f);
+            //newMeshObject.transform.SetParent(placemarks[0].transform, true);
+
+            //for (int i = 0; i < polyMesh.vertices.Length; i++)
+            //{
+                //polyMesh.
+            //}
+
+            // create value dictionary
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>()
+                                                {
+                { "Perimeter(m)",          totalDistance},
+                { "Area(m2)",              (decimal)area}
+                //{ "Mean_Northing (m)" ,    meanPosition.z },
+                //{ "Mean_Easting (m)" ,     meanPosition.x },
+                //{ "Mean_Altitude (m)" ,    meanPosition.y }
+                                                };
+
+            // create tool instance        
+            toolControllerComponent.CreateToolInstance("Polygon",
+                "\nPerimeter (m): " + totalDistance.ToString("0.000") +
+                "\nArea (m2):          " + area.ToString("0.000"),
+                //"\n + Mean Northing (m): " + meanPosition.z.ToString("0.000")
+                //"\n + Mean Easting  (m): " + meanPosition.x.ToString("0.000") +
+                //"\n + Mean Altitude (m): " + meanPosition.y.ToString("0.000"),
+				Tool.toolType.POLYGON,
+                dict, placemarks);
+        }
+        else
+        {
+            foreach(var p in placemarks)
+            {
+                Destroy(p);
+            }
+            ToolController.ToolIsCurrentlyRunning = false;   
+        }  
+    }
+    
+    public void startToolInterface()
+    {
+
+        // PolylineTool myScriptInstance = FindObjectOfType<PolylineTool>();
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(false);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(true);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(false);
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(false);
+
+
+
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Polygon tool";
+        toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool").gameObject.GetComponent<Button>().onClick.AddListener(CancelButton);
+
+        toolControllerComponent.MeasurementControlUI.SetActive(true);
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+        {
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Polygon tool";
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(true);
+            // GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool").gameObject.GetComponent<Button>().onClick.AddListener(this.OnUse);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(false);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(true);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(false);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(false);
+
+
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool").gameObject.GetComponent<Button>().onClick.AddListener(CancelButton);
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("SaveToMemory").gameObject.GetComponent<Button>().onClick.AddListener(SaveMultiInstance);
+
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.localPosition = new Vector3(0.0f, -400.0f, 0.0f);
+
+        }
+        PauseAndGUIBehaviour.isToolMenu = false;
+        ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
+
+
+        //  StartCoroutine(this.OnUse());
+    }
+
+    public void CancelButton()
+    {
+        // toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 1;
+
+        // StopGPSTracking(false);
+        toolControllerComponent.MeasurementControlUI.SetActive(false);
+
+        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
+        {
+            GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
+        }
+
+
+        if (PauseAndGUIBehaviour.isPause)
+            PauseAndGUIBehaviour.isPause = false;
+        ToolController.ToolIsCurrentlyRunning = false;
+        ToolController.ToolControllerInterfaceIsCurrentlyRunning = false;
+
+
+    }
+    
+    public override GameObject LoadFromFile(string FilePath)
+    {
+        List<GameObject> placemarks = new List<GameObject>();
+        LineRenderer lr = null;
+
+        if (File.Exists(FilePath))
+        {
+            String fileData = System.IO.File.ReadAllText(FilePath);
+            String[] lines = fileData.Split("\n"[0]);
+            GameObject TempPlacemark, LastPlaceMark = null;
+
+            foreach (String line in lines)
+            {
+                String[] data = line.Split(","[0]);
+                if (data.Length == 3) // discard non-coordinate lines
+                {
+                    decimal x = decimal.Parse(data[0]);
+                    decimal y = decimal.Parse(data[1]);
+                    decimal z = decimal.Parse(data[2]);
+
+                    TempPlacemark = Instantiate(toolControllerComponent.PlacemarkObject);
+                    TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
+                    TempPlacemark.name = "distance placemark";
+
+                    TempPlacemark.transform.position = new Vector3((float)x, (float)y, (float)z);
+
+                    if (LastPlaceMark != null)
+                    {
+                        lr = TempPlacemark.AddComponent<LineRenderer>() as LineRenderer;
+                        lr.startWidth = lr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.5f);
+
+                        lr.material = toolControllerComponent.LineMaterial;
+
+                        lr.SetPosition(1, TempPlacemark.transform.position);
+                        lr.SetPosition(0, LastPlaceMark.transform.position);
+                    }
+                    LastPlaceMark = TempPlacemark;
+                    placemarks.Add(TempPlacemark);
+                }
+            }
+            //do calculations
+            Vector3 uPos1;
+            Vector3 uPos2;
+
+            decimal totalDistance = 0m;
+            Vector3Decimal meanPosition = new Vector3Decimal(0m, 0m, 0m);
+
+            for (int i = 0; i < placemarks.Count; i++)
+            {
+                uPos1 = placemarks[i].transform.position;
+                if (i < placemarks.Count - 1)
+                {
+                    uPos2 = placemarks[i + 1].transform.position;
+                    totalDistance += VirtualMeter.CalculateRealDistance(uPos1, uPos2);
+                }
+                meanPosition += VirtualMeter.CalculateRealPositionOfPoint(uPos1);
+            }
+
+            meanPosition /= placemarks.Count;
+
+            Mesh polyMesh = TriangulatePlacemarkLine(placemarks);
+
+            float area = 0.0f;
+            for (int i = 0; i < polyMesh.triangles.Length / 3; i += 3)
+            {
+                int v1 = polyMesh.triangles[i];
+                int v2 = polyMesh.triangles[i + 1];
+                int v3 = polyMesh.triangles[i + 2];
+
+                Vector3 p1 = polyMesh.vertices[v1];
+                Vector3 p2 = polyMesh.vertices[v2];
+                Vector3 p3 = polyMesh.vertices[v3];
+
+                float numerator = p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y);
+                area += Mathf.Abs(numerator * 0.5f);
+            }
+
+            GameObject newMeshObject = new GameObject("PolygonMesh");
+            newMeshObject.AddComponent<MeshFilter>();
+            newMeshObject.AddComponent<MeshRenderer>();
+            newMeshObject.GetComponent<MeshFilter>().sharedMesh = polyMesh;
+
+            newMeshObject.transform.Rotate(Vector3.right * 90, Space.World);
+            newMeshObject.transform.position = new Vector3(0.0f, placemarks[0].transform.position.y, 0.0f);
+            newMeshObject.GetComponent<MeshRenderer>().material = toolControllerComponent.PolyMaterial;
+
+            //newMeshObject.transform.SetParent(placemarks[0].transform, true);
+
+            // project onto ground 
+
+            // create value dictionary
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>()
+                                                {
+                { "Total_Distance(m)",     totalDistance},
+                { "Area(m^2)",              (decimal)area},
+                { "Mean_Northing (m)" ,    meanPosition.z },
+                { "Mean_Easting (m)" ,     meanPosition.x },
+                { "Mean_Altitude (m)" ,    meanPosition.y }
+                                                };
+
+            // create tool instance        
+            return toolControllerComponent.CreateToolInstance("Polyline",
+                "\nTotal_Distance (m): " + totalDistance.ToString("0.000") +
+                "\nArea (m^2):          " + area.ToString("0.000") +
+                "\nMean Northing (m): " + meanPosition.z.ToString("0.000") +
+                "\nMean Easting  (m): " + meanPosition.x.ToString("0.000") +
+                "\nMean Altitude (m): " + meanPosition.y.ToString("0.000"),
+                Tool.toolType.POLYGON,
+                dict, placemarks);
+        }
+        return null;
+    }
+
+    public static void SaveSingleInstance(ToolInstance instance)
+    {
+        string FilePath = "Outputs/Polygons";
+
+
+        // CSV export
+
+        var directory = new DirectoryInfo(Application.dataPath);
+        var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
+
+        try
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        var path = Path.Combine(directoryPath, string.Format("{0}.csv", instance.ToolTitle.ToString() + " " + DateTime.Now.ToString("yyyyMMdd_Hmmssffff")));
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+
+        //var sr = File.CreateText(path);
+        StreamWriter writer = new StreamWriter(path, true);
+
+        string csvData = "";
+        csvData += "#id, Lat, Lon, z, Comments\n";
+
+        Vector3Decimal realPosition = new Vector3Decimal();
+        for (int i = 0; i < instance.PlacemarkList.Count; ++i)
+        {
+            realPosition = VirtualMeter.CalculateGPSPosition(instance.PlacemarkList[i].transform.position);
+
+            Debug.Log(realPosition.x);
+
+            csvData += i.ToString() + ",";
+            csvData += realPosition.z.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
+            csvData += realPosition.x.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
+            csvData += realPosition.y.ToString("0.000", new CultureInfo("en-GB")) + ",";
+            csvData += DateTime.Now.ToString("yyyyMMdd_Hmmssffff") + "\n";
+        }
+
+        writer.WriteLine(csvData, "en-GB");
+        writer.Close();
+
+
+        //kml
+
+        var kml = new SharpKml.Dom.Kml();
+        kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
+
+        // Create style 1
+        var style = new Style();
+        style.Id = "s_ylw-pushpin";
+        style.Icon = new IconStyle();
+        style.Icon.Hotspot = new Hotspot();
+        style.Icon.Hotspot.X = 20.0;
+        style.Icon.Hotspot.Y = 2.0;
+        style.Icon.Hotspot.XUnits = Unit.Pixel;
+        style.Icon.Hotspot.YUnits = Unit.Pixel;
+        style.Icon.Icon = new IconStyle.IconLink(new Uri("http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"));
+        style.Icon.Scale = 1.1;
+
+        // Create style 2
+        var style2 = new Style();
+        style2.Id = "s_ylw-pushpin_hl";
+        style2.Icon = new IconStyle();
+        style2.Icon.Hotspot = new Hotspot();
+        style2.Icon.Hotspot.X = 20.0;
+        style2.Icon.Hotspot.Y = 2.0;
+        style2.Icon.Hotspot.XUnits = Unit.Pixel;
+        style2.Icon.Hotspot.YUnits = Unit.Pixel;
+        style2.Icon.Icon = new IconStyle.IconLink(new Uri("http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"));
+        style2.Icon.Scale = 1.3;
+
+        //stylemap
+        var pair1 = new Pair();
+        pair1.State = StyleState.Normal;
+        pair1.StyleUrl = new Uri("#s_ylw-pushpin", UriKind.Relative);
+
+        var pair2 = new Pair();
+        pair2.State = StyleState.Highlight;
+        pair2.StyleUrl = new Uri("#s_ylw-pushpin_hl", UriKind.Relative);
+
+        var stylemap = new StyleMapCollection();
+        stylemap.Id = "m_ylw - pushpin";
+        stylemap.Add(pair1);
+        stylemap.Add(pair2);
+
+        // create boundary
+        OuterBoundary outerBoundary = new OuterBoundary();
+        outerBoundary.LinearRing = new LinearRing();
+        outerBoundary.LinearRing.Coordinates = new CoordinateCollection();
+                
+        foreach (var pl in instance.GetComponent<ToolInstance>().PlacemarkList)
+        {
+            realPosition = VirtualMeter.CalculateGPSPosition(pl.transform.position);
+            Vector linePoint = new Vector((double)realPosition.z, (double)realPosition.x, (double)realPosition.y);
+            outerBoundary.LinearRing.Coordinates.Add(linePoint);
+        }
+
+        // create Polygon
+        Polygon polygon = new Polygon();
+        polygon.Extrude = true;
+        polygon.AltitudeMode = AltitudeMode.ClampToGround;
+        polygon.OuterBoundary = outerBoundary;
+
+        // create Placemark
+        var placemark = new Placemark();
+        placemark.Geometry = polygon;
+        placemark.Name = instance.ToolTitle;
+        placemark.StyleUrl = new Uri("#m_ylw-pushpin", UriKind.Relative);
+
+        // create the document
+        var document = new SharpKml.Dom.Document();
+        document.Name = instance.ToolTitle + " " + DateTime.Now.ToString("yyyyMMdd_Hmmssffff");
+        document.AddStyle(stylemap);
+        document.AddStyle(style);
+        document.AddStyle(style2);
+        document.AddFeature(placemark);
+
+        // set root 
+        kml.Feature = document;
+
+        // save to file
+        KmlFile kmlf = KmlFile.Create(kml, false);
+        using (var stream = System.IO.File.OpenWrite(Path.Combine(directoryPath, document.Name + ".kml")))
+        {
+            kmlf.Save(stream);
+        }
+
+
+       // ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
+    }
+
+    public static void SaveMultiInstance()
+    {
+        string FilePath = "Outputs/Polygons";
+
+
+        // CSV
+        var directory = new DirectoryInfo(Application.dataPath);
+        var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
+
+        try
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        var path = Path.Combine(directoryPath, "AllPolygons " + DateTime.Now.ToString("yyyyMMdd_Hmmssffff") + ".csv");
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+
+        var sr = File.CreateText(path);
+        string csvData = "";
+        csvData += "#id, Lat, Lon, z, Comments\n";
+
+        Vector3Decimal realPosition = new Vector3Decimal();
+        foreach (var inst in instanceList)
+        {
+            for (int i = 0; i < inst.GetComponent<ToolInstance>().PlacemarkList.Count; ++i)
+            {
+                realPosition = VirtualMeter.CalculateGPSPosition(inst.GetComponent<ToolInstance>().PlacemarkList[i].transform.position);
+                csvData += inst.GetComponent<ToolInstance>().ToolTitle.ToString() + ",";
+                csvData += ((double)realPosition.z).ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
+                csvData += ((double)realPosition.x).ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
+                csvData += ((double)realPosition.y).ToString("0.000", new CultureInfo("en-GB")) + ",";
+                csvData += DateTime.Now.ToString("yyyyMMdd_Hmmssffff") + "\n";
+            }
+        }
+
+        sr.WriteLine(csvData);
+        sr.Close();
+
+
+        // KML
+
+        var kml = new SharpKml.Dom.Kml();
+        kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
+
+        // Create style 1
+        var style = new Style();
+        style.Id = "s_ylw-pushpin";
+        style.Icon = new IconStyle();
+        style.Icon.Hotspot = new Hotspot();
+        style.Icon.Hotspot.X = 20.0;
+        style.Icon.Hotspot.Y = 2.0;
+        style.Icon.Hotspot.XUnits = Unit.Pixel;
+        style.Icon.Hotspot.YUnits = Unit.Pixel;
+        style.Icon.Icon = new IconStyle.IconLink(new Uri("http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"));
+        style.Icon.Scale = 1.1;
+
+        // Create style 2
+        var style2 = new Style();
+        style2.Id = "s_ylw-pushpin_hl";
+        style2.Icon = new IconStyle();
+        style2.Icon.Hotspot = new Hotspot();
+        style2.Icon.Hotspot.X = 20.0;
+        style2.Icon.Hotspot.Y = 2.0;
+        style2.Icon.Hotspot.XUnits = Unit.Pixel;
+        style2.Icon.Hotspot.YUnits = Unit.Pixel;
+        style2.Icon.Icon = new IconStyle.IconLink(new Uri("http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"));
+        style2.Icon.Scale = 1.3;
+
+        //stylemap
+        var pair1 = new Pair();
+        pair1.State = StyleState.Normal;
+        pair1.StyleUrl = new Uri("#s_ylw-pushpin", UriKind.Relative);
+
+        var pair2 = new Pair();
+        pair2.State = StyleState.Highlight;
+        pair2.StyleUrl = new Uri("#s_ylw-pushpin_hl", UriKind.Relative);
+
+        var stylemap = new StyleMapCollection();
+        stylemap.Id = "m_ylw - pushpin";
+        stylemap.Add(pair1);
+        stylemap.Add(pair2);
+
+        // create the document
+        var document = new SharpKml.Dom.Document();
+        document.Name = "AllPolygons " + DateTime.Now.ToString("yyyyMMdd_Hmmssffff");
+        document.AddStyle(stylemap);
+        document.AddStyle(style);
+        document.AddStyle(style2);
+
+        // This will be the location of the Placemark.
+        foreach (var inst in instanceList)
+        {
+            // create boundary
+            OuterBoundary outerBoundary = new OuterBoundary();
+            outerBoundary.LinearRing = new LinearRing();
+            outerBoundary.LinearRing.Coordinates = new CoordinateCollection();
+
+            foreach (var pl in inst.GetComponent<ToolInstance>().PlacemarkList)
+            {
+                realPosition = VirtualMeter.CalculateGPSPosition(pl.transform.position);
+                Vector linePoint = new Vector((double)realPosition.z, (double)realPosition.x, (double)realPosition.y);
+                outerBoundary.LinearRing.Coordinates.Add(linePoint);
+            }
+
+            // create Polygon
+            Polygon polygon = new Polygon();
+            polygon.Extrude = true;
+            polygon.AltitudeMode = AltitudeMode.ClampToGround;
+            polygon.OuterBoundary = outerBoundary;
+
+            var placemark = new Placemark();
+            placemark.Geometry = polygon;
+            placemark.Name = inst.GetComponent<ToolInstance>().ToolTitle;
+            placemark.StyleUrl = new Uri("#m_ylw-pushpin", UriKind.Relative);
+
+            document.AddFeature(placemark);
+        }
+
+        // set root 
+        kml.Feature = document;
+
+        // save to file
+        KmlFile kmlf = KmlFile.Create(kml, false);
+        using (var stream = System.IO.File.OpenWrite(Path.Combine(directoryPath, document.Name + ".kml")))
+        {
+            kmlf.Save(stream);
+        }
+
+        ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
+    
+    //    ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
+}
+}
