@@ -26,6 +26,7 @@ Antoniou, V., Bonali, F., Nomikou, P., ,Tibaldi, A.,  Melissinos, P., Mariotto, 
 Wright, P. N., Whitworth, M., Tibaldi, A., Bonali, F., Antoniou, V., Nomikou, P., Vitello, F., Becciani, U., Krokos, M. and Van Wyk de Vries, B. (2021)](https://doi.org/10.1080/03098265.2022.2045573)
 - [How Academics and the Public Experienced Immersive Virtual Reality for Geo-ducation. Geosciences, 12(1), 9.
 Bonali, F. L., Russo, E., Vitello, F., Antoniou, V., Marchese, F., Fallati, L., ... & Tibaldi, A. (2021).](https://doi.org/10.3390/geosciences12010009)
+
 **Example of UAV-based survey**
 - [A unique 12 ka subaerial record of rift-transform triple-junction tectonics, N.E. Iceland. Scientific Reports, 9:9669.
 UAV-based surveying in volcano-tectonics: An example from the Iceland rift. Journal of Structural Geology, 121, 46-64. Bonali, F. L., Tibaldi, A., Marchese, F., Fallati, L., Russo, E., Corselli, C., & Savini, A. (2019)](https://doi.org/10.1016/j.jsg.2019.02.004)
