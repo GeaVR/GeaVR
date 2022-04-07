@@ -5,7 +5,8 @@
  *             https://github.com/GeaVR/GeaVR
  * 
  * GeaVR is an open source software that allows the user to experience a wide 
- * range of geological and geomorphological sites in immersive virtual reality.
+ * range of geological and geomorphological sites in immersive virtual reality,
+ * including data collection.
  *
  * Main Developers:      
  * 
