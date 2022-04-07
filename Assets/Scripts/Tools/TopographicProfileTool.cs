@@ -44,9 +44,7 @@ using System;
 using System.IO;
 using System.Globalization;
 
-/// <summary>
-/// 
-/// </summary>
+
 public class TopographicProfileTool : Tool
 {
     [HideInInspector]
@@ -61,7 +59,6 @@ public class TopographicProfileTool : Tool
         // temporary objects
         GameObject TempPlacemark = null, LastPlaceMark = null, TempPlacemarkInfo = null;
         List<GameObject> placemarks = new List<GameObject>();
-
 
         // hold until trigger is released
         // this avoids instant placement 
@@ -94,8 +91,6 @@ public class TopographicProfileTool : Tool
                 {
                     placemarkConfirmed = true;
                     Destroy(TempPlacemark);
-
-
                     toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
 
                     foreach (var p in placemarks)
@@ -156,7 +151,6 @@ public class TopographicProfileTool : Tool
                 {
                     placemarkConfirmed = true;
                     placemarks.Add(TempPlacemark);
-                    //ToolController.ToolIsCurrentlyRunning = false;
 
                 }
                 yield return wfeof;
@@ -191,8 +185,6 @@ public class TopographicProfileTool : Tool
 
         // create tool instance - then update graphs
         GameObject NewToolInstance = toolControllerComponent.CreateToolInstance("Topographic Profile",
-            //"Minimum Distance (m): " + realDistance.ToString("0.000") +
-           // "\nTopographic Profile Distance (m): " + GroundDistance.ToString("0.000")
             "", "",
             Tool.toolType.PROFILE,
             dict, placemarks, DateTime.Now, true, true
@@ -200,17 +192,13 @@ public class TopographicProfileTool : Tool
 
         NewToolInstance.GetComponent<ToolInstance>().UpdateGraphs(lr);
         toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
-
-        // ToolController.ToolIsCurrentlyRunning = false;        
     }
 
     public static void SaveSingleInstance(ToolInstance instance)
     {
         string FilePath = "Outputs/Profile";
-
-
+       
         // CSV export
-
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
 
@@ -234,11 +222,8 @@ public class TopographicProfileTool : Tool
         }
 
         Vector3[] points = new Vector3[lr.positionCount];
-       lr.GetPositions(points);
+        lr.GetPositions(points);
     
-
-
-        //var sr = File.CreateText(path);
         StreamWriter writer = new StreamWriter(path, true);
 
         string csvData = "";
@@ -263,20 +248,11 @@ public class TopographicProfileTool : Tool
 
         }
 
-
         writer.Close();
-        
-
-
-
-
-
     }
 
     public static void SaveToFile(string FilePath, List<GameObject> PlacemarkList)
     {
-
-
         // This will be the location of the Placemark.
         var point = new Point();
         point.Coordinate = new Vector(-13.163959, -72.545992);
@@ -296,8 +272,6 @@ public class TopographicProfileTool : Tool
 
     public void CancelButton()
     {
-
-       
 
     }
 }

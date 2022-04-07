@@ -37,12 +37,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using System.IO;
 using System;
-
-//using UnityEditor.Events;
-
 using SharpKml.Base;
 using SharpKml.Dom;
 using SharpKml.Engine;
@@ -216,7 +212,6 @@ public class RulerTool : Tool
             oldNote = "\n3D Line Length(m): " + profileDistance.ToString("0.000") +
                 "\nH Line Length (m): " + hDistance.ToString("0.000") +
                 "\nV Line Length (m): " + vDistance.ToString("0.000") +
-                //"\nGround Distance (m): " + GroundDistance.ToString("0.000") +
                 "\nHeading (°): " + heading.ToString("0.0") +
                 "\nInclination (°): " + inclination.ToString("0.0")+"\nNote: ";
 
@@ -225,7 +220,6 @@ public class RulerTool : Tool
             // create tool instance        
             DateTime date = DateTime.Now;
             string globalID = date.ToString("yyyy.MMddHmmssffff") + ",";
-
 
             toolControllerComponent.CreateToolInstance("Ruler", oldNote
                , "",
@@ -247,8 +241,6 @@ public class RulerTool : Tool
     {
 
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Ruler tool";
-
-
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(false);
@@ -356,15 +348,11 @@ public class RulerTool : Tool
         }
         PauseAndGUIBehaviour.isToolMenu = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
-
-        //  StartCoroutine(this.OnUse());
     }
 
     public void GetInsertedNotes()
     {
         _note = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").gameObject.transform.Find("Group2").gameObject.transform.Find("Field_notebook").gameObject.GetComponent<FieldNotes>().outputString;
-
-
         if (instanceList.Count != 0)
         {
 
@@ -372,17 +360,13 @@ public class RulerTool : Tool
             ToolInstance currentInstance = instanceList[instanceList.Count - 1].GetComponent<ToolInstance>();
             currentInstance.CustomTxt = _note;
 
-
             if (GameObject.Find(currentInstance.GUIMenu.name) != null)
                 GameObject.Find(currentInstance.GUIMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote + "" + currentInstance.CustomTxt;
             if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
                 GameObject.Find(currentInstance.OculusMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote + "" + currentInstance.CustomTxt;
 
-
-
         }
     }
-
 
     public void CancelButton()
     {
@@ -406,17 +390,11 @@ public class RulerTool : Tool
 
     public void ImportData()
     {
-
         string FilePath = "Import";
 
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
-
-
-
         var path = Path.Combine(directoryPath, string.Format("rulers.csv"));
-
-
         LoadFromFile(path.ToString());
         ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
 
@@ -425,7 +403,6 @@ public class RulerTool : Tool
 
     public override GameObject LoadFromFile(string FilePath)
     {
-
 
         if (File.Exists(FilePath))
         {
@@ -455,7 +432,6 @@ public class RulerTool : Tool
                         decimal [] rot_y = {decimal.Parse(data[10],  NumberStyles.Any, new CultureInfo("en-GB")), decimal.Parse(data[20], NumberStyles.Any, new CultureInfo("en-GB")) };
                         decimal [] rot_w = {decimal.Parse(data[11], NumberStyles.Any, new CultureInfo("en-GB")), decimal.Parse(data[21], NumberStyles.Any, new CultureInfo("en-GB")) };
 
-
                         string date = data[28];
                         string comment = Regex.Replace(data[29], @"\t|\n|\r", "");
 
@@ -468,27 +444,18 @@ public class RulerTool : Tool
                             TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
                             TempPlacemark.name = "distance placemark";
 
-
-                            //TempPlacemark.transform.position = new Vector3((float)unityPosition.z, (float)unityPosition.x, (float)unityPosition.y); // this will need to account for offset
                             TempPlacemark.transform.position = new Vector3((float)x[times], (float)y[times], (float)z[times]); // this will need to account for offset
                             TempPlacemark.transform.rotation = new Quaternion((float)rot_x[times], (float)rot_y[times], (float)rot_z[times], (float)rot_w[times]); // this will need to account for offset
                             placemarks.Add(TempPlacemark);
                         }
 
-
-                     
-                      
-                        
                             LineRenderer lr = TempPlacemark.AddComponent<LineRenderer>() as LineRenderer;
                             lr.startWidth = lr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.5f);
                             lr.material = toolControllerComponent.MeasurementMaterial;
                             lr.SetPosition(0, placemarks[0].transform.position + Vector3.up * (float)(toolControllerComponent.MarkerScale * 0.5f));
                             lr.SetPosition(1, placemarks[1].transform.position + Vector3.up * (float)(toolControllerComponent.MarkerScale * 0.5f));
 
-                      
-
-
-                        dictionary = new Dictionary<string, decimal>();
+                            dictionary = new Dictionary<string, decimal>();
                             dictionary.Add("Line_length", (decimal)decimal.Parse(data[22], NumberStyles.Any, new CultureInfo("en-GB")));
                             dictionary.Add("Ground_distance", (decimal)decimal.Parse(data[23], NumberStyles.Any, new CultureInfo("en-GB")));
                             dictionary.Add("hDistance", (decimal)decimal.Parse(data[24], NumberStyles.Any, new CultureInfo("en-GB")));
@@ -496,41 +463,34 @@ public class RulerTool : Tool
                             dictionary.Add("Heading", (decimal)decimal.Parse(data[24], NumberStyles.Any, new CultureInfo("en-GB")));
                             dictionary.Add("Inclination", (decimal)decimal.Parse(data[25], NumberStyles.Any, new CultureInfo("en-GB")));
 
-                          oldNote = "\nLine Length(m): " + decimal.Parse(data[22], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.000") +
+                            oldNote = "\nLine Length(m): " + decimal.Parse(data[22], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.000") +
                                   "\nH Line Length(m) (m): " + decimal.Parse(data[24], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.000")+
                                  "\nV Line Length(m) (m): " + decimal.Parse(data[25], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.000")+
-                                //"\nGround Distance (m): " + decimal.Parse(data[23], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.000") +
                                 "\nHeading (°): " + decimal.Parse(data[26], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.0") +
                                 "\nInclination (°): " + decimal.Parse(data[27], NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.0") + "\nNote: ";
 
     
                             // create value dictionary 
                             // create tool instance        
-                           
 
-                        DateTime myDate = DateTime.ParseExact(date, "MM/dd/yyyy H:mm:ss.ffff",
+                            DateTime myDate = DateTime.ParseExact(date, "MM/dd/yyyy H:mm:ss.ffff",
                                        System.Globalization.CultureInfo.InvariantCulture);
 
-                        // create tool instance
-                        toolControllerComponent.CreateToolInstance("Ruler", "", comment,
-                            Tool.toolType.RULER,
-                            dictionary, placemarks, myDate, true, false, true, localID, data[1], false);
-
-
-
+                            // create tool instance
+                            toolControllerComponent.CreateToolInstance("Ruler", "", comment,
+                                Tool.toolType.RULER,
+                                dictionary, placemarks, myDate, true, false, true, localID, data[1], false);
 
                         localID++;
 
                     }
-                        else
+                    else
                     {
-                        Debug.Log("elemento già presente");
+                        Debug.Log("Already existing");
 
                     }
                 }
             }
-
-
         }
         return null;
     }
@@ -561,7 +521,6 @@ public class RulerTool : Tool
 
 
         // CSV export
-
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
 
@@ -588,7 +547,6 @@ public class RulerTool : Tool
         StreamWriter writer = new StreamWriter(path, true);
 
         string csvData = "";
-        // csvData += "#id, Lat, Lon, z, Comments";
         csvData += "#Index, Id, Lat1, Lon1, z1, unity_z1, unity_x1, unity_y1, unity_rotation_z1, unity_rotation_x1, unity_rotation_y1,unity_rotation_w1, Lat2, Lon2, z2, unity_z2, unity_x2, unity_y2, unity_rotation_z2, unity_rotation_x2, unity_rotation_y2, unity_rotation_w2, Line_length, Ground_distance, H Distance, V Distance,  Heading, Inclination, Date, Comments";
         writer.WriteLine(csvData, "en-GB");
         Vector3Decimal realPosition = new Vector3Decimal();
@@ -601,8 +559,7 @@ public class RulerTool : Tool
             if (j % 2 != 0)
             {
                 csvData = (i / 2).ToString() + ",";
-                //csvData = i.ToString() + ",";
-                csvData += instance.ID;//creationDate.ToString("yyyy.MMddHmmssffff") + ",";
+                csvData += instance.ID;
             }
 
             csvData += realPosition.z.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
@@ -610,13 +567,13 @@ public class RulerTool : Tool
             csvData += realPosition.y.ToString("0.000", new CultureInfo("en-GB")) + ",";
 
             
-                csvData += instance.RulerList[i].transform.position.z.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-                csvData += instance.RulerList[i].transform.position.x.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-                csvData += instance.RulerList[i].transform.position.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-                csvData += instance.RulerList[i].transform.rotation.z.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-                csvData += instance.RulerList[i].transform.rotation.x.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-                csvData += instance.RulerList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-                csvData += instance.RulerList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.position.z.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.position.x.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.position.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.rotation.z.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.rotation.x.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
+            csvData += instance.RulerList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
 
             if (j % 2 == 0)
             {
@@ -636,12 +593,9 @@ public class RulerTool : Tool
             j++;
         }
 
-        // writer.WriteLine(csvData, "en-GB");
         writer.Close();
 
-
         //kml
-
         var kml = new SharpKml.Dom.Kml();
         kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -718,14 +672,10 @@ public class RulerTool : Tool
         {
             kmlf.Save(stream);
         }
-
-
-        //ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
     }
 
     public void SaveMultiInstance()
     {
-
         if (instanceList.Count == 0)
         {
             ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("No data!", 1.5f));
@@ -733,7 +683,6 @@ public class RulerTool : Tool
         else
         {
             string FilePath = "Outputs/Ruler";
-
 
             // CSV
             var directory = new DirectoryInfo(Application.dataPath);
@@ -771,18 +720,13 @@ public class RulerTool : Tool
                 int j = 1;
                 for (int i = 0; i < inst.GetComponent<ToolInstance>().RulerList.Count; ++i)
                 {
-
-                    
                     realPosition = VirtualMeter.CalculateGPSPosition(inst.GetComponent<ToolInstance>().RulerList[i].transform.position);
-
-
 
                     if (j % 2 != 0)
                     {
                         csvData = z.ToString() + ",";
-                        csvData += inst.GetComponent<ToolInstance>().ID;//creationDate.ToString("yyyy.MMddHmmssffff") + ",";
+                        csvData += inst.GetComponent<ToolInstance>().ID;
                         z++;
-
                     }
 
                     csvData += realPosition.z.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
@@ -800,7 +744,6 @@ public class RulerTool : Tool
 
                     if (j % 2 == 0)
                     {
-
                         csvData += inst.GetComponent<ToolInstance>().ValueDict["Line_length"].ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
                         csvData += inst.GetComponent<ToolInstance>().ValueDict["Ground_distance"].ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
                         csvData += inst.GetComponent<ToolInstance>().ValueDict["hDistance"].ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
@@ -816,18 +759,9 @@ public class RulerTool : Tool
                     }
                     j++;
                 }
-
-
-
-
-
-
             }
 
-            //sr.WriteLine(csvData);
             sr.Close();
-
-
             // KML
 
             var kml = new SharpKml.Dom.Kml();
@@ -913,8 +847,6 @@ public class RulerTool : Tool
             }
 
             ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
-
-            //ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
         }
     }
 
@@ -935,7 +867,6 @@ public class RulerTool : Tool
                 p.GetComponent<ToolInstance>().RulerList[i].SetActive(!status);
             }
         }
-
         string statusString = !status ? "Hide" : "Show";
         GameObject.Find("Canvas").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = statusString;
 
@@ -953,7 +884,6 @@ public class RulerTool : Tool
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
 
-        //throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter()
@@ -966,7 +896,6 @@ public class RulerTool : Tool
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = statusString;
-
     }
 
 }

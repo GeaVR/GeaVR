@@ -77,70 +77,10 @@ public class MyOVRTrackedRemote : MonoBehaviour {
 
         if (sm != StateSingleton.stateMode)
             ChangeState();
-        
-        /*
-                if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger) > 0.8 && OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.8)
-                    ChangeState();
-         
-        
-                       if (controller == OVRInput.Controller.RTouch)
-                       {
-
-                           RaycastHit hit;
-                           if (Physics.Raycast(transform.position, transform.forward, out hit, 100000))
-                           {
-
-                               if (hit.collider.gameObject.GetComponent<ButtonsPauseMenu>() != null)
-                               {
-                                   hit.collider.gameObject.GetComponent<ButtonsPauseMenu>().OculusTriggerButtonOn();
-                               }
-
-                               if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.90f && hit.collider.gameObject.GetComponent<Button>() != null)
-                               {
-
-
-                                   if (hit.collider.gameObject.GetComponent<ButtonsPauseMenu>() != null)
-                                   {
-                                       hit.collider.gameObject.GetComponent<ButtonsPauseMenu>().OculusTriggerButton();
-                                   }
-
-                                   //  hit.collider.gameObject.GetComponent<Button>().onClick.Invoke(); // invoke built in UI
-
-                                   if (!preventMultiTrigger)
-                                   {
-                                       hit.collider.gameObject.GetComponent<Button>().onClick.Invoke(); // invoke built in UI
-                                       preventMultiTrigger = true;
-                                   }
-
-                               }
-                               if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) <= 0.90f)
-                               {
-                                   preventMultiTrigger = false;
-                               }
-
-
-
-
-
-                           }
-                       }
-                       
-                       else if (lineAppear && controller == OVRInput.Controller.RTouch)
-                       {
-                           //GetComponent<LineRenderer>().enabled = false;
-                           //lineAppear = false;
-                       }
-                       */
-
-                       
     }
 
     void Update()
     {
-        //Debug.Log("Chiamo update controller: "+controller);
-
-
-
         if (controller == OVRInput.Controller.RTouch)
         {
 
@@ -200,16 +140,12 @@ public class MyOVRTrackedRemote : MonoBehaviour {
                 if (hoveredObject != null) // if no longer hovering over an object
                 {
                     ExecuteEvents.Execute<IPointerExitHandler>(hoveredObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerExitHandler); // invoke on exit
-                   // ExecuteEvents.Execute<IPointerExitHandler>(hit.collider.gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerExitHandler); // invoke on exit
                     hoveredObject = null;
                 }
 
                 GetComponent<LineRenderer>().SetPosition(2, transform.position + transform.forward * 10000);
                 pointer.transform.position = transform.position + transform.forward * 10000;
 
-
-                //                GetComponent<LineRenderer>().SetPosition(2, transform.forward * 10000);
-                //              pointer.transform.position = transform.forward * 10000;
             }
         }
     }
@@ -217,8 +153,6 @@ public class MyOVRTrackedRemote : MonoBehaviour {
     public void Initialize(float y, float z, float optionalYRotation = 0f)
     {
         float x;
-        //y += targetCamera.GetComponent<Camera>().ScreenToWorldPoint(centerOfCamera).y;
-        //z += targetCamera.GetComponent<Camera>().ScreenToWorldPoint(centerOfCamera).z;
         if (controller == OVRInput.Controller.LTouch || controller == OVRInput.Controller.LTrackedRemote)
             x = -3;
         else if (controller == OVRInput.Controller.RTouch || controller == OVRInput.Controller.RTrackedRemote)
@@ -226,16 +160,12 @@ public class MyOVRTrackedRemote : MonoBehaviour {
         else x = 0;
 
         Vector3 v = new Vector3(x, y, z);
-        //startOffsetPosition = targetCamera.transform.TransformDirection(v.normalized) + v;
         startOffsetPosition = targetCamera.transform.position;
-        //startOffsetRotation = new Vector3(optionalYRotation, 0, 0);
     }
     
     void ChangeState()
     {
         sm = StateSingleton.stateMode;
-       // Debug.Log("Fixing Joypad Position " + sm);
-
         switch (sm)
         {
             case StateSingleton.StateMode.WALKING:

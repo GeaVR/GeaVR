@@ -81,14 +81,11 @@ public class PolygonTool : Tool
     public override IEnumerator ToolCoroutine()
     {
         // a List to store all created placemarks in the line
-        //List<Vector3> placemarks = new List<Vector3>();
         List<GameObject> placemarks = new List<GameObject>();
 
         WaitForEndOfFrame wfeof = new WaitForEndOfFrame();
         ToolController.ToolIsCurrentlyRunning = true;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = false;
-
-
 
         toolControllerComponent.MeasurementControlUI.gameObject.SetActive(false);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
@@ -96,8 +93,6 @@ public class PolygonTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").gameObject.transform.Find("Group2").gameObject.transform.Find("Field_notebook").gameObject.GetComponent<FieldNotes>().outputString = "";
         }
-
-
         // temporary objects
         GameObject TempPlacemark, LastPlaceMark = null, TempPlacemarkInfo = null;
         LineRenderer lr = null, firstLr = null;
@@ -125,7 +120,6 @@ public class PolygonTool : Tool
 
                 lr.SetPosition(1, TempPlacemark.transform.position);
                 lr.SetPosition(0, LastPlaceMark.transform.position);
-
             }
 
             //Handling Placemark
@@ -200,7 +194,6 @@ public class PolygonTool : Tool
                         firstLr.SetPosition(0, TempPlacemark.transform.position);
                         firstLr.SetPosition(1, Vector3.up);
                     }
-                    //ToolController.ToolIsCurrentlyRunning = false;
                 }
                 // whether to cancel out of tool
                 // this should also remove potential placemarks
@@ -226,7 +219,6 @@ public class PolygonTool : Tool
                         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
                             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(true);
                     }
-
 
                 }
 
@@ -305,34 +297,19 @@ public class PolygonTool : Tool
             newMeshObject.GetComponent<MeshFilter>().sharedMesh = polyMesh;
             newMeshObject.GetComponent<MeshRenderer>().material = toolControllerComponent.PolyMaterial;
 
-            //newMeshObject.transform.Rotate(Vector3.right * 90, Space.World);
-            //newMeshObject.transform.position = new Vector3(0.0f, placemarks[0].transform.position.y, 0.0f);
             newMeshObject.transform.SetParent(placemarks[0].transform, true);
-
-            //for (int i = 0; i < polyMesh.vertices.Length; i++)
-            //{
-                //polyMesh.
-            //}
-
             // create value dictionary
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>()
             {
                 { "Perimeter_2D(m)",          totalDistance_2d},
                 { "Perimeter_3D(m)",          totalDistance},
-               // { "Area_3D(m2)",              (decimal)area},
                 { "Area_2D(m2)",              (decimal)area}
-               // { "Volume(m2)",              (decimal)area}
-                //{ "Mean_Northing (m)" ,    meanPosition.z },
-                //{ "Mean_Easting (m)" ,     meanPosition.x },
-                //{ "Mean_Altitude (m)" ,    meanPosition.y }
             };
 
 
             oldNote = "\n2D Perimeter (m): " + totalDistance_2d.ToString("0.000") +
                 "\n3D Perimeter (m): "+ totalDistance.ToString("0.000") +
-                //"\n3D Area (m2):          " + area.ToString("0.000") +
                 "\n2D Area (m2):          " + area.ToString("0.000") +
-                //"\nVolume (m2):          " + area.ToString("0.000") +
            "\nNote: ";
 
             // create tool instance      
@@ -353,9 +330,6 @@ public class PolygonTool : Tool
             }
             ToolController.ToolIsCurrentlyRunning = false;   
         }  
-
-
-
     }
     
     public void startToolInterface()
@@ -415,7 +389,6 @@ public class PolygonTool : Tool
         {
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Polygon tool";
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(true);
-            // GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool").gameObject.GetComponent<Button>().onClick.AddListener(this.OnUse);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(true);
@@ -465,9 +438,6 @@ public class PolygonTool : Tool
         }
         PauseAndGUIBehaviour.isToolMenu = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
-
-
-        //  StartCoroutine(this.OnUse());
     }
 
 
@@ -496,9 +466,6 @@ public class PolygonTool : Tool
 
     public void CancelButton()
     {
-        // toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 1;
-
-        // StopGPSTracking(false);
         toolControllerComponent.MeasurementControlUI.SetActive(false);
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
@@ -511,33 +478,22 @@ public class PolygonTool : Tool
             PauseAndGUIBehaviour.isPause = false;
         ToolController.ToolIsCurrentlyRunning = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = false;
-
-
     }
 
     public void ImportData()
     {
-
         string FilePath = "Import";
 
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
-
-
-
         var path = Path.Combine(directoryPath, string.Format("polygons.csv"));
-
-
         LoadFromFile(path.ToString());
         ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
-
     }
 
 
     public override GameObject LoadFromFile(string FilePath)
     {
-
-
         if (File.Exists(FilePath))
         {
 
@@ -565,40 +521,33 @@ public class PolygonTool : Tool
                         placemarks = new List<GameObject>();
 
 
-                    }
-                    
-                      
+                    }   
+                
+                    decimal z = decimal.Parse(data[10], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
+                    decimal x = decimal.Parse(data[11], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
+                    decimal y = decimal.Parse(data[12], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
 
-                        decimal z = decimal.Parse(data[10], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
-                        decimal x = decimal.Parse(data[11], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
-                        decimal y = decimal.Parse(data[12], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
+                    decimal rot_z = decimal.Parse(data[13], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
+                    decimal rot_x = decimal.Parse(data[14], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
+                    decimal rot_y = decimal.Parse(data[15], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
+                    decimal rot_w = decimal.Parse(data[16], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
 
-                        decimal rot_z = decimal.Parse(data[13], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
-                        decimal rot_x = decimal.Parse(data[14], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
-                        decimal rot_y = decimal.Parse(data[15], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
-                        decimal rot_w = decimal.Parse(data[16], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
-
-                         date = data[17];
-                         comment = Regex.Replace(data[18], @"\t|\n|\r", "");
+                    date = data[17];
+                    comment = Regex.Replace(data[18], @"\t|\n|\r", "");
 
 
-                        TempPlacemark = Instantiate(toolControllerComponent.PlacemarkObject2);
-                        TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
-                        TempPlacemark.name = "distance placemark";
+                    TempPlacemark = Instantiate(toolControllerComponent.PlacemarkObject2);
+                    TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
+                    TempPlacemark.name = "distance placemark";
 
-                        //TempPlacemark.transform.position = new Vector3((float)unityPosition.z, (float)unityPosition.x, (float)unityPosition.y); // this will need to account for offset
-                        TempPlacemark.transform.position = new Vector3((float)x, (float)y, (float)z); // this will need to account for offset
-                        TempPlacemark.transform.rotation = new Quaternion((float)rot_x, (float)rot_y, (float)rot_z, (float)rot_w); // this will need to account for offset
-                        placemarks.Add(TempPlacemark);
-
+                    TempPlacemark.transform.position = new Vector3((float)x, (float)y, (float)z); // this will need to account for offset
+                    TempPlacemark.transform.rotation = new Quaternion((float)rot_x, (float)rot_y, (float)rot_z, (float)rot_w); // this will need to account for offset
+                    placemarks.Add(TempPlacemark);
                 }
             }
 
             //Add the latest Polygon
             createPolygonInImport(placemarks, prevId, date, comment);
-
-
-
         }
         return null;
     }
@@ -606,11 +555,9 @@ public class PolygonTool : Tool
 
     private void createPolygonInImport(List<GameObject> placemarks, string name, string date, string comment)
     {
-
         //test if already imported
         if (!PolygonMap.Contains(name))
         {
-        
             //do calculations
             Vector3 uPos1;
             Vector3 uPos2;
@@ -678,47 +625,26 @@ public class PolygonTool : Tool
             newMeshObject.AddComponent<MeshRenderer>();
             newMeshObject.GetComponent<MeshFilter>().sharedMesh = polyMesh;
             newMeshObject.GetComponent<MeshRenderer>().material = toolControllerComponent.PolyMaterial;
-
-            //newMeshObject.transform.Rotate(Vector3.right * 90, Space.World);
-            //newMeshObject.transform.position = new Vector3(0.0f, placemarks[0].transform.position.y, 0.0f);
             newMeshObject.transform.SetParent(placemarks[0].transform, true);
-
-            //for (int i = 0; i < polyMesh.vertices.Length; i++)
-            //{
-            //polyMesh.
-            //}
-
             // create value dictionary
             Dictionary<string, decimal> dict1 = new Dictionary<string, decimal>()
-                                                    {
+            {
                     { "Perimeter_2D(m)",          totalDistance_2d},
                     { "Perimeter_3D(m)",          totalDistance},
-                   // { "Area_3D(m2)",              (decimal)area},
                     { "Area_2D(m2)",              (decimal)area}
-                   // { "Volume(m2)",              (decimal)area}
-                    //{ "Mean_Northing (m)" ,    meanPosition.z },
-                    //{ "Mean_Easting (m)" ,     meanPosition.x },
-                    //{ "Mean_Altitude (m)" ,    meanPosition.y }
-                                                    };
+                 
+            };
 
 
             oldNote = "\n2D Perimeter(m): " + totalDistance_2d.ToString("0.000") +
                 "\n3D Perimeter(m)" + totalDistance.ToString("0.000") +
-                //"\n3D Area (m2):          " + area.ToString("0.000") +
                 "\n2D Area (m2):          " + area.ToString("0.000") +
-           //"\nVolume (m2):          " + area.ToString("0.000") +
            "\nNote: ";
 
             // create tool instance      
-
-
-
             DateTime myDate = DateTime.ParseExact(date, "MM/dd/yyyy H:mm:ss.ffff",
                                System.Globalization.CultureInfo.InvariantCulture);
 
-          
-
-          
             toolControllerComponent.CreateToolInstance("Polygon", oldNote
                 , "",
                 Tool.toolType.POLYGON,
@@ -729,7 +655,7 @@ public class PolygonTool : Tool
         }
         else
         {
-            Debug.Log("elemento già presente");
+            Debug.Log("Already Existing");
 
         }
     }
@@ -737,10 +663,7 @@ public class PolygonTool : Tool
     public static void SaveSingleInstance(ToolInstance instance)
     {
         string FilePath = "Outputs/Polygons";
-
-
         // CSV export
-
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
 
@@ -763,11 +686,9 @@ public class PolygonTool : Tool
             File.Delete(path);
         }
 
-        //var sr = File.CreateText(path);
         StreamWriter writer = new StreamWriter(path, true);
 
         string csvData = "";
-      //  csvData += "#Index, Id, Lat, Lon, z, Date, Comments";
         csvData += "#Index, Id, Lat, Lon, z, Perimeter_2d, Perimeter_3d, Area_2D, Area_3D, Volume, unity_z, unity_x,unity_y, unity_rotation_z, unity_rotation_x, unity_rotation_y,unity_rotation_w, Date, Comments";
 
         writer.WriteLine(csvData, "en-GB");
@@ -776,11 +697,8 @@ public class PolygonTool : Tool
         for (int i = 0; i < instance.PolygonList.Count; ++i)
         {
             realPosition = VirtualMeter.CalculateGPSPosition(instance.PolygonList[i].transform.position);
-
-            Debug.Log(realPosition.x);
-
             csvData = i.ToString() + ",";
-            csvData += instance.ID;//creationDate.ToString("yyyy.MMddHmmssffff") + ",";
+            csvData += instance.ID;
             csvData += realPosition.z.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
             csvData += realPosition.x.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
             csvData += realPosition.y.ToString("0.000", new CultureInfo("en-GB")) + ",";
@@ -789,9 +707,7 @@ public class PolygonTool : Tool
             csvData += instance.ValueDict["Perimeter_3D(m)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
             csvData += instance.ValueDict["Area_2D(m2)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
             csvData += instance.ValueDict["Area_2D(m2)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
-            //sostituire con volume
             csvData += instance.ValueDict["Area_2D(m2)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
-
 
 
             csvData += instance.PolygonList[i].transform.position.z.ToString("0.0000", new CultureInfo("en-GB")) + ",";
@@ -802,20 +718,14 @@ public class PolygonTool : Tool
             csvData += instance.PolygonList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
             csvData += instance.PolygonList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
 
-
-
-
             csvData += instance.creationDate.ToString("MM/dd/yyyy H:mm:ss.ffff") + ",";
             csvData += instance.CustomTxt;
             writer.WriteLine(csvData, "en-GB");
         }
 
-//        writer.WriteLine(csvData, "en-GB");
         writer.Close();
 
-
         //kml
-
         var kml = new SharpKml.Dom.Kml();
         kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -899,9 +809,6 @@ public class PolygonTool : Tool
         {
             kmlf.Save(stream);
         }
-
-
-       // ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
     }
 
     public void SaveMultiInstance()
@@ -914,8 +821,6 @@ public class PolygonTool : Tool
         else
         {
             string FilePath = "Outputs/Polygons";
-
-
             // CSV
             var directory = new DirectoryInfo(Application.dataPath);
             var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
@@ -954,7 +859,7 @@ public class PolygonTool : Tool
                 {
                     realPosition = VirtualMeter.CalculateGPSPosition(inst.GetComponent<ToolInstance>().PolygonList[i].transform.position);
                     csvData = j.ToString() + ",";
-                    csvData += inst.GetComponent<ToolInstance>().ID;// creationDate.ToString("yyyy.MMddHmmssffff") + ",";
+                    csvData += inst.GetComponent<ToolInstance>().ID;
                     csvData += ((double)realPosition.z).ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
                     csvData += ((double)realPosition.x).ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
                     csvData += ((double)realPosition.y).ToString("0.000", new CultureInfo("en-GB")) + ",";
@@ -963,7 +868,6 @@ public class PolygonTool : Tool
                     csvData += inst.GetComponent<ToolInstance>().ValueDict["Perimeter_3D(m)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
                     csvData += inst.GetComponent<ToolInstance>().ValueDict["Area_2D(m2)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
                     csvData += inst.GetComponent<ToolInstance>().ValueDict["Area_2D(m2)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
-                    //sostituire con volume
                     csvData += inst.GetComponent<ToolInstance>().ValueDict["Area_2D(m2)"].ToString("0.000", new CultureInfo("en-GB")) + ",";
 
                     csvData += inst.GetComponent<ToolInstance>().PolygonList[i].transform.position.z.ToString("0.0000", new CultureInfo("en-GB")) + ",";
@@ -973,9 +877,6 @@ public class PolygonTool : Tool
                     csvData += inst.GetComponent<ToolInstance>().PolygonList[i].transform.rotation.x.ToString("0.0000", new CultureInfo("en-GB")) + ",";
                     csvData += inst.GetComponent<ToolInstance>().PolygonList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
                     csvData += inst.GetComponent<ToolInstance>().PolygonList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
-
-
-
                     csvData += inst.GetComponent<ToolInstance>().creationDate.ToString("MM/dd/yyyy H:mm:ss.ffff") + ",";
                     csvData += inst.GetComponent<ToolInstance>().CustomTxt;// + "\n";
                     sr.WriteLine(csvData, "en-GB");
@@ -984,12 +885,9 @@ public class PolygonTool : Tool
           
             }
 
-            //        sr.WriteLine(csvData);
             sr.Close();
 
-
             // KML
-
             var kml = new SharpKml.Dom.Kml();
             kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -1079,17 +977,13 @@ public class PolygonTool : Tool
             }
 
             ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
-
-            //    ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
         }
 }
 
     public void DeleteAllInstances()
     {
-     
         foreach (var p in instanceList)
         {
-           
             for (int i = 0; i < p.GetComponent<ToolInstance>().PolygonList.Count; ++i)
             {
                 
@@ -1101,13 +995,11 @@ public class PolygonTool : Tool
         }
         PolygonMap.Clear();
         instanceList.Clear();
-
     }
 
 
     public void ShowHide()
     {
-
         bool status = true;
         if (instanceList.Count > 0)
             status = instanceList[0].GetComponent<ToolInstance>().PolygonList[0].activeSelf;
@@ -1133,13 +1025,11 @@ public class PolygonTool : Tool
 
     public void OnPointerExit()
     {
-
         GameObject.Find("Canvas").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
 
-        //throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter()
@@ -1152,7 +1042,5 @@ public class PolygonTool : Tool
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = statusString;
-
     }
-
 }

@@ -65,7 +65,6 @@ public class ToolInstance : MonoBehaviour {
     private int Index;
     public Tool.toolType instanceToolType;
 
-    //private List<decimal> ValueList; 
     public List<GameObject> PlacemarkList;
 
     public List<GameObject> PolylineList;
@@ -107,8 +106,6 @@ public class ToolInstance : MonoBehaviour {
         CurrentlyVisible = this;
         ID = globalID;
         Index = localID;
-        // ID = StaticID;
-        // StaticID = StaticID + 1;
         instanceToolType = _ToolType;
         creationDate = _creationDate;
 
@@ -119,11 +116,6 @@ public class ToolInstance : MonoBehaviour {
         CustomTxt = _Desc;
 
         ValueDict = Values;
-
-        // PlacemarkList = Placemarks;
-
-
-
         switch (_ToolType)
         {
             case Tool.toolType.PLACEMARK:
@@ -168,7 +160,6 @@ public class ToolInstance : MonoBehaviour {
 
                 // set world menu to update info when maximised
                 Transform WorldMenuCanvas = WorldMenu.transform.Find("Canvas");
-                //WorldMenuCanvas.Find("Maximise").gameObject.GetComponent<Button>().onClick.AddListener(ShowMenus);
                 if (WorldMenuCanvas.Find("Cancel").gameObject.GetComponent<Button>().interactable)
                     WorldMenuCanvas.Find("Cancel").gameObject.GetComponent<Button>().onClick.AddListener(DestroyInstance);
                 if (WorldMenuCanvas.Find("Close").gameObject.GetComponent<Button>().interactable)
@@ -222,13 +213,9 @@ public class ToolInstance : MonoBehaviour {
             OculusMenu.transform.localScale = Vector3.one;
             OculusMenu.transform.localPosition = Vector3.zero;
 
-            //
-
-
             Transform OculusMenuCanvas = OculusMenu.transform.Find("Canvas");
 
             OculusMenuCanvas.Find("Notes").gameObject.GetComponent<Button>().interactable = true;
-            //OculusMenuCanvas.Find("Maximise").gameObject.GetComponent<Button>().onClick.AddListener(ShowMenus);
             if (OculusMenuCanvas.Find("Cancel").gameObject.GetComponent<Button>().interactable)
                 OculusMenuCanvas.Find("Cancel").gameObject.GetComponent<Button>().onClick.AddListener(DestroyInstance);
             if (OculusMenuCanvas.Find("Close").gameObject.GetComponent<Button>().interactable)
@@ -242,7 +229,6 @@ public class ToolInstance : MonoBehaviour {
                 OculusMenuCanvas.Find("Export").gameObject.GetComponent<Button>().onClick.AddListener(SaveOutput);
             if (OculusMenuCanvas.Find("Confirm").gameObject.GetComponent<Button>().interactable)
                 OculusMenuCanvas.Find("Confirm").gameObject.GetComponent<Button>().onClick.AddListener(ConfirmMeasure);
-
 
             if (hasGraph)
             {
@@ -261,16 +247,6 @@ public class ToolInstance : MonoBehaviour {
             GUIMenu.GetComponentInChildren<Canvas>(true).renderMode = RenderMode.ScreenSpaceOverlay;
 
             // add listener to close menus on cancel
-            /* 
-            //old version
-                   GUIMenu.transform.Find("Canvas").transform.Find("Cancel").gameObject.GetComponent<Button>().onClick.AddListener(DestroyInstance);
-                   GUIMenu.transform.Find("Canvas").transform.Find("Close").gameObject.GetComponent<Button>().onClick.AddListener(DestroyOrClose);
-
-                   // update menus
-                   ShowMenus();
-                   toolControllerComponent.StartCoroutine(MenuCoroutine());
-            */
-
             Transform GUIMenuCanvas = GUIMenu.transform.Find("Canvas").transform;
             GUIMenuCanvas.Find("Cancel").gameObject.GetComponent<Button>().onClick.AddListener(DestroyInstance);
             GUIMenuCanvas.Find("Close").gameObject.GetComponent<Button>().onClick.AddListener(DestroyOrClose);
@@ -279,8 +255,6 @@ public class ToolInstance : MonoBehaviour {
             GUIMenuCanvas.Find("Confirm").gameObject.GetComponent<Button>().onClick.AddListener(ConfirmMeasure);
 
             // update menus
-            //ShowMenus();
-
             CurrentlyVisible = this;
             UpdateMenus();
 
@@ -368,7 +342,6 @@ public class ToolInstance : MonoBehaviour {
 
     public void ShowNotes()
     {
-   
         NotesMenu = Instantiate(toolControllerComponent.NotesMenuPrefab);
         NotesMenu.name = "GUIMenu" + ID.ToString();
         NotesMenu.GetComponentInChildren<Canvas>(true).renderMode = RenderMode.ScreenSpaceOverlay;
@@ -377,7 +350,6 @@ public class ToolInstance : MonoBehaviour {
         NotesMenu.transform.Find("Canvas").transform.Find("Close").gameObject.GetComponent<Button>().onClick.AddListener(HideNotes);
         NotesMenu.transform.Find("Canvas").transform.Find("Export").gameObject.GetComponent<Button>().onClick.AddListener(SaveNotesToTXT);
         NotesMenu.GetComponentsInChildren<TMP_InputField>(true)[0].onEndEdit.AddListener(OnUpdateString);
-
     }
 
     public void HideNotes()
@@ -391,7 +363,6 @@ public class ToolInstance : MonoBehaviour {
     {
 
         StartCoroutine(ShowNotificationInLabel("Done!", 1.5f));
-
         switch (instanceToolType)
         {
             case Tool.toolType.PLACEMARK:
@@ -420,7 +391,6 @@ public class ToolInstance : MonoBehaviour {
     }
         
     // other
-
     public void SaveTopographicGraphToCSV()
     {
         LineRenderer lr = PlacemarkList[0].GetComponent<LineRenderer>();
@@ -456,7 +426,6 @@ public class ToolInstance : MonoBehaviour {
             csvData = "";
             csvData += i.ToString() + ",";
 
-            //realPosition = VirtualMeter.CalculateRealPositionOfPoint(lr.GetPosition(i));
             // The computation schould be done with real position
             realPosition = VirtualMeter.CalculateGPSPosition(lr.GetPosition(i));
             csvData += realPosition.z.ToString("0.0000000000000") + ",";
@@ -468,9 +437,6 @@ public class ToolInstance : MonoBehaviour {
         }
 
         sr.Close();
-
-        //StartCoroutine(ShowNotification("Profile has been exported", 1));
-
     }
 
     public void SaveNotesToTXT()
@@ -525,13 +491,7 @@ public class ToolInstance : MonoBehaviour {
 
 
     }
-/*
-    public void DestroyAllInstance()
-    {
 
-        DestroyInstance();
-    }
-    */
     public void DestroySingleInstance()
     {
 
@@ -566,7 +526,6 @@ public class ToolInstance : MonoBehaviour {
                 break;
 
             case Tool.toolType.PROFILE:
-                // TopographicProfileTool.instanceList.Add(NewToolInstance);
                 foreach (var p in ProfileList)
                 {
                     Destroy(p);
@@ -588,12 +547,6 @@ public class ToolInstance : MonoBehaviour {
                 break;
         }
 
-
-       
-
-      //   StaticID--;
-
-
         if (gameObject != null)
         {
             Destroy(gameObject);
@@ -606,21 +559,15 @@ public class ToolInstance : MonoBehaviour {
     public void DestroyInstance()
     {
 
-        Debug.Log("Called:DestroyInstance ");
-        //StopAllCoroutines();
         DestroyMenus();
 
         if (CurrentlyVisible == this)
         {
             CurrentlyVisible = null;
         }
-        
-
-
-  
-            switch (instanceToolType)
-            {
-                case Tool.toolType.PLACEMARK:
+        switch (instanceToolType)
+        {
+            case Tool.toolType.PLACEMARK:
                     
                     foreach (var p in PlacemarkList)
                     {
@@ -640,7 +587,7 @@ public class ToolInstance : MonoBehaviour {
                
                     break;
 
-                case Tool.toolType.POLYGON:
+            case Tool.toolType.POLYGON:
                     foreach (var p in PolygonList)
                     {
                         Destroy(p);
@@ -658,8 +605,7 @@ public class ToolInstance : MonoBehaviour {
                     PolygonTool.localID--;
                 break;
 
-                case Tool.toolType.LINE:
-                    
+            case Tool.toolType.LINE:
                     foreach (var p in PolylineList)
                     {
                         Destroy(p);
@@ -677,9 +623,7 @@ public class ToolInstance : MonoBehaviour {
                     PolylineTool.localID--;
                 break;
 
-                case Tool.toolType.PROFILE:
-                // TopographicProfileTool.instanceList.Add(NewToolInstance);
-
+            case Tool.toolType.PROFILE:
                     foreach (var p in ProfileList)
                     {
                         Destroy(p);
@@ -695,14 +639,11 @@ public class ToolInstance : MonoBehaviour {
             
                 break;
 
-                case Tool.toolType.RULER:
+            case Tool.toolType.RULER:
                     foreach (var p in RulerList)
                     {
                         Destroy(p);
                     }
-
-               
-
 
                     if (gameObject != null)
                     {
@@ -713,14 +654,11 @@ public class ToolInstance : MonoBehaviour {
                     RulerTool.localID--;
                 break;
 
-                case Tool.toolType.SURFACE:
+            case Tool.toolType.SURFACE:
                     foreach (var p in SurfaceList)
                     {
                         Destroy(p);
                     }
-
-               
-
 
                     if (gameObject != null)
                     {
@@ -731,9 +669,6 @@ public class ToolInstance : MonoBehaviour {
                     SurfaceTool.localID--;
                 break;
             }
-
-   
-
 
         if (!isClosing)
         {
@@ -750,48 +685,13 @@ public class ToolInstance : MonoBehaviour {
         ToolController.ToolIsCurrentlyRunning = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
 
-
-
     }
 
     public void ConfirmMeasure()
     {
        
-       // tmpNote = null;
-         DestroyMenus();
- /*
-        switch (instanceToolType)
-        {
-            case Tool.toolType.PLACEMARK:
-               
-                break;
-
-            case Tool.toolType.POLYGON:
-                
-                break;
-
-            case Tool.toolType.LINE:
-                
-                break;
-
-            case Tool.toolType.PROFILE:
-               
-                break;
-
-            case Tool.toolType.RULER:
-
-                foreach (var p in PlacemarkList)
-                {
-                    Destroy(p);
-                }
-
-                if (gameObject != null)
-                {
-                    Destroy(gameObject);
-                }
-                break;
-        }
-*/
+        DestroyMenus();
+ 
         ToolController.ToolIsCurrentlyRunning = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
 
@@ -804,7 +704,6 @@ public class ToolInstance : MonoBehaviour {
         }
         if (ShouldDestroyOnClose)
         {
-            //DestroyInstance();
             switch (instanceToolType)
             {
                 case Tool.toolType.PLACEMARK:
@@ -841,10 +740,6 @@ public class ToolInstance : MonoBehaviour {
 
                     break;
             }
-
-
-
-            
         }
         PauseAndGUIBehaviour.isToolMenu = false;
     }
@@ -883,7 +778,6 @@ public class ToolInstance : MonoBehaviour {
         while (menuShouldStayOpen && !isClosing)
         {
             Cursor.visible = true;
-            //menuShouldStayOpen = !(Tool.checkIfToolShouldQuit());
             yield return wfeof;
         }
 
@@ -901,7 +795,6 @@ public class ToolInstance : MonoBehaviour {
         }
     }
 
-
     IEnumerator ShowNotificationInLabel(string message, float delay)
     {
        
@@ -915,13 +808,6 @@ public class ToolInstance : MonoBehaviour {
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
             GameObject.Find(OculusMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("LowerPanel").transform.Find("downlabelastooltip").GetComponent<Text>().color = new Color(1, 0, 0, 1); ;
 
-        
-        /*
-        GameObject.Find("Canvas").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = message;
-        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = message;
-        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().color = new Color(1, 0, 0, 1); ;
-        GameObject.Find("Canvas").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().color = new Color(1, 0, 0, 1); ;
-        */
 
         yield return new WaitForSeconds(delay);
 
@@ -934,13 +820,6 @@ public class ToolInstance : MonoBehaviour {
             GameObject.Find(GUIMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("LowerPanel").transform.Find("downlabelastooltip").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
             GameObject.Find(OculusMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("LowerPanel").transform.Find("downlabelastooltip").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1);
-
-        /*
-        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
-        GameObject.Find("Canvas").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
-        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1); ;
-        GameObject.Find("Canvas").gameObject.transform.Find("GpsTrackControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1); ;
-  */
 
     }
 

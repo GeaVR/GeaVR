@@ -261,7 +261,6 @@ public class SceneLoadingUI : MonoBehaviour {
         // Initial path: default (Documents), Title: "Load File", submit button text: "Load"
         yield return FileBrowser.WaitForLoadDialog(true, null, "Select Scene Folder", "Select");
 
-       
         if (FileBrowser.Success)
         {
             TMProInputField.text = FileBrowser.Result;
@@ -474,70 +473,6 @@ public class SceneLoadingUI : MonoBehaviour {
 
             }
         }
-
-
-        //fv removed
-
-        /*
-                    // open KML
-                    Debug.Log("loading doc.kml");
-                FileStream kmlStream = null;
-                try
-                {
-                    kmlStream = File.Open(currentScenePath + "\\doc.kml", FileMode.Open);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log(ex);
-                    kmlStream = null;
-                }
-
-                if (kmlStream != null)
-                {
-                    SharpKml.Engine.KmlFile docKML = SharpKml.Engine.KmlFile.Load(kmlStream);
-
-                    if (docKML != null)
-                    {
-
-
-
-
-
-                        var kml = docKML.Root as SharpKml.Dom.Kml;
-
-                        // find all LatLonAlt Boxes in the KML
-                        var RegionList = kml.Flatten().OfType<LatLonAltBox>();
-
-
-
-                        Debug.Log(RegionList.Count());
-
-                        for (int i=0;i< RegionList.Count();i++)
-                            Debug.Log("west_dd("+i+"): " + (decimal)RegionList.ElementAt(i).West);
-
-
-                        if (RegionList.Count() > 0)
-                        {
-                            // we only care about the first one found
-                            west_dd = (decimal)RegionList.ElementAt(0).West;
-                            east_dd = (decimal)RegionList.ElementAt(0).East;
-                            south_dd = (decimal)RegionList.ElementAt(0).South;
-                            north_dd = (decimal)RegionList.ElementAt(0).North;
-
-                            alt_min_dd = (decimal)RegionList.ElementAt(0).MinimumAltitude;
-                            alt_max_dd = (decimal)RegionList.ElementAt(0).MaximumAltitude;
-
-                            Debug.Log("west_dd: "+ west_dd);
-                            Debug.Log("east_dd: " + east_dd);
-                            Debug.Log("south_dd: " + south_dd);
-                            Debug.Log("north_dd: " + north_dd);
-
-                            Debug.Log("alt_min_dd: " + alt_min_dd);
-                            Debug.Log("alt_max_dd: " + alt_max_dd);
-                        }
-                    }
-                }
-            */
         // open xml
         Debug.Log("loading tiles.xml");
         XmlDocument newXml = new XmlDocument();
@@ -645,55 +580,6 @@ public class SceneLoadingUI : MonoBehaviour {
         // calculate position
         Vector3Decimal point = PositionController.CalculateUnityPosition(new Vector3Decimal(longitude, altitude, latitiude));        
         TerrainLoader.playerStart = (Vector3)point;
-        
-        /*
-        longitude   = Decimal.Parse(longitudeTextbox.text);
-        altitude    = Decimal.Parse(altitudeTextbox.text);
-        latitiude   = Decimal.Parse(latitudeTextbox.text);       
-
-        // calculate position
-        Vector3Decimal point = PositionController.CalculateUnityPosition(new Vector3Decimal(longitude, altitude, latitiude));
-         
-        // create scene.xml
-        XmlDocument xmlDoc = new XmlDocument();
-        //root
-        XmlNode rootNode = xmlDoc.CreateElement("document");
-        xmlDoc.AppendChild(rootNode);
-        //header
-        XmlDeclaration docNode = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", null);
-        xmlDoc.InsertBefore(docNode, rootNode);
-        //scene
-        XmlNode sceneNode = xmlDoc.CreateElement("folder");
-        rootNode.AppendChild(sceneNode);
-
-        //offset
-        XmlNode offsetNode = xmlDoc.CreateElement("offset");
-        offsetNode.InnerText = altOffset.ToString(new CultureInfo("en-GB"));
-        sceneNode.AppendChild(offsetNode);
-
-        //position
-        XmlNode positionNode = xmlDoc.CreateElement("position");
-
-        XmlNode xNode = xmlDoc.CreateElement("x");
-        xNode.InnerText = point.x.ToString(new CultureInfo("en-GB"));
-
-        XmlNode yNode = xmlDoc.CreateElement("y");
-        yNode.InnerText = point.y.ToString(new CultureInfo("en-GB"));
-
-        XmlNode zNode = xmlDoc.CreateElement("z");
-        zNode.InnerText = point.z.ToString(new CultureInfo("en-GB"));
-
-        // create hierarchy
-        positionNode.AppendChild(xNode);
-        positionNode.AppendChild(yNode);
-        positionNode.AppendChild(zNode);
-        sceneNode.AppendChild(positionNode);
-
-        //save scene.xml
-        xmlDoc.Save(Path.Combine(currentScenePath, "scene.xml"));
-
-        Console.WriteLine("scene.xml created");
-        */
     }
 
     /**

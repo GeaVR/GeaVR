@@ -72,8 +72,6 @@ public class MapCameraBehaviour : MonoBehaviour {
             Vector3 rotationVector = new Vector3(0,(target.transform.eulerAngles.y ),-1* (target.transform.eulerAngles.y));
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsInfoOnMap").gameObject.transform.Find("GameObject").gameObject.transform.Find("GameObject").transform.rotation = Quaternion.Euler(rotationVector);
-            //GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsInfoOnMap").gameObject.transform.Find("GameObject").gameObject.transform.Find("GameObject").transform.rotation = Quaternion.Euler(rotationVector_after);
-
         }
 
     }

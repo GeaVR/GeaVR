@@ -41,7 +41,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-//using UnityEditor.Events;
 using SharpKml;
 using SharpKml.Base;
 using SharpKml.Dom;
@@ -93,17 +92,7 @@ public class PolylineTool : Tool
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
         }
-/*
-        // hold until trigger is released
-        // this avoids instant placement 
-        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
-        {
-            while (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.8f)
-            {
-                yield return wfeof;
-            }
-        }
-*/
+
 
         // temporary objects
         GameObject TempPlacemark, LastPlaceMark = null, TempPlacemarkInfo = null;
@@ -128,8 +117,6 @@ public class PolylineTool : Tool
                 lr.startWidth = lr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.2f);
 
                 lr.material = toolControllerComponent.LineMaterial;
-
-                //lr.SetPosition(1, TempPlacemark.transform.position + Vector3.up * (float)(toolControllerComponent.MarkerScale * 0.5f));
                 lr.SetPosition(1, TempPlacemark.transform.position );
                 lr.SetPosition(0, LastPlaceMark.transform.position );
             }
@@ -147,7 +134,6 @@ public class PolylineTool : Tool
                 if (Physics.Raycast(master.transform.position, directionMaster.transform.forward, out hit, 100000))
                 {
                     //pos 
-                    //TempPlacemark.transform.position = hit.point + (toolControllerComponent.MarkerScale * 2) * Vector3.up;
                     TempPlacemark.transform.position = hit.point;
                     //rotation
                     TempPlacemark.transform.eulerAngles = new Vector3(0f, directionMaster.transform.eulerAngles.y, directionMaster.transform.eulerAngles.z);                    
@@ -189,7 +175,7 @@ public class PolylineTool : Tool
                 
                 // whether to cancel out of tool
                 // this should also remove potential placemarks
-                if (checkIfToolShouldQuit())// || OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0.90f)
+                if (checkIfToolShouldQuit())
                 {
                     shouldStopPlacing = true;
                     Destroy(TempPlacemark);
@@ -238,13 +224,11 @@ public class PolylineTool : Tool
             
             // create value ditionary
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>()
-                                                {
+            {
                 {"Total_Distance(m)",      totalDistance},
                 {"Total_Distance_2D(m)",      totalDistance_2d}
-                //,{ "Mean_Northing (m)" ,    meanPosition.z }
-                //,{ "Mean_Easting (m)" ,     meanPosition.x }
-                //,{ "Mean_Altitude (m)" ,    meanPosition.y }
-                                                };
+  
+            };
 
 
             oldNote = "\n3D Length (m): " + totalDistance.ToString("0.000") + 
@@ -274,8 +258,6 @@ public class PolylineTool : Tool
     
     public void startToolInterface()
     {
-
-      
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_placemark").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_line").gameObject.SetActive(true);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_polygon").gameObject.SetActive(false);
@@ -314,16 +296,9 @@ public class PolylineTool : Tool
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_polygon").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_ruler").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_surface").gameObject.SetActive(false);
-
-
-
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("UpperPanel").gameObject.transform.Find("Text").gameObject.GetComponent<Text>().text = "Line tool";
-
         GameObject.Find("Canvas").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-
         GameObject.Find("Canvas").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(GetInsertedNotes);
-
-
         toolControllerComponent.MeasurementControlUI.SetActive(true);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
         {
@@ -370,46 +345,24 @@ public class PolylineTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_polygon").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_ruler").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_surface").gameObject.SetActive(false);
-
-
-
-            //   GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash").gameObject.GetComponent<Button>().onClick.AddListener(DeleteAllInstances);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(GetInsertedNotes);
-
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.localPosition = new Vector3(0.0f, -400.0f, 0.0f);
-
         }
         PauseAndGUIBehaviour.isToolMenu = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
-
-
-        //  StartCoroutine(this.OnUse());
     }
-
 
     public void GetInsertedNotes()
     {
          _note = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").gameObject.transform.Find("Group2").gameObject.transform.Find("Field_notebook").gameObject.GetComponent<FieldNotes>().outputString;
-
-
-      
         if (instanceList.Count != 0)
         {
-
-        
             ToolInstance currentInstance = instanceList[instanceList.Count - 1].GetComponent<ToolInstance>();
             currentInstance.CustomTxt = _note;
 
-           
-
-          
-
             if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
                 GameObject.Find(currentInstance.OculusMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote + "" + currentInstance.CustomTxt;
-
-
-
         }
     }
 
@@ -422,7 +375,6 @@ public class PolylineTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.SetActive(false);
         }
 
-
         if (PauseAndGUIBehaviour.isPause)
             PauseAndGUIBehaviour.isPause = false;
         ToolController.ToolIsCurrentlyRunning = false;
@@ -433,29 +385,20 @@ public class PolylineTool : Tool
 
     public void ImportData()
     {
-
         string FilePath = "Import";
-
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
-
-
-
         var path = Path.Combine(directoryPath, string.Format("lines.csv"));
-
 
         LoadFromFile(path.ToString());
         ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
-
     }
 
 
     public override GameObject LoadFromFile(string FilePath)
     {
-
         if (File.Exists(FilePath))
         {
-
             String fileData = System.IO.File.ReadAllText(FilePath);
             String[] lines = fileData.Split("\n"[0]);
             GameObject TempPlacemark;
@@ -466,8 +409,6 @@ public class PolylineTool : Tool
             foreach (String line in lines)
             {
                 String[] data = line.Split(","[0]);
-
-
                 if (data.Length == 16 && data[0][0].ToString() != "#") // discard non-coordinate lines
                 {
                     if (prevId != data[1])
@@ -481,8 +422,6 @@ public class PolylineTool : Tool
 
 
                     }
-
-
 
                     decimal z = decimal.Parse(data[7], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
                     decimal x = decimal.Parse(data[8], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"));
@@ -501,19 +440,14 @@ public class PolylineTool : Tool
                     TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
                     TempPlacemark.name = "distance placemark";
 
-                    //TempPlacemark.transform.position = new Vector3((float)unityPosition.z, (float)unityPosition.x, (float)unityPosition.y); // this will need to account for offset
                     TempPlacemark.transform.position = new Vector3((float)x, (float)y, (float)z); // this will need to account for offset
                     TempPlacemark.transform.rotation = new Quaternion((float)rot_x, (float)rot_y, (float)rot_z, (float)rot_w); // this will need to account for offset
                     placemarks.Add(TempPlacemark);
-
                 }
             }
 
             //Add the latest Polygon
             createLineInImport(placemarks, prevId, date, comment);
-
-
-
         }
         return null;
     }
@@ -521,51 +455,32 @@ public class PolylineTool : Tool
 
     private void createLineInImport(List<GameObject> placemarks, string name, string date, string comment)
     {
-
-
-
         //test if already imported
         if (!LineMap.Contains(name))
         {
-
-
-
             //do calculations
             GameObject TempPlacemark;
-
             LineRenderer lr = null;
-
             decimal totalDistance = 0m;
             decimal totalDistance_2d = 0m;
-
-
-            /*
-
-           */
-
             Vector3Decimal meanPosition = new Vector3Decimal(0m, 0m, 0m);
 
             for (int i = 0; i < placemarks.Count - 1; i++)
             {
                 lr = placemarks[i].AddComponent<LineRenderer>() as LineRenderer;
                 lr.startWidth = lr.endWidth = (float)(toolControllerComponent.MarkerScale * 0.2f);
-
                 lr.material = toolControllerComponent.LineMaterial;
 
-                //lr.SetPosition(1, TempPlacemark.transform.position + Vector3.up * (float)(toolControllerComponent.MarkerScale * 0.5f));
                 lr.SetPosition(1, placemarks[i + 1].transform.position);
                 lr.SetPosition(0, placemarks[i].transform.position);
             }
 
             // create value ditionary
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>()
-                                                {
+            {
                 {"Total_Distance(m)",      totalDistance},
                 {"Total_Distance_2D(m)",      totalDistance_2d}
-                //,{ "Mean_Northing (m)" ,    meanPosition.z }
-                //,{ "Mean_Easting (m)" ,     meanPosition.x }
-                //,{ "Mean_Altitude (m)" ,    meanPosition.y }
-                                                };
+            };
 
 
             oldNote = "\n3D Length (m): " + totalDistance.ToString("0.000") +
@@ -587,22 +502,15 @@ public class PolylineTool : Tool
         }
         else
         {
-            Debug.Log("elemento già presente");
+            Debug.Log("Already Existing");
 
         }
-
-
-
-
     }
 
     public static void SaveSingleInstance(ToolInstance instance)
     {
         string FilePath = "Outputs/Lines";
-
-
         // CSV export
-
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
 
@@ -629,7 +537,6 @@ public class PolylineTool : Tool
         StreamWriter writer = new StreamWriter(path, true);
 
         string csvData = "";
-        // csvData += "#Index, Id, Lat, Lon, z, Date, Comments";
         csvData += "#Index, Id, Lat, Lon, z, 2D Length, 3D Length, unity_z, unity_x,unity_y, unity_rotation_z, unity_rotation_x, unity_rotation_y,unity_rotation_w, Date, Comments";
 
         writer.WriteLine(csvData, "en-GB");
@@ -657,19 +564,14 @@ public class PolylineTool : Tool
             csvData += instance.PolylineList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
             csvData += instance.PolylineList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
 
-
-
             csvData += instance.creationDate.ToString("MM/dd/yyyy H:mm:ss.ffff") + ",";
             csvData += instance.CustomTxt;
             writer.WriteLine(csvData, "en-GB");
         }
 
-       // writer.WriteLine(csvData, "en-GB");
         writer.Close();
 
-
         //kml
-
         var kml = new SharpKml.Dom.Kml();
         kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -746,14 +648,10 @@ public class PolylineTool : Tool
         {
             kmlf.Save(stream);
         }
-
-
-        //ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
     }
 
     public void SaveMultiInstance()
     {
-
         if (instanceList.Count == 0)
         {
             ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("No data!", 1.5f));
@@ -761,12 +659,9 @@ public class PolylineTool : Tool
         else
         {
             string FilePath = "Outputs/Lines";
-
-
             // CSV
             var directory = new DirectoryInfo(Application.dataPath);
             var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
-
             try
             {
                 if (!Directory.Exists(directoryPath))
@@ -788,7 +683,6 @@ public class PolylineTool : Tool
 
             var sr = File.CreateText(path);
             string csvData = "";
-            //csvData += "#Index, Id, Lat, Lon, z, Date, Comments";
             csvData += "#Index, Id, Lat, Lon, z, 2D Length, 3D Length, unity_z, unity_x,unity_y, unity_rotation_z, unity_rotation_x, unity_rotation_y,unity_rotation_w, Date, Comments";
 
             sr.WriteLine(csvData, "en-GB");
@@ -817,7 +711,6 @@ public class PolylineTool : Tool
                     csvData += inst.GetComponent<ToolInstance>().PolylineList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
                     csvData += inst.GetComponent<ToolInstance>().PolylineList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
 
-
                     csvData += inst.GetComponent<ToolInstance>().creationDate.ToString("MM/dd/yyyy H:mm:ss.ffff") + ",";
                     csvData += inst.GetComponent<ToolInstance>().CustomTxt;
                     sr.WriteLine(csvData, "en-GB");
@@ -826,15 +719,10 @@ public class PolylineTool : Tool
                 }
             }
 
-            //sr.WriteLine(csvData);
             sr.Close();
-
-
             // KML
-
             var kml = new SharpKml.Dom.Kml();
             kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
-
             // Create style 1
             var style = new Style();
             style.Id = "s_ylw-pushpin";
@@ -922,28 +810,20 @@ public class PolylineTool : Tool
 
     public  void DeleteAllInstances()
     {
-       
         foreach (var p in instanceList)
         {
-
-
-        
             for (int i = 0; i < p.GetComponent<ToolInstance>().PolylineList.Count; ++i)
             {
                 Debug.Log("sono: "+p.GetComponent<ToolInstance>().instanceToolType);
                 p.GetComponent<ToolInstance>().DestroySingleInstance();
             }
-
             localID--;
-
         }
         instanceList.Clear();
-
     }
 
     public void ShowHide()
     {
-
         bool status = true;
         if (instanceList.Count > 0)
             status = instanceList[0].GetComponent<ToolInstance>().PolylineList[0].activeSelf;
@@ -969,13 +849,10 @@ public class PolylineTool : Tool
 
     public void OnPointerExit()
     {
-
         GameObject.Find("Canvas").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
-
-        //throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter()
@@ -990,8 +867,4 @@ public class PolylineTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = statusString;
 
     }
-
-
-
-
 }

@@ -60,7 +60,6 @@ public class DroneModeController : MonoBehaviour {
     public GameObject OculusTouchRight, OculusTouchLeft;
 	// Use this for initialization
 	void Start () {
-      //  transform.position = new Vector3(transform.position.x, STARTHEIGHT, transform.position.z);
     }
   
     // Update is called once per frame
@@ -84,7 +83,6 @@ public class DroneModeController : MonoBehaviour {
 
             // project onto ground plane to prevent vertical movement
             // comment the next line to have functionality like Google earth
-            // desiredDirection = Vector3.ProjectOnPlane(desiredDirection, Vector3.up).normalized; 
 
             //vertical
             move2d = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
@@ -159,14 +157,6 @@ public class DroneModeController : MonoBehaviour {
 
         PositionSingleton.playerContinousPosition = transform.position;
         PositionSingleton.playerContinousRotation = transform.eulerAngles;
-/*
-        if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS && !PauseAndGUIBehaviour.isPause && !PauseAndGUIBehaviour.isModeMenu)
-        {
-            lr = OculusTouchRight.GetComponent<LineRenderer>();
-            LinePointer();
-        }
- */
-        
     }
 
     void MoveVertical(float step)
@@ -198,29 +188,6 @@ public class DroneModeController : MonoBehaviour {
     public void LinePointer()
     {
 
-        /*
-        Vector3 endPoint = OculusTouchRight.transform.position + OculusTouchRight.transform.TransformDirection(Vector3.forward * 10000);
-        bool isEndPointValid = false;
-        RaycastHit hit;
-        if (Physics.Raycast(OculusTouchRight.transform.position + OculusTouchRight.transform.forward, OculusTouchRight.transform.TransformDirection(Vector3.forward), out hit, 1000000))
-        {
-            endPoint = hit.point;
-            isEndPointValid = true;
-        }
-
-        if (
-            OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.3f 
-            && isEndPointValid && !isMTPCrunning
-            )
-            StartCoroutine(MoveToPointCoroutine(endPoint,transform.eulerAngles.x));
-
-
-        lr.SetPosition(0, OculusTouchRight.transform.position);
-        if (!isMTPCrunning || !isRWTCrunning) lr.SetPosition(1, endPoint);
-        distance = Vector3.Distance(OculusTouchRight.transform.position, endPoint);
-        
-    */
-
     }
 
     IEnumerator MoveToPointCoroutine(Vector3 target, float minAngle)
@@ -239,7 +206,6 @@ public class DroneModeController : MonoBehaviour {
             angle = OculusTouchRight.transform.eulerAngles.x - startAngle;
             angle = (angle > 180) ? (180 - angle) : angle;
             frac += Mathf.Clamp(angle, -45, 45)*0.002f;
-            //frac += (ClampAngle(OculusTouchRight.transform.eulerAngles.x - minAngle - 40, -30, 30)*0.01f);
             frac = Mathf.Clamp(frac, 0f, 0.8f);
             if (OculusTouchRight.GetComponent<LineRenderer>().startWidth < 10 * tempWidth)
                 OculusTouchRight.GetComponent<LineRenderer>().startWidth += 0.1f;
@@ -259,12 +225,8 @@ public class DroneModeController : MonoBehaviour {
     IEnumerator RotateWithTriggerCoroutine()
     {
         isRWTCrunning = true;
-        //float angle = 0;
-        //float startOculusTouchAngle = OculusTouchRight.transform.eulerAngles.y;
-        //startOculusTouchAngle = (startOculusTouchAngle > 180) ? (180 - startOculusTouchAngle) : startOculusTouchAngle;
 
         float startAngle = transform.eulerAngles.y;
-        //startAngle = (startAngle > 180) ? (180 - startAngle) : startAngle;
 
         float angleToSet = 0;
         float diffAngle = 0;
@@ -281,15 +243,11 @@ public class DroneModeController : MonoBehaviour {
 
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, angleToSet, transform.eulerAngles.z);
 
-            //Vector3 currentTouchVector = OculusTouchRight.transform.forward;
-            //currentTouchVector = new Vector3(currentTouchVector.x, 0.0f, currentTouchVector.z).normalized;
-            
             // interpolate to smooth flickering due to input noise
             prevDiffAngle = diffAngle;
             float targetAngle = Vector3.SignedAngle(startTouchVector, transform.worldToLocalMatrix * OculusTouchRight.transform.forward, Vector3.up);
             diffAngle = Mathf.SmoothDampAngle(prevDiffAngle, targetAngle * ROTATIONSMOOTHINGSCALINGFACTOR, ref smoothingVelocity, ROTATIONSMOOTHINGTIME);
             
-            //angle = OculusTouchRight.transform.eulerAngles.y - startOculusTouchAngle;
             diffAngle = (diffAngle > 180) ? (180 - diffAngle) : diffAngle;
             diffAngle = Mathf.Clamp(diffAngle, -ROTATIONCAP, ROTATIONCAP);
             yield return new WaitForEndOfFrame();

@@ -97,8 +97,6 @@ public class Clock : MonoBehaviour
         if (showSeconds)
         {
             clockText.text += ":" + time.Second.ToString("D2");
-        //    GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GPSControlUI").gameObject.transform.Find("Panel").gameObject.transform.Find("Clock").GetComponent<Text>().text += ":" + time.Second.ToString("D2");
-
         }
     }
 }

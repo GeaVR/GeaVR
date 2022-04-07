@@ -233,15 +233,11 @@ public class SurfaceTool : Tool
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(true);
 
-     
-
-
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_placemark").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_polygon").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_line").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_ruler").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_surface").gameObject.SetActive(true);
-
 
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash_placemark").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash_line").gameObject.SetActive(false);
@@ -262,15 +258,12 @@ public class SurfaceTool : Tool
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("ShowHide_ruler").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("ShowHide_surface").gameObject.SetActive(true);
 
-
-
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_placemark").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_line").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_polygon").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_ruler").gameObject.SetActive(false);
         toolControllerComponent.MeasurementControlUI.gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_surface").gameObject.SetActive(true);
-
 
         GameObject.Find("Canvas").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
         GameObject.Find("Canvas").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(GetInsertedNotes);
@@ -288,13 +281,11 @@ public class SurfaceTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(true);
 
-
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_placemark").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_line").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_polygon").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_surface").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_ruler").gameObject.SetActive(true);
-
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash_placemark").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash_line").gameObject.SetActive(false);
@@ -322,13 +313,10 @@ public class SurfaceTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_ruler").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("OpenFromMemory_surface").gameObject.SetActive(true);
 
-
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(GetInsertedNotes);
 
-
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.localPosition = new Vector3(0.0f, -400.0f, 0.0f);
-
         }
         PauseAndGUIBehaviour.isToolMenu = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
@@ -338,22 +326,16 @@ public class SurfaceTool : Tool
     {
         _note = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").gameObject.transform.Find("Group2").gameObject.transform.Find("Field_notebook").gameObject.GetComponent<FieldNotes>().outputString;
 
-
         if (instanceList.Count != 0)
         {
 
-
             ToolInstance currentInstance = instanceList[instanceList.Count - 1].GetComponent<ToolInstance>();
             currentInstance.CustomTxt = _note;
-
 
             if (GameObject.Find(currentInstance.GUIMenu.name) != null)
                 GameObject.Find(currentInstance.GUIMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote + "" + currentInstance.CustomTxt;
             if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
                 GameObject.Find(currentInstance.OculusMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote + "" + currentInstance.CustomTxt;
-
-
-
         }
     }
 
@@ -374,7 +356,6 @@ public class SurfaceTool : Tool
 
     public void ImportData()
     {
-
         string FilePath = "Import";
 
         var directory = new DirectoryInfo(Application.dataPath);
@@ -390,11 +371,8 @@ public class SurfaceTool : Tool
 
     public override GameObject LoadFromFile(string FilePath)
     {
-
-
         if (File.Exists(FilePath))
         {
-
             String fileData = System.IO.File.ReadAllText(FilePath);
             String[] lines = fileData.Split("\n"[0]);
             GameObject TempPlacemark;
@@ -404,7 +382,6 @@ public class SurfaceTool : Tool
                 Debug.Log("line: " + line);
                 String[] data = line.Split(","[0]);
 
-                
                 if (data.Length == 17 && data[0][0].ToString() != "#") // discard non-coordinate lines
                 {
 
@@ -412,7 +389,6 @@ public class SurfaceTool : Tool
                     {
                         List<GameObject> placemarks = new List<GameObject>();
                     
-
                         decimal z = decimal.Parse(data[8],  NumberStyles.Any, new CultureInfo("en-GB"));
                         decimal x = decimal.Parse(data[9],  NumberStyles.Any, new CultureInfo("en-GB"));
                         decimal y = decimal.Parse(data[10],  NumberStyles.Any, new CultureInfo("en-GB"));
@@ -428,28 +404,20 @@ public class SurfaceTool : Tool
                         string date = data[15];
                         string comment = Regex.Replace(data[16], @"\t|\n|\r", "");
 
-
                         //Instantiate placemark
                         TempPlacemark = Instantiate(toolControllerComponent.SurfaceToolObject);
                         TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
                         TempPlacemark.name = "distance placemark";
 
-
-                        //TempPlacemark.transform.position = new Vector3((float)unityPosition.z, (float)unityPosition.x, (float)unityPosition.y); // this will need to account for offset
                         TempPlacemark.transform.position = new Vector3((float)x, (float)y, (float)z); // this will need to account for offset
                         TempPlacemark.transform.rotation = new Quaternion((float)rot_x, (float)rot_y, (float)rot_z, (float)rot_w); // this will need to account for offset
                         placemarks.Add(TempPlacemark);
 
-
-
-
-                      
-
                         Dictionary<string, decimal> Values = new Dictionary<string, decimal>{
-            { "DipDirection" , (decimal) decimal.Parse(data[7], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"))},
-            { "Strike" , (decimal)decimal.Parse(data[5], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB")) },
-            { "Dip" , (decimal)decimal.Parse(data[6], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB")) }
-        };
+                            { "DipDirection" , (decimal) decimal.Parse(data[7], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB"))},
+                            { "Strike" , (decimal)decimal.Parse(data[5], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB")) },
+                            { "Dip" , (decimal)decimal.Parse(data[6], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB")) }
+                        };
 
 
                         oldNote = "Strike (°): " + decimal.Parse(data[5], NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands | NumberStyles.Any, new CultureInfo("en-GB")).ToString("0.000") +
@@ -467,21 +435,14 @@ public class SurfaceTool : Tool
                             Values,
                             placemarks, myDate, true, false, false, localID, data[1], false);
 
-
-
-
-
                         localID++;
                     }
                     else
                     {
-                        Debug.Log("elemento già presente");
-
+                        Debug.Log("Already existing");
                     }
                 }
             }
-
-
         }
         return null;
     }
@@ -516,7 +477,6 @@ public class SurfaceTool : Tool
             File.Delete(path);
         }
 
-        //var sr = File.CreateText(path);
         StreamWriter writer = new StreamWriter(path, true);
 
         string csvData = "";
@@ -531,7 +491,7 @@ public class SurfaceTool : Tool
             Debug.Log(realPosition.x);
 
             csvData = i.ToString() + ",";
-            csvData += instance.ID;//creationDate.ToString("yyyy.MMddHmmssffff") + ",";
+            csvData += instance.ID;
             csvData += realPosition.z.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
             csvData += realPosition.x.ToString("0.0000000000000", new CultureInfo("en-GB")) + ",";
             csvData += realPosition.y.ToString("0.000", new CultureInfo("en-GB")) + ",";
@@ -547,19 +507,14 @@ public class SurfaceTool : Tool
             csvData += instance.SurfaceList[i].transform.rotation.y.ToString("0.0000", new CultureInfo("en-GB")) + ",";
             csvData += instance.SurfaceList[i].transform.rotation.w.ToString("0.0000", new CultureInfo("en-GB")) + ",";
 
-
-
             csvData += instance.creationDate.ToString("MM/dd/yyyy H:mm:ss.ffff") + ",";
             csvData += instance.CustomTxt;
             writer.WriteLine(csvData, "en-GB");
         }
 
-       // writer.WriteLine(csvData, "en-GB");
         writer.Close();
 
-
         //kml
-
         var kml = new SharpKml.Dom.Kml();
         kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -606,8 +561,6 @@ public class SurfaceTool : Tool
         var point = new Point();
         point.Coordinate = new Vector((double)realPosition.z, (double)realPosition.x, (double)realPosition.y);
 
-        //point.Tilt = 40;
-
         // This is the Element to save to the Kml file.
         var placemark = new Placemark();
         placemark.Geometry = point;
@@ -632,9 +585,6 @@ public class SurfaceTool : Tool
         {
             kmlf.Save(stream);
         }
-
-
-       // ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Single measure has been exported", 1));
     }
 
     public  void SaveMultiInstance()
@@ -647,7 +597,6 @@ public class SurfaceTool : Tool
         else
         {
             string FilePath = "Outputs/Surfaces";
-
 
             // CSV
             var directory = new DirectoryInfo(Application.dataPath);
@@ -709,12 +658,9 @@ public class SurfaceTool : Tool
                 j++;
             }
 
-            //sr.WriteLine(csvData);
             sr.Close();
-
-
+           
             // KML
-
             var kml = new SharpKml.Dom.Kml();
             kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -791,21 +737,15 @@ public class SurfaceTool : Tool
             }
 
             ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
-            //ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Multiple surfaces have been exported", 1));
         }
     }
 
     public void DeleteAllInstances()
     {
-
         foreach (var p in instanceList)
         {
-
-
-        
             for (int i = 0; i < p.GetComponent<ToolInstance>().SurfaceList.Count; ++i)
             {
-                
                 p.GetComponent<ToolInstance>().DestroySingleInstance();
             }
 
@@ -814,7 +754,6 @@ public class SurfaceTool : Tool
         }
         instanceList.Clear();
         surfaceMap.Clear();
-
     }
 
     public void ShowHide()
@@ -849,7 +788,6 @@ public class SurfaceTool : Tool
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
 
-        //throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter()

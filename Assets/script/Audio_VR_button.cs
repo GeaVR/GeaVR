@@ -40,7 +40,6 @@ using UnityEngine.Windows.Speech;
 
 public class Audio_VR_button : Abstract_VR_button
 {
-
     private bool clicked = false;
 
     protected new void Update()

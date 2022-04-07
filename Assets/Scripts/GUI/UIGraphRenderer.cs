@@ -71,24 +71,6 @@ public class UIGraphRenderer : Graphic {
         }
 
         Vector2 origin = GetRelativePosition(new Vector2(0.0f, 0.0f));
-
-        // draw background lines        
-        /*
-        float d = MinY;
-        while (backgroundLineWorldHeight != 0.0f && d < MaxY)
-        {
-            d += backgroundLineWorldHeight;
-            Vector2 linePosition = GetRelativePosition(new Vector2(0.0f, d));
-
-            DrawLine(vh,
-                GetPointInRectangleSpace(new Vector2(0.0f, linePosition.y)),
-                GetPointInRectangleSpace(new Vector2(1.0f, linePosition.y)),
-                new Vector2(0.0f, LineWidth * 0.5f),
-                Color.grey
-                );
-        }
-        */
-
         // draw axes
         DrawLine(vh,
             GetPointInRectangleSpace(new Vector2(origin.x, 0.0f)),

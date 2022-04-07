@@ -102,9 +102,6 @@ public class CameraControllerTool : Tool
             }
 
             inp_stm.Close();
-
-       
-
         }
 
         WaitForEndOfFrame wfeof = new WaitForEndOfFrame();
@@ -115,12 +112,6 @@ public class CameraControllerTool : Tool
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").gameObject.SetActive(true);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").transform.localPosition = new Vector3(0.0f, -530.0f, 0.0f);
-
-            //   GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("Photo").GetComponent<Button>().OnPointerEnter
-
-
-
-
         }
         toolControllerComponent.CameraControlUI.SetActive(true);
 
@@ -322,37 +313,25 @@ public class CameraControllerTool : Tool
             if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             {
             }
-                //imageForWaypoint.GetComponent<RawImage>().texture = sampleTexture;
         }
 
      
         toolControllerComponent.WaypointMenu.GetComponent<CanvasGroup>().alpha = 1;
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
-        {
-
-    
+        {    
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").GetComponent<CanvasGroup>().alpha = 1;
             toolControllerComponent.hands[0].transform.position = oldpositionL;
             toolControllerComponent.hands[1].transform.position = oldpositionR;
-
-
-
         }
 
         yield return null;
-
-
     }
 
     IEnumerator makeScreenshot()
     {
-
-
         yield return new WaitForSeconds(0.1f);
-
-
         yield return new WaitForEndOfFrame();
 
         // Create a texture the size of the screen, RGB24 format
@@ -457,46 +436,27 @@ public class CameraControllerTool : Tool
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().text = message;
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().color = new Color(1, 0, 0, 1); ;
         GameObject.Find("Canvas").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().color = new Color(1, 0, 0, 1); ;
-        /*
-                GameObject.Find("Canvas").gameObject.transform.Find("Notification").Find("NotificationText").GetComponent<UnityEngine.UI.Text>().text = message;
-                if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
-                    GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Notification").Find("NotificationText").GetComponent<UnityEngine.UI.Text>().text = message;
-
-                //notificationText.GetComponent<UnityEngine.UI.Text>().enabled = true;
-                GameObject.Find("Canvas").gameObject.transform.Find("Notification").gameObject.SetActive(true);
-                if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
-                    GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Notification").gameObject.SetActive(true);
-        */
 
         yield return new WaitForSeconds(delay);
+        
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().text = "";
         GameObject.Find("Canvas").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().text = "";
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1); ;
         GameObject.Find("Canvas").gameObject.transform.Find("CameraControlUI").transform.Find("LowerPanel").transform.Find("Camera_Tool_text").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1); ;
-
-        /*        //notificationText.GetComponent<UnityEngine.UI.Text>().enabled = false;
-                GameObject.Find("Canvas").gameObject.transform.Find("Notification").gameObject.SetActive(false);
-                if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
-                    GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Notification").gameObject.SetActive(false);
-          */
-
     }
 
     public void SavePhotoNoteToFile()
     {
-
         toolControllerComponent.ListPhoto[toolControllerComponent.actualPhoto].Note = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("PhotoPreview").gameObject.transform.Find("PhotoNoteText").gameObject.transform.Find("Text").GetComponent<Text>().text ;
         
         GameObject.Find("Canvas").gameObject.transform.Find("PhotoPreview").gameObject.transform.Find("PhotoNoteTextVisible").GetComponent<Text>().text = toolControllerComponent.ListPhoto[toolControllerComponent.actualPhoto].Note;
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("PhotoPreview").gameObject.transform.Find("PhotoNoteTextVisible").GetComponent<Text>().text = toolControllerComponent.ListPhoto[toolControllerComponent.actualPhoto].Note;
 
         UpdateCSVFile();
-
     }
 
     public void ViewPhoto(PhotoEntry lastPhoto)
     {
-
         Texture2D sampleTexture = LoadPNG(lastPhoto.Path + "/" + lastPhoto.PhotoName, width, height);
 
         if (sampleTexture)
@@ -603,8 +563,6 @@ public class CameraControllerTool : Tool
             ViewPreviousPhoto();
         else if (toolControllerComponent.actualPhoto == 0)
             ViewNextPhoto();
-
-        //StartCoroutine(ShowNotification("Done!", 1.5f));
     }
 
     public void ClearAll()
@@ -655,6 +613,4 @@ public class CameraControllerTool : Tool
         }
         return tex;
     }
-
-
 }

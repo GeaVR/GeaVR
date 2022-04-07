@@ -51,7 +51,7 @@ public class DistanceBasedTerrainLoader : MonoBehaviour
     public bool isLow       = false;
     public bool shouldLoop  = true;
 
-    private List<GameObject>                terrainObjects = new List<GameObject>();
+    private List<GameObject> terrainObjects = new List<GameObject>();
     private Dictionary<string, List<int>>   terrainObjectsNameDictionary = new Dictionary<string, List<int>>();
     
     static int modelIndex = 0;
@@ -84,36 +84,6 @@ public class DistanceBasedTerrainLoader : MonoBehaviour
         }
     }
 
-    /*
-    void OBJLoaded(ThreadedOBJLoader loader, int j)
-    {
-        // if for some reason we've got a loader that should have been deleted
-        if (loader.ShouldDelete)
-        {
-            loader.DestroyLoader();
-            return;
-        }
-
-        //string name = Path.GetFileName(loader.filePath);
-
-        string name = terrainData.CellList[j];
-        terrainObjectsNameDictionary[name] = new List<int>();
-
-        // add newly created mesh objects to list of created objects
-        foreach (GameObject meshGameObject in loader.meshObjects)
-        {
-            terrainObjectsNameDictionary[name].Add(terrainObjects.Count);
-            terrainObjects.Add(meshGameObject);
-
-        }
-        foreach (GameObject colliderGameObject in loader.colliderObjects)
-        {
-            terrainObjectsNameDictionary[name].Add(terrainObjects.Count);
-            terrainObjects.Add(colliderGameObject);
-        }
-    }
-    */
-
     /// <summary>
     /// Removes all previously loaded data and destroys GameObjects
     /// </summary>
@@ -128,8 +98,6 @@ public class DistanceBasedTerrainLoader : MonoBehaviour
             ObjectLoader.enabled = true;
             ObjectLoader.DestroyLoader();
         }
-
-        //threadedOBJLoadersToRun.Clear();
 
         foreach (GameObject terrainObject in terrainObjects)
         {
@@ -164,11 +132,6 @@ public class DistanceBasedTerrainLoader : MonoBehaviour
         }
         return false;
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
     public IEnumerator Run_Coroutine()
     {
         while (shouldLoop)

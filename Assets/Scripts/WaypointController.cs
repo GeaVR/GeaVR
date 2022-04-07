@@ -58,8 +58,8 @@ public class WaypointController : MonoBehaviour {
 	
 	void OnDestroy()
     {
-        Debug.Log("OnDestroy1");
-		        PauseAndGUIBehaviour.isGPS2 = false;
+		     
+	  PauseAndGUIBehaviour.isGPS2 = false;
 
     }
 

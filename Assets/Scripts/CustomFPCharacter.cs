@@ -167,8 +167,6 @@ public class CustomFPCharacter : MonoBehaviour
                             m_CharacterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
 
         // get input does this, projecting hear removes variable joystick values
-        // desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
-        
         m_MoveDir.x = desiredMove.x * speed;
         m_MoveDir.z = desiredMove.z * speed;
 
@@ -251,20 +249,7 @@ public class CustomFPCharacter : MonoBehaviour
 
 
     private void PlayFootStepAudio()
-    {/*
-        if (!m_CharacterController.isGrounded)
-        {
-            return;
-        }
-        // pick & play a random footstep sound from the array,
-        // excluding sound at index 0
-        int n = Random.Range(1, m_FootstepSounds.Length);
-        m_AudioSource.clip = m_FootstepSounds[n];
-        m_AudioSource.PlayOneShot(m_AudioSource.clip);
-        // move picked sound to index 0 so it's not picked next time
-        m_FootstepSounds[n] = m_FootstepSounds[0];
-        m_FootstepSounds[0] = m_AudioSource.clip;
-        */
+    {
     }
 
 
@@ -322,26 +307,6 @@ public class CustomFPCharacter : MonoBehaviour
             desiredDirection = transform.worldToLocalMatrix * desiredDirection;
             horizontal = desiredDirection.x;
             vertical = desiredDirection.z;
-            
-            // Y movement
-            /*
-            if (!isTooHigh)
-            {
-                move2d = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
-            
-                if (Mathf.Abs(move2d.y) > flyYVectorTrigger)
-                {
-                    isMovingY = true;
-                    m_Jump = false;
-                    m_Jumping = false;
-                }
-
-                if (isMovingY)
-                {
-                    m_MoveDir.y = flySpeed * Mathf.Min(move2d.y + desiredDirection.y, 1f);
-                }
-            }
-            */
         }
         else
         {
@@ -411,12 +376,7 @@ public class CustomFPCharacter : MonoBehaviour
     IEnumerator RotateWithTriggerCoroutine()
     {
         isRWTCrunning = true;
-        //float angle = 0;
-        //float startOculusTouchAngle = OculusTouchRight.transform.eulerAngles.y;
-        //startOculusTouchAngle = (startOculusTouchAngle > 180) ? (180 - startOculusTouchAngle) : startOculusTouchAngle;
-
         float startAngle = transform.eulerAngles.y;
-        //startAngle = (startAngle > 180) ? (180 - startAngle) : startAngle;
 
         float angleToSet = 0;
         float diffAngle = 0;
@@ -427,22 +387,17 @@ public class CustomFPCharacter : MonoBehaviour
 
         while (OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.3f)
         {
-            //print(diffAngle);
             angleToSet = startAngle - diffAngle;
             angleToSet = (angleToSet < 0) ? (360 + angleToSet) : angleToSet;
 
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, angleToSet, transform.eulerAngles.z);
             m_Camera.transform.eulerAngles = new Vector3(m_Camera.transform.eulerAngles.x, angleToSet, m_Camera.transform.eulerAngles.z);
 
-            //Vector3 currentTouchVector = OculusTouchRight.transform.forward;
-            //currentTouchVector = new Vector3(currentTouchVector.x, 0.0f, currentTouchVector.z).normalized;
-
             // interpolate to smooth flickering due to input noise
             prevDiffAngle = diffAngle;
             float targetAngle = Vector3.SignedAngle(startTouchVector, transform.worldToLocalMatrix * OculusTouchRight.transform.forward, Vector3.up);
             diffAngle = Mathf.SmoothDampAngle(prevDiffAngle, targetAngle * ROTATIONSMOOTHINGSCALINGFACTOR, ref smoothingVelocity, ROTATIONSMOOTHINGTIME);
 
-            //angle = OculusTouchRight.transform.eulerAngles.y - startOculusTouchAngle;
             diffAngle = (diffAngle > 180) ? (180 - diffAngle) : diffAngle;
             diffAngle = Mathf.Clamp(diffAngle, -ROTATIONCAP, ROTATIONCAP);
             yield return new WaitForEndOfFrame();

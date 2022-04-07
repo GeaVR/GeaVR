@@ -55,32 +55,8 @@ public class Location_on_mapTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsInfoOnMap").gameObject.SetActive(true);
             toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
         }
-            /*
-        if (toolControllerComponent.OculusCanvas)
-        {
-            toolControllerComponent.OculusCanvas.transform.Find("GpsInfoOnMap").gameObject.active = true;
-        }
-        */
-            /*
-                    if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
-                    {
-                        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").GetComponent<CanvasGroup>().alpha = 0;
-                        GameObject.Find("Canvas_Oculus").gameObject.transform.Find("GpsInfoOnMap").gameObject.SetActive(true);
-                    }
-
-                    //2D
-                    toolControllerComponent.LocationOnMapTool.SetActive(true);
-                    toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 0;
-
-
-
-                    //toolControllerComponent.ToolIsCurrentlyRunning = false;
-                    ToolController.ToolIsCurrentlyRunning = false;
-
-                */
-
-            yield return wfeof;
-
+        
+        yield return wfeof;
     }
 
     public void CancelButton()

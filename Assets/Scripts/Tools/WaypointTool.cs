@@ -37,7 +37,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using System.IO;
 using System;
 using System.Globalization;
@@ -68,10 +67,8 @@ public class WaypointTool : Tool
 
             }
         }
-        // toolControllerComponent.ToolMenuInstance.active = false;
 
         //2D
-        // toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 0;
         ToolController.ToolIsCurrentlyRunning = true;
 
         toolControllerComponent.WaypointIdCounter.GetComponent<Text>().text = "" + counter.ToString("000");
@@ -84,7 +81,6 @@ public class WaypointTool : Tool
         {
             toolControllerComponent.OculusMasterObject.gameObject.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.color = new Color(0.2783019f, 0.3061422f, 1, 1);
 
-            //    GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").GetComponent<CanvasGroup>().alpha = 0;
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").gameObject.transform.Find("UpperPanel").gameObject.transform.Find("id_counter_value").gameObject.GetComponent<Text>().text = "" + counter.ToString("000"); ;
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").gameObject.transform.Find("Container").gameObject.transform.Find("Name").gameObject.transform.Find("InputField").GetComponent<InputField>().text = "wp_" + counter.ToString("000");
 
@@ -93,21 +89,15 @@ public class WaypointTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").gameObject.SetActive(true);
         }
 
-        //ToolController.ToolIsCurrentlyRunning = false;
-        //toolControllerComponent.ToolIsCurrentlyRunning = false;
         yield return new WaitForEndOfFrame();
     }
     
-  
-
     public void CancelButton()
     {
 
         if (File.Exists(toolControllerComponent.WaypointPicture.GetComponent<Text>().text))
             File.Delete(toolControllerComponent.WaypointPicture.GetComponent<Text>().text);
-        ;
         //2D
-        //toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 1;
         ToolController.ToolIsCurrentlyRunning = false;
         toolControllerComponent.WaypointMenu.SetActive(false);
 
@@ -117,8 +107,6 @@ public class WaypointTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").Find("Container").Find("Notes").Find("InputField").GetComponent<InputField>().text = "";
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").gameObject.SetActive(false);
         }
-
-        //toolControllerComponent.ToolMenuPrefab.active = true;
         PauseAndGUIBehaviour.isToolMenu = false;
     }
 
@@ -133,10 +121,8 @@ public class WaypointTool : Tool
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
         {
-          //  GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").GetComponent<CanvasGroup>().alpha = 1;
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").gameObject.SetActive(false);
             InputField oculusNotes = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("WaypointMenu").Find("Container").Find("Notes").Find("InputField").GetComponent<InputField>();
-
             //if the 2D notes field has been used, then only the text in that one will be saved and the oculus one will be reset. Otherwise the oculus one is used.
             if (notes == "")
             {
@@ -156,8 +142,6 @@ public class WaypointTool : Tool
 
         ToolController.ToolIsCurrentlyRunning = false;
         PauseAndGUIBehaviour.isToolMenu = false;
-
     }
-
 
 }

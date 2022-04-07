@@ -69,14 +69,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (StateSingleton.stateView == StateSingleton.StateView.UNSET)
                 StateSingleton.stateView = START_STATE_VIEW;
 
-            //            sv = StateSingleton.stateView;
-           
-           /* sv = StateSingleton.StateView.UNSET;
-            ModeController.SetActive(true);
-*/
-//            UpdateStateView();
-
-//TEST REVERT
     sv = StateSingleton.stateView;
             UpdateStateView();
             ModeController.SetActive(true);
@@ -144,7 +136,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             
 
-            //            if ((Input.GetKeyDown(KeyCode.F2) || OVRInput.GetDown(OVRInput.Button.Two)) && !PauseAndGUIBehaviour.isPause && !ToolController.ToolIsCurrentlyRunning)
             if ((Input.GetKeyDown(KeyCode.F2) || OVRInput.GetDown(OVRInput.Button.Two)) && !PauseAndGUIBehaviour.isPause && !PauseAndGUIBehaviour.isSettingsMenu && !ToolController.ToolIsCurrentlyRunning && !PauseAndGUIBehaviour.isToolMenu && !ToolController.ToolControllerInterfaceIsCurrentlyRunning)
             {
                 PauseAndGUIBehaviour.isModeMenu = !PauseAndGUIBehaviour.isModeMenu;
@@ -154,10 +145,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             if ( Input.GetKeyDown(KeyCode.F3) || OVRInput.GetDown(OVRInput.Button.One) && !PauseAndGUIBehaviour.isPause &&  !PauseAndGUIBehaviour.isModeMenu && !PauseAndGUIBehaviour.isSettingsMenu)
             {
-                //             PauseAndGUIBehaviour.isPause = !PauseAndGUIBehaviour.isPause;
                 if (ToolController.ToolIsCurrentlyRunning || ToolController.ToolControllerInterfaceIsCurrentlyRunning)
                 {
-                   // StartCoroutine(ShowNotification("Close Current Tool", 1));
                 }
                 else
                 {
@@ -169,16 +158,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 PauseAndGUIBehaviour.isSettingsMenu = !PauseAndGUIBehaviour.isSettingsMenu;
             }
-
-
-
-
-
-
-
-
-
-
         }
 
         IEnumerator ShowNotification(string message, float delay)
@@ -284,8 +263,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
                         go.GetComponent<Camera>().targetDisplay = 0;
                     }
 
-                    //Display.displays[1].Activate();
-
                     foreach (GameObject go in new GameObject[] {Mode3DVPWalking, Mode3DVPFlight, Mode3DVPDrone})
                     {
                         foreach (Camera c in go.GetComponentsInChildren<Camera>())
@@ -296,7 +273,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
                     //Set FPSController exception
                     WalkingModeObj.GetComponent<FirstPersonController>().isOculusTouch = false;
-                    //WalkingModeObj.GetComponent<FirstPersonController>().LeftOculusTouch = null;
 
                     break;
                 case StateSingleton.StateView.MODE2D_PLUS_OCULUS:
@@ -325,10 +301,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
                         if (ExperimentalOculusUI)
                         {
-                            //CanvasOculus.transform.SetParent(OculusTouchLeft.transform);
-
                             CanvasOculus.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
-                            //CanvasOculus.transform.localScale *= oculusCanvasScale * 0.001f;
                         }
 
 
@@ -337,7 +310,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
                         {
                             if (tr.gameObject.GetComponent<Button>() != null)
                             {
-                              //  print(tr.gameObject.name);
                                 coll = tr.gameObject.AddComponent<BoxCollider>() as BoxCollider;
                                 coll.isTrigger = true;
                                 coll.size = new Vector3(
@@ -354,13 +326,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
                     //Set FPSController exception
                     WalkingModeObj.GetComponent<FirstPersonController>().isOculusTouch = true;
-                    //WalkingModeObj.GetComponent<FirstPersonController>().LeftOculusTouch = OculusTouchLeft;
-                    
-                    // Set Oculus canvas
-                    //FlightModeObj.GetComponent<VirtualMeter>().oculusToolInfo = CanvasOculus.transform.Find("Current Tool").gameObject; 
-                    //DroneModeObj.GetComponent<VirtualMeter>().oculusToolInfo = CanvasOculus.transform.Find("Current Tool").gameObject;
-                    //WalkingModeObj.GetComponent<VirtualMeter>().oculusToolInfo = CanvasOculus.transform.Find("Current Tool").gameObject;
-                    
                     break;
                 
                 case StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS:
@@ -397,7 +362,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
                     //Set FPSController exception
                     WalkingModeObj.GetComponent<FirstPersonController>().isOculusTouch = true;
-                    //WalkingModeObj.GetComponent<FirstPersonController>().LeftOculusTouch = OculusTouchLeft;
                     break;
             }
             

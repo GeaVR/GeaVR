@@ -166,65 +166,42 @@ public class ButtonsPauseMenu : MonoBehaviour
 
     void Settings()
     {
-        //ShowSons(true);
         Show(MenuGuiToShow, !MenuGuiToShow.activeSelf);
 
     }
 
     void GPS2()
     {
-
-        //ShowSons(true);
-
         PauseAndGUIBehaviour.isGPS2 = true;
         PauseAndGUIBehaviour.isPause = true;
-
         Show(MenuGuiToShow, !MenuGuiToShow.activeSelf);
-
     }
 
     void GPS_INFO_ON_MAP()
     {
-
         PauseAndGUIBehaviour.isGpsInfoOnMap = !PauseAndGUIBehaviour.isGpsInfoOnMap;
-
-        // PauseAndGUIBehaviour.isPause = true;
-
     }
 
     void Help()
     {
-
     }
 
     void Placemark()
     {
-        //VirtualMeter.isActiveWaypoint = true;
     }
-
 
     void Screenshot()
     {
-
-        //PauseAndGUIBehaviour.isPauseforScreenshot = true;
-
         PauseAndGUIBehaviour.isScreenshot = true;
-     //   CameraTools.isActiveScreenshot = true;
-
-
     }
-
-
 
     void TopographicProfile()
     {
-        //VirtualMeter.isActiveTopographicProfile = true;
         PauseAndGUIBehaviour.isPause = false;
     }
 
     void Ruler()
     {
-        //VirtualMeter.isActiveDistance = true;
         PauseAndGUIBehaviour.isPause = false;
     }
 
@@ -281,9 +258,6 @@ public class ButtonsPauseMenu : MonoBehaviour
 
     void ScreenshotForWaypoint()
     {
-        //PauseAndGUIBehaviour.isScreenshot = true;
-
-       // CameraTools.isActiveScreenshotForWaypoint = true;
     }
 
     //General Purpose Functions
@@ -296,7 +270,6 @@ public class ButtonsPauseMenu : MonoBehaviour
                 tr.gameObject.SetActive(value);
         }
     }
-
 
     void Show(GameObject gb, bool value)
     {

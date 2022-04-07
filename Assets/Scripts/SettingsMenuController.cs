@@ -52,8 +52,6 @@ public class SettingsMenuController : MonoBehaviour {
 	void Update () {
 		
 	}
-
-
 	public void QuitApplication()
 	{
 		Application.Quit();
@@ -103,21 +101,4 @@ public class SettingsMenuController : MonoBehaviour {
 		}
 	}
 
-/*
-	IEnumerator BlinkText(GameObject t)
-	{
-		if (!t.activeSelf)
-		{
-			t.gameObject.SetActive(true);
-			foreach (KeyCode key in keys)
-			{
-				while (Input.GetKey(key))
-					yield return new WaitForSeconds(0.1f);
-			}
-
-			yield return new WaitForSeconds(2);
-			t.gameObject.SetActive(isMeCoordinate);
-		}
-	}
-	*/
 }

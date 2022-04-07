@@ -58,24 +58,12 @@ public class HeightAndSpeedRegulator : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-       // cc = GetComponent<CharacterController>();
        
 	}
 	
 	// Update is called once per frame
 	void Update () {
-    /*
-     *if (Input.GetKey(KEY_HEIGHT_REGULATOR_MINUS) && cc.height > MIN_HEIGHT)
-        {
-            cc.height -= step;
-            transform.position += Vector3.down * Time.deltaTime*SPEED_OFFSET;
-        }
-        else if (Input.GetKey(KEY_HEIGHT_REGULATOR_PLUS) && cc.height < MAX_HEIGHT)
-        {
-            cc.height += step;
-            transform.position += Vector3.up * Time.deltaTime * SPEED_OFFSET*SPEED_OFFSET_PERCENT;
-        }
-        */
+   
         if (Input.GetKey(KEY_SPEED_REGULATOR_MINUS))
         {
             DecreaseSpeed();
@@ -86,7 +74,6 @@ public class HeightAndSpeedRegulator : MonoBehaviour {
             IncreaseSpeed();
 
         }
-
     }
 
     public void IncreaseSpeed()
@@ -98,9 +85,6 @@ public class HeightAndSpeedRegulator : MonoBehaviour {
                 fpc = GetComponent<CustomFPCharacter>();
                 fpc.m_WalkSpeed += SPEED_OFFSET * Time.deltaTime;
                 fpc.m_WalkSpeed = Mathf.Clamp(fpc.m_WalkSpeed, 1f, SPEED_OFFSET_PERCENT * fpc.m_RunSpeed);
-
-                //	StartCoroutine(BlinkText(speedTextPanel);
-
                 break;
             case StateSingleton.StateMode.FLIGHT:
                 tpc = GetComponent<TopCameraControlller>();
@@ -121,7 +105,6 @@ public class HeightAndSpeedRegulator : MonoBehaviour {
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Speed").gameObject.transform.Find("SpeedPanel").gameObject.transform.Find("Elevation").GetComponent<Text>().text = speedText.text;
 
     }
-
 
     public void DecreaseSpeed()
     {
@@ -147,8 +130,6 @@ public class HeightAndSpeedRegulator : MonoBehaviour {
 
         speedText.text = "Decrease Speed";
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Speed").gameObject.transform.Find("SpeedPanel").gameObject.transform.Find("Elevation").GetComponent<Text>().text = speedText.text;
-
-
           
     }
 }

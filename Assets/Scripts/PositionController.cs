@@ -178,80 +178,13 @@ public class PositionController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
-
         playerRealPosition = new Vector3Decimal();
         newPlayerRealPosition = new Vector3Decimal();
-
-    /*
-       //td = refTile.GetComponent<TileData>();
-       //tilesColliding = new List<GameObject>();
-
-       //added fv, read json file to map pixel to real world
-
-       string path = "Tiles/" + tileFileName;
-       TextAsset ta = (TextAsset)Resources.Load(path);
-       string json = ta.text;
-
-
-       tileObject = new TileObject();
-       tileObject = JsonUtility.FromJson<TileObject>(json);
-
-       west_dd = decimal.Parse(tileObject.XWorldLimitsDD[0]);
-       east_dd = decimal.Parse(tileObject.XWorldLimitsDD[1]);
-       south_dd = decimal.Parse(tileObject.YWorldLimitsDD[0]);
-       north_dd = decimal.Parse(tileObject.YWorldLimitsDD[1]);
-
-       west_uu = decimal.Parse(tileObject.XWorldLimitsUU[0]);
-       east_uu = decimal.Parse(tileObject.XWorldLimitsUU[1]);
-       south_uu = decimal.Parse(tileObject.YWorldLimitsUU[0]);
-       north_uu = decimal.Parse(tileObject.YWorldLimitsUU[1]);
-
-
-       delta_dd_ew = east_dd - west_dd;
-       //delta_uu_ew = Math.Abs(east_uu - west_uu);
-       delta_uu_ew = east_uu - west_uu;
-
-       delta_uu_ew = (delta_uu_ew == 0) ? 0.000001m : delta_uu_ew; //avoid division by zero crash - could result in incorrect results
-       conversionValue_ew = delta_dd_ew / delta_uu_ew;
-
-       // calibrated for the northern hemisphere 
-       //delta_dd_ns = Math.Abs(north_dd - south_dd);
-       //delta_uu_ns = Math.Abs(north_uu - south_uu);
-
-       delta_dd_ns = north_dd - south_dd;
-       delta_uu_ns = north_uu - south_uu;
-       delta_uu_ns = (delta_uu_ns == 0) ? 0.000001m : delta_uu_ns; //avoid division by zero crash - could result in incorrect results
-       conversionValue_ns = delta_dd_ns / delta_uu_ns;
-
-
-       delta_dd_z = alt_max_dd - alt_min_dd;
-       delta_uu_z = alt_max_uu - alt_min_uu;
-       delta_uu_z = (delta_uu_z == 0) ? 0.000001m : delta_uu_z; //avoid division by zero crash - could result in incorrect results
-       conversionValue_alt = delta_dd_z / delta_uu_z;
-
-       */
     }
 
     void Update()
     {
-        /* 
-                 *  consolidated into CalculateGPSPosition()
-                 * 
-                newPlayerRealPosition = Vector3Decimal.Parse(transform.position);
-                //z= east <-> west
-                //  newPlayerRealPosition.x = (Math.Abs(newPlayerRealPosition.x) * convertionValue_ew) + west_dd;
-                newPlayerRealPosition.x = ((newPlayerRealPosition.x - west_uu) * conversionValue_ew) + west_dd;
-                //z = north <-> south
-                newPlayerRealPosition.z = ((newPlayerRealPosition.z - south_uu) * conversionValue_ns) + south_dd;
-                //y is altitude
-                newPlayerRealPosition.y = ((newPlayerRealPosition.y - alt_min_uu) * conversionValue_alt) + alt_min_dd + offset_alt;
-                //newPlayerRealPosition.y = (Math.Abs(newPlayerRealPosition.y) * convertionValue_alt) + Math.Abs(alt_min_dd);
-        */
-
         newPlayerRealPosition = CalculateGPSPosition(transform.position);
-
-        // Debug.Log("newPlayerRealPosition: " + newPlayerRealPosition.x + " " + newPlayerRealPosition.y + " " + newPlayerRealPosition.z);
 
         PositionSingleton.playerRealElevation = newPlayerRealPosition.y;
         playerRealPosition = newPlayerRealPosition;
@@ -314,15 +247,6 @@ public class PositionController : MonoBehaviour
 
     public static Vector3Decimal CalculateRealPositionOfPoint(Vector3 point)
     {
-        /** legacy method of calculation
-     Vector3Decimal temp;
-     temp = (Vector3Decimal.Parse(point) - Vector3Decimal.Parse(terrainPosition));
-     temp.x *= globalScaleFactor;
-     temp.z *= globalScaleFactor;
-     temp.y *= globalHeightScaleFactor;
-     temp += tileRealPosition;        
-     return temp;    
-     */
         return CalculateGPSPosition(point);
     }
 
@@ -333,27 +257,12 @@ public class PositionController : MonoBehaviour
 		newRealPosition += Vector3Decimal.Parse(WorldRebaser.accumulatedOffset);
         newRealPosition.x = ((newRealPosition.x - west_uu) * conversionValue_ew) + west_dd;
 
-        //Debug.Log("((" + newRealPosition.x + " - " + west_uu+ ") * " + conversionValue_ew+") + "+west_dd );
-
-        //z = north <-> south
         newRealPosition.z = ((newRealPosition.z - south_uu) * conversionValue_ns) + south_dd;
         newRealPosition.y = ((newRealPosition.y - alt_min_uu) * conversionValue_alt) + alt_min_dd + offset_alt;
 
         return newRealPosition;
     }
 
-    /*
-    public Vector3Decimal CalculateRealPosition(Vector3 point)
-    {
-        Vector3Decimal newRealPosition = Vector3Decimal.Parse(point);
-        newRealPosition.x = ((newRealPosition.x - west_uu) * conversionValue_ew) + west_dd;
-        //z = north <-> south
-        newRealPosition.z = ((newRealPosition.z - south_uu) * conversionValue_ns) + south_dd;
-        newRealPosition.y = ((newRealPosition.y - alt_min_uu) * conversionValue_alt) + alt_min_dd + offset_alt;
-
-        return newRealPosition;
-    }
-    */
 
     /**
 	 * Calculate euclidian distance between 2 points
@@ -383,9 +292,6 @@ public class PositionController : MonoBehaviour
         decimal b = Pos1.z - Pos2.z;
 
 
-        //  return (decimal)(Mathf.Max((float)point1.x, (float)point2.x) - Mathf.Min((float)point1.x, (float)point2.x)); 
-        // lose precision :/ 
-
         return (decimal)System.Math.Sqrt((double)(a * a + b * b)); // lose precision :/ 
     }
 
@@ -406,12 +312,11 @@ public class PositionController : MonoBehaviour
         return (decimal)System.Math.Sqrt((double)(a * a + b * b + c * c)); // some precision loss, but is tiny
     }
 
-    //public Vector3Decimal CalculateUnityPosition(Vector3 point)
     public static Vector3Decimal CalculateUnityPosition(Vector3Decimal point)
     {
 
         Debug.Log("point x:" + point.x + " - y: " + point.y + " - z: " + point.z);
-        Vector3Decimal newUnityPosition = point;//Vector3Decimal.Parse(point);
+        Vector3Decimal newUnityPosition = point;
 
         newUnityPosition.x = ((point.x - west_dd) / conversionValue_ew) + west_uu;
         //lat
@@ -420,8 +325,6 @@ public class PositionController : MonoBehaviour
 
         Debug.Log("((" + newUnityPosition.y + " - " + alt_min_dd + " - " + offset_alt + ") / " + conversionValue_alt + " ) - " + Math.Abs(alt_min_uu));
         //lon
-
-
         newUnityPosition.y = ((newUnityPosition.y - alt_min_dd - offset_alt) / conversionValue_alt) - Math.Abs(alt_min_uu);
 		newUnityPosition -= Vector3Decimal.Parse(WorldRebaser.accumulatedOffset);
 
@@ -441,9 +344,6 @@ public class PositionController : MonoBehaviour
 
     public static decimal CalculateVerticalRealDistance2D(Vector3Decimal point1, Vector3Decimal point2)
     {
-
-
-
         return (decimal)(Mathf.Max((float)point1.y, (float)point2.y) - Mathf.Min((float)point1.y, (float)point2.y)); // lose precision :/ 
     }
 

@@ -40,12 +40,6 @@ using UnityEngine;
 public class GUISubController : MonoBehaviour {
     public GameObject[] GuiToReset;
 
-    // Use this for initialization
- //   void OnEnable () {
- //       foreach (GameObject go in GuiToReset)
- //           go.SetActive(false);
-	//}
-
     private void OnDisable()
     {
         foreach (GameObject go in GuiToReset)

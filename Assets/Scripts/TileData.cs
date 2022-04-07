@@ -52,11 +52,6 @@ public class TileData : MonoBehaviour {
     void Start()
     {
         //Initialize Tile Object
-        //tileFileName = gameObject.name + ".txt";
-        //string path = "Assets/Tiles/" + tileFileName;
-        //StreamReader sr = File.OpenText(path);
-        //string json = sr.ReadToEnd();
-        //tileFileName = gameObject.name;
         string path = "Tiles/" + tileFileName;
         TextAsset ta = (TextAsset)Resources.Load(path);
         string json = ta.text;
@@ -71,27 +66,6 @@ public class TileData : MonoBehaviour {
         globalScaleFactor = (decimal.Parse(tileObject.XWorldLimits[1]) - decimal.Parse(tileObject.XWorldLimits[0])) / ((decimal)terrainSize.x*totalNumberOfTiles);
         globalHeightScaleFactor = (decimal.Parse(tileObject.MaxAlt) - decimal.Parse(tileObject.MinAlt)) / ((decimal)terrainSize.y);
         terrainPosition = transform.position + terrainSize / 2;
-		
-	/*	
-		Debug.Log("tileObject.XWorldLimits[0]: "+tileObject.XWorldLimits[0]);
-		Debug.Log("tileObject.XWorldLimits[1]: "+tileObject.XWorldLimits[1]);
-
-		Debug.Log("tileObject.YWorldLimits[0]: "+tileObject.YWorldLimits[0]);
-		Debug.Log("tileObject.YWorldLimits[1]: "+tileObject.YWorldLimits[1]);
-
-		
-		Debug.Log("x: "+x);
-		Debug.Log("y: "+y);
-		Debug.Log("totalNumberOfTiles "+totalNumberOfTiles);
-		
-		Debug.Log("terrainSize: "+terrainSize);
-		Debug.Log("globalScaleFactor: "+globalScaleFactor);
-		Debug.Log("globalHeightScaleFactor: "+globalHeightScaleFactor);
-
-		Debug.Log("tileRealPosition: "+tileRealPosition);
-		
-		
-*/
     }
 
     // Update is called once per frame

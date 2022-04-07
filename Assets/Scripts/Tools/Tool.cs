@@ -89,7 +89,6 @@ public class Tool : MonoBehaviour
             PauseAndGUIBehaviour.isToolMenu = false;
        	    if (isImporter)
             {
-                //string path = EditorUtility.OpenFilePanel("Open CSV", "", "csv"); // disabled for now, need to find a non-editor file panel
                 string path = "";
                 if (path.Length != 0)
                 {
@@ -120,15 +119,7 @@ public class Tool : MonoBehaviour
         }
 
         if (Input.GetMouseButton(1) 
-            //|| OVRInput.GetDown(OVRInput.Button.One) 
-            //|| OVRInput.GetDown(OVRInput.Button.Two)  
-            //|| OVRInput.GetDown(OVRInput.Button.Three) 
-            //|| OVRInput.GetDown(OVRInput.Button.Four)
-            || OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.3f && !isHolding
-            //|| PauseAndGUIBehaviour.isPause == true
-            //|| PauseAndGUIBehaviour.isModeMenu == true
-            //|| PauseAndGUIBehaviour.isToolMenu == true            
-    )
+            || OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.3f && !isHolding)
         {
 
             
@@ -167,13 +158,11 @@ public class Tool : MonoBehaviour
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Notification").Find("NotificationText").GetComponent<UnityEngine.UI.Text>().text = message;
 
-        //notificationText.GetComponent<UnityEngine.UI.Text>().enabled = true;
         GameObject.Find("Canvas").gameObject.transform.Find("Notification").gameObject.SetActive(true);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Notification").gameObject.SetActive(true);
         
         yield return new WaitForSeconds(delay);
-        //notificationText.GetComponent<UnityEngine.UI.Text>().enabled = false;
         GameObject.Find("Canvas").gameObject.transform.Find("Notification").gameObject.SetActive(false);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("Notification").gameObject.SetActive(false);
@@ -186,7 +175,6 @@ public class Tool : MonoBehaviour
 
         GameObject.Find("Canvas").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = message;
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = message;
-        
 
         yield return new WaitForSeconds(delay);
         GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
@@ -195,6 +183,4 @@ public class Tool : MonoBehaviour
         GameObject.Find("Canvas").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().color = new Color(0.1960784f, 0.1960784f, 0.1960784f, 1); ;
 
     }
-
-   
 }

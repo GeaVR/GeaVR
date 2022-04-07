@@ -136,57 +136,6 @@ public class VRKeyboard_Text : MonoBehaviour {
                 lastPressed = OVRInput.RawButton.RThumbstickRight;
             }
         }
-        // TODO: this should be to move the cursor up and downrow in the text
-        //else if (inputField.isFocused && OVRInput.Get(OVRInput.RawButton.RThumbstickUp))
-        //{
-        //    if (lastPressed.Equals(OVRInput.RawButton.RThumbstickUp))
-        //    {
-        //        timer += Time.deltaTime;
-        //        if (timer > waitTime)
-        //        {
-        //            timer = 0.0f;
-        //            if (selectionActive)
-        //            {
-        //                inputField.selectionFocusPosition = previousRowIndex(inputField.text, inputField.selectionFocusPosition); //System.Math.Max(0, inputField.selectionFocusPosition - 10);
-        //            }
-        //            else
-        //            {
-        //                inputField.caretPosition = previousRowIndex(inputField.text, inputField.caretPosition);
-        //            }
-        //            inputField.ForceLabelUpdate();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        timer = 0.0f;
-        //        lastPressed = OVRInput.RawButton.RThumbstickUp;
-        //    }
-        //}
-        //else if (inputField.isFocused && OVRInput.Get(OVRInput.RawButton.RThumbstickDown))
-        //{
-        //    if (lastPressed.Equals(OVRInput.RawButton.RThumbstickDown))
-        //    {
-        //        timer += Time.deltaTime;
-        //        if (timer > waitTime)
-        //        {
-        //            timer = 0.0f;
-        //            if (selectionActive)
-        //            {
-        //                inputField.selectionFocusPosition = System.Math.Min(inputField.text.Length, inputField.selectionFocusPosition + charsPerRow);
-        //            }
-        //            else
-        //            {
-        //                inputField.caretPosition = System.Math.Min(inputField.text.Length, inputField.caretPosition + charsPerRow);
-        //            }
-        //            inputField.ForceLabelUpdate();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        timer = 0.0f;
-        //        lastPressed = OVRInput.RawButton.RThumbstickDown;
-        //    }
-        //}
     }
 
     private IEnumerator accelerateCaret()
@@ -203,58 +152,6 @@ public class VRKeyboard_Text : MonoBehaviour {
     private int previousRowIndex(string text, int caretPosition)
     {
         return caretPosition;
-        /*
-        columnPosition = caretPosition;
-        int rowIndex = 0;
-        int actualCharShift = 0;
-
-        string previousText = text.Substring(caretPosition - charsPerRow, charsPerRow);
-        print(previousText);
-                
-        string[] rows = text.Split('\n');
-        List<int> visualizedRowsLengths = new List<int>();
-        bool found = false;
-
-        foreach (string row in rows)
-        {
-            int nextLength = row.Length;
-            while (nextLength >= charsPerRow)
-            {
-                visualizedRowsLengths.Add(charsPerRow);
-                nextLength -= charsPerRow;
-                if ((actualCharShift + charsPerRow) < caretPosition)
-                {
-                    actualCharShift += charsPerRow;
-                    rowIndex += 1;
-                }
-                else
-                {
-                    found = true;
-                    break;
-                }
-            }
-            visualizedRowsLengths.Add(nextLength+1);    //+1 is for the \n char which was lost in 'text.Split('\n')'
-            if (!found && (actualCharShift + nextLength + 1) < caretPosition)
-            {
-                actualCharShift += nextLength + 1;
-                rowIndex += 1;
-            }
-            else
-                break;
-        }
-        while(rowIndex < visualizedRowsLengths.Count && columnPosition > visualizedRowsLengths[rowIndex])
-        {
-            columnPosition -= (visualizedRowsLengths[rowIndex]);
-
-            if (rowIndex > 0)   //actualCharShift describes the shift of caret up to the previous row of the current one
-                actualCharShift += (visualizedRowsLengths[rowIndex-1]);
-        }
-        if (rowIndex == 0)
-            return 0;
-        else
-            return actualCharShift + caretPosition - visualizedRowsLengths[visualizedRowsLengths.Count-1];
-            */
-
     }
 
     public void OnDeselect()

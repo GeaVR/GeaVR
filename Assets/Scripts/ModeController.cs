@@ -70,28 +70,8 @@ public class ModeController : MonoBehaviour {
         {
 
             sm = StateSingleton.stateMode;
-            //UpdateStateModeFarlocco();
             UpdateStateMode();
         }
-/*
-        if (OVRInput.GetDown(OVRInput.RawButton.X) && StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS && !PauseAndGUIBehaviour.isPause && !PauseAndGUIBehaviour.isModeMenu)
-        {
-            switch (StateSingleton.stateMode)
-            {
-                case StateSingleton.StateMode.WALKING:
-                    StateSingleton.stateMode = StateSingleton.StateMode.FLIGHT;
-                    break;
-                case StateSingleton.StateMode.FLIGHT:
-                    StateSingleton.stateMode = StateSingleton.StateMode.DRONE;
-                    break;
-                case StateSingleton.StateMode.DRONE:
-                    StateSingleton.stateMode = StateSingleton.StateMode.WALKING;
-                    break;
-            }
-        }
-        */
-
-       
 
     }
 
@@ -127,8 +107,6 @@ public class ModeController : MonoBehaviour {
 
     }
 
-
-
     public void UpdateStateMode()
     {
         RaycastHit hit;
@@ -156,9 +134,6 @@ public class ModeController : MonoBehaviour {
                     CanvasR.GetComponent<Canvas>().worldCamera = VP.transform.Find("Right").GetComponent<Camera>();
                 }
 
-               // FlightModeObj.SetActive(false);
-               // DroneModeObj.SetActive(false);
-
                 break;
             case StateSingleton.StateMode.FLIGHT:
 
@@ -179,11 +154,6 @@ public class ModeController : MonoBehaviour {
                     CanvasL.GetComponent<Canvas>().worldCamera = VP.transform.Find("Left").GetComponent<Camera>();
                     CanvasR.GetComponent<Canvas>().worldCamera = VP.transform.Find("Right").GetComponent<Camera>();
                 }
-
-//                    WalkingModeObj.SetActive(false);
-  //                  DroneModeObj.SetActive(false);
-
-
 
                 break;
             case StateSingleton.StateMode.DRONE:
@@ -206,9 +176,6 @@ public class ModeController : MonoBehaviour {
                     CanvasL.GetComponent<Canvas>().worldCamera = VP.transform.Find("Left").GetComponent<Camera>();
                     CanvasR.GetComponent<Canvas>().worldCamera = VP.transform.Find("Right").GetComponent<Camera>();
                 }
-               // WalkingModeObj.SetActive(false);
-              //  FlightModeObj.SetActive(false);
-
                 break;
         }
 

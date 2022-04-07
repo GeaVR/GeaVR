@@ -58,6 +58,3 @@ public class UIRenderInFront : MonoBehaviour
         }
     }
 }
-
-// found here
-// https://answers.unity.com/questions/878667/world-space-canvas-on-top-of-everything.html

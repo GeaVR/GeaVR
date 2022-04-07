@@ -44,7 +44,6 @@ public class AddToOculusCanvas : MonoBehaviour {
         StartCoroutine("addToOculusCanvas");
 	}
 	
-
     private IEnumerator addToOculusCanvas()
     {
         while (GameObject.Find("Canvas_Oculus") == null)

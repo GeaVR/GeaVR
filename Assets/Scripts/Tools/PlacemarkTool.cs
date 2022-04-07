@@ -187,7 +187,6 @@ public class PlacemarkTool : Tool
             dict, placemarks, date,
             false,false,true,localID,globalID);
 
-        //ToolController.ToolIsCurrentlyRunning = false;
     }
 
     public void startToolInterface()
@@ -239,11 +238,6 @@ public class PlacemarkTool : Tool
         GameObject.Find("Canvas").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
         GameObject.Find("Canvas").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(GetInsertedNotes);
       
-        //GameObject.Find("Canvas").gameObject.transform.Find("ToolMenu").gameObject.transform.Find("Group2").gameObject.transform.Find("Field_notebook").gameObject.GetComponent<FieldNotes>().setOutputString(CustomTxt);
-
-
-
-
         toolControllerComponent.MeasurementControlUI.SetActive(true);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
         {
@@ -256,14 +250,11 @@ public class PlacemarkTool : Tool
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_ruler").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StartTool_surface").gameObject.SetActive(false);
 
-          
-
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_placemark").gameObject.SetActive(true);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_line").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_polygon").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_ruler").gameObject.SetActive(false);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("StopTool_surface").gameObject.SetActive(false);
-
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash_placemark").gameObject.SetActive(true);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").gameObject.transform.Find("Content").gameObject.transform.Find("EmptyTrash_line").gameObject.SetActive(false);
@@ -294,19 +285,13 @@ public class PlacemarkTool : Tool
 
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.localPosition = new Vector3(0.0f, -400.0f, 0.0f);
 
-            // GameObject.Find("Canvas_Oculus").gameObject.transform.Find("ToolMenu").gameObject.transform.Find("Group2").gameObject.transform.Find("Field_notebook").gameObject.GetComponent<FieldNotes>().setOutputString(CustomTxt);
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(GetInsertedNotes);
-
         }
-
-
-
 
         PauseAndGUIBehaviour.isToolMenu = false;
         ToolController.ToolControllerInterfaceIsCurrentlyRunning = true;
 
-        //  StartCoroutine(this.OnUse());
     }
 
     public void GetInsertedNotes()
@@ -316,29 +301,19 @@ public class PlacemarkTool : Tool
 
         if (instanceList.Count != 0)
         {
-
-          
             ToolInstance currentInstance=instanceList[instanceList.Count - 1].GetComponent<ToolInstance>();
             currentInstance.CustomTxt = _note;
-
-           
 
             if (GameObject.Find(currentInstance.GUIMenu.name) != null)
                 GameObject.Find(currentInstance.GUIMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote+""+ currentInstance.CustomTxt;
   
             if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
                 GameObject.Find(currentInstance.OculusMenu.name).gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("InputField").GetComponent<InputField>().text = oldNote + "" + currentInstance.CustomTxt;
-
-
-
         }
     }
 
     public void CancelButton()
     {
-        // toolControllerComponent.ToolMenuInstance.GetComponent<CanvasGroup>().alpha = 1;
-
-        // StopGPSTracking(false);
         toolControllerComponent.MeasurementControlUI.SetActive(false);
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
@@ -362,24 +337,16 @@ public class PlacemarkTool : Tool
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
 
-        
-
         var path = Path.Combine(directoryPath, string.Format("placemarks.csv"));
-
        
         LoadFromFile(path.ToString());
         ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
-
     }
-
 
     public override GameObject LoadFromFile(string FilePath)
     {
-     
-
         if (File.Exists(FilePath))
         {
-
             String fileData = System.IO.File.ReadAllText(FilePath);
             String[] lines = fileData.Split("\n"[0]);
             GameObject TempPlacemark;
@@ -408,7 +375,6 @@ public class PlacemarkTool : Tool
                         string date = data[12];
                         string comment = Regex.Replace(data[13], @"\t|\n|\r", "");
 
-
                         TempPlacemark = Instantiate(toolControllerComponent.PlacemarkObject);
                         TempPlacemark.transform.localScale *= toolControllerComponent.MarkerScale;
                         TempPlacemark.name = "placemark";
@@ -417,7 +383,6 @@ public class PlacemarkTool : Tool
                         TempPlacemark.transform.position = new Vector3((float)x, (float)y, (float)z); // this will need to account for offset
                         TempPlacemark.transform.rotation = new Quaternion((float)rot_x, (float)rot_y, (float)rot_z, (float)rot_w); // this will need to account for offset
                         placemarks.Add(TempPlacemark);
-
 
                         //do calculations
                         Vector3Decimal realPosition = VirtualMeter.CalculateRealPositionOfPoint(placemarks[0].transform.position - 40 * Vector3.up);
@@ -438,34 +403,25 @@ public class PlacemarkTool : Tool
                             Tool.toolType.PLACEMARK,
                             dict, placemarks, myDate, false, false, true, localID, data[1], false);
 
-
-
-
                         localID++;
                     }
                     else
                     {
-                        Debug.Log("elemento già presente");
-
+                        Debug.Log("Already Existing");
                     }
                 }
             }
-
-          
         }
         return null;
     }
 
     // export
-
     public static void SaveSingleInstance(ToolInstance instance)
     {
 
         string FilePath = "Outputs/Placemarks";
         
-
         // CSV export
-
         var directory = new DirectoryInfo(Application.dataPath);
         var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
 
@@ -488,7 +444,6 @@ public class PlacemarkTool : Tool
             File.Delete(path);
         }
 
-        //var sr = File.CreateText(path);
         StreamWriter writer = new StreamWriter(path, true);
 
         string csvData = "";
@@ -516,17 +471,11 @@ public class PlacemarkTool : Tool
 
 
             csvData += instance.creationDate.ToString("MM/dd/yyyy H:mm:ss.ffff") + ",";
-            //csvData += DateTime.Now.ToString("yyyyMMdd_Hmmssffff") + ",";
             csvData += instance.CustomTxt;
             writer.WriteLine(csvData, "en-GB");
-
         }
 
-       //writer.WriteLine(csvData, "en-GB");
         writer.Close();
-
-
-     
         //kml
 
         var kml = new SharpKml.Dom.Kml();
@@ -599,9 +548,6 @@ public class PlacemarkTool : Tool
         {
             kmlf.Save(stream);
         }
-
-       // ShowNotification("Done-dopne-dome!", 1.5f);
-       // ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Done!", 1.5f));
     }
 
     public void SaveMultiInstance()
@@ -613,8 +559,6 @@ public class PlacemarkTool : Tool
         else
         {
             string FilePath = "Outputs/Placemarks";
-
-
             // CSV
             var directory = new DirectoryInfo(Application.dataPath);
             var directoryPath = Path.Combine(directory.Parent.FullName, FilePath);
@@ -673,13 +617,9 @@ public class PlacemarkTool : Tool
                 }
                 j++;
             }
-
-            // sr.WriteLine(csvData);
             sr.Close();
 
-
             // KML
-
             var kml = new SharpKml.Dom.Kml();
             kml.AddNamespacePrefix(KmlNamespaces.GX22Prefix, KmlNamespaces.GX22Namespace);
 
@@ -755,35 +695,28 @@ public class PlacemarkTool : Tool
                 kmlf.Save(stream);
             }
 
-
-            // ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotification("Multiple measure has been exported", 1));
             ToolController.globalToolControllerObject.StartCoroutine(Tool.ShowNotificationLabelForMesuring("Done!", 1.5f));
         }
     }
 
     public void DeleteAllInstances()
     {
-
         foreach (var p in instanceList)
         {
             for (int i = 0; i < p.GetComponent<ToolInstance>().PlacemarkList.Count; ++i)
             {
-           
                 p.GetComponent<ToolInstance>().DestroySingleInstance();
             }
 
             localID--;
-
         }
         instanceList.Clear();
         PlacemarkMap.Clear();
-
     }
 
 
     public void ShowHide()
     {
-
         bool status = true;
         if (instanceList.Count>0)
             status = instanceList[0].GetComponent<ToolInstance>().PlacemarkList[0].activeSelf;
@@ -808,18 +741,14 @@ public class PlacemarkTool : Tool
 
     public void OnPointerExit()
     {
-
         GameObject.Find("Canvas").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = "";
-
-        //throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter()
     {
-
         string statusString = "Hide / Show";
         if (instanceList.Count > 0)
             statusString = instanceList[0].GetComponent<ToolInstance>().PlacemarkList[0].activeSelf ? "Hide" : "Show";
@@ -828,7 +757,6 @@ public class PlacemarkTool : Tool
 
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("MeasurementControlUI").transform.Find("LowerPanel").transform.Find("GpsTrack_Tool_text").GetComponent<Text>().text = statusString;
-
     }
 
 

@@ -43,8 +43,6 @@ using  TMPro;
 
 public class FieldNotes : Tool {
 
-    // public GameObject NotesMenu = null;
-    // public GameObject  textarea;
     [HideInInspector]
     public static String Notes = "";
 
@@ -78,17 +76,12 @@ public class FieldNotes : Tool {
 
     public new void OnDirectUse()
     {
-
-       
         outputString = null;
-
         OnUse();
     }
 
     public new void OnUse()
     {
-
-       
         vrKeyboard_InputField = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.transform.Find("Canvas").gameObject.transform.Find("Panel").gameObject.transform.Find("VRKeyboard_InputField").GetComponent<VRKeyboard_Text>();
         notesMenu = GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject;
 
@@ -222,7 +215,6 @@ public class FieldNotes : Tool {
             menuShouldStayOpen = !(checkIfToolShouldQuit());
             yield return wfeof;
         }
-        //NotesMenu.SetActive(false);
         toolControllerComponent.NotesMenu.gameObject.SetActive(false);
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS)
             GameObject.Find("Canvas_Oculus").gameObject.transform.Find("NotesMenu").gameObject.SetActive(false);

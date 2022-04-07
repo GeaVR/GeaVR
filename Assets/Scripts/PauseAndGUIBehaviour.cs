@@ -95,8 +95,6 @@ public class PauseAndGUIBehaviour : MonoBehaviour {
     void Start()
     {
         Cursor.visible = false;
-        //line = GameObject.FindGameObjectWithTag("Line");
-        //line.GetComponent<Button>().interactable = false;
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
         {
             foreach (GameObject gts in GuiToHide)
@@ -198,8 +196,6 @@ public class PauseAndGUIBehaviour : MonoBehaviour {
 	
 	public void PauseforScreenshot(bool value)
 	{
-
-      //  Canvass.SetActive(!value);
 	}
 
     public void Pause(bool value)
@@ -230,8 +226,6 @@ public class PauseAndGUIBehaviour : MonoBehaviour {
 
         foreach (GameObject gts in GuiToShowSettingsMenu)
             gts.SetActive(value);
-
-        // 
     }
 
 
@@ -249,7 +243,6 @@ public class PauseAndGUIBehaviour : MonoBehaviour {
         foreach (GameObject gts in GuiToShowModeMenu)
             gts.SetActive(value);
 
-       // 
     }
 
     public void GuiCameraControlUIMenu(bool value)
@@ -273,8 +266,6 @@ public class PauseAndGUIBehaviour : MonoBehaviour {
       
         foreach (GameObject gts in GuiToHideInMenu)
         {
-
-           // if (gts.name != "ToolMenu")
                 gts.SetActive(false && !isUsingOculus);
         }
 

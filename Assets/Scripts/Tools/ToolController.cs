@@ -37,9 +37,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using UnityStandardAssets.Characters.FirstPerson;
-
 using System.IO;
 using System;
 
@@ -60,7 +58,6 @@ public class PhotoEntry
 
 public class ToolController : MonoBehaviour {
 
-    //
     private List<GameObject> ToolInstances;
 
     // inspector interface 
@@ -106,24 +103,17 @@ public class ToolController : MonoBehaviour {
     public static bool ToolControllerInterfaceIsCurrentlyRunning = false;
     public Material LineMaterial;
 
-    //[HideInInspector]
-    //public bool ToolIsCurrentlyRunning = false;
-
-    // added MK 06/01/19
     public Material PolyMaterial;
 	public Material MeasurementMaterial;	
     public GameObject PlacemarkObject2;
     public GameObject PlacemarkObject3;
     public GameObject SurfaceToolObject;
 
-    //addedd FV
     public GameObject ToolMenuInstance;
 
     public GameObject CameraControlUI = null;
-    //  [HideInInspector]
     public GameObject OculusCameraControlUI = null;
 
-    //  [HideInInspector]
     public Sprite spriteImageInitial = null;
 
 
@@ -273,22 +263,12 @@ public class ToolController : MonoBehaviour {
         Dictionary<string, decimal> Values, List<GameObject> Placemarks, DateTime creationDate,
         bool DestroyOnClose = false, bool hasGraph = false, bool ShowWorldMenu = true, int localID=0, string globalID= "", bool showToolSummaryUI = true)
     {
-        //ToolInfoMenu.SetActive(!hasGraph);
-        //TopographicGraph.SetActive(hasGraph);
-
-
-
-
         //update oculus menu
         if (StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_OCULUS || StateSingleton.stateView == StateSingleton.StateView.MODE2D_PLUS_3DVP_PLUS_OCULUS)
         {
             OculusCanvas = ViewControllerGameObject.GetComponent<ViewController>().CanvasOculus;
             OculusToolInfoMenu = ViewControllerGameObject.GetComponent<ViewController>().CanvasOculus.transform.Find("Current Tool").gameObject;
             OculusTopographicGraph = ViewControllerGameObject.GetComponent<ViewController>().CanvasOculus.transform.Find("Current Graph").gameObject;
-            //CameraControlUI = ViewControllerGameObject.GetComponent<ViewController>().CanvasOculus.transform.Find("CameraControlUI").gameObject; ;
-            //OculusToolInfoMenu.SetActive(!hasGraph);
-            //OculusHandToolInfoMenu.SetActive(!hasGraph);
-            //OculusTopographicGraph.SetActive(hasGraph);
         }
 
         GameObject NewToolInstance = null;
@@ -337,12 +317,9 @@ public class ToolController : MonoBehaviour {
     {
 
         NotificationText.GetComponent<UnityEngine.UI.Text>().text = message;
-        //notificationText.GetComponent<UnityEngine.UI.Text>().enabled = true;
         NotificationPanel.SetActive(true);
 
         yield return new WaitForSeconds(delay);
-        //notificationText.GetComponent<UnityEngine.UI.Text>().enabled = false;
         NotificationPanel.SetActive(false);
-
     }
 }
