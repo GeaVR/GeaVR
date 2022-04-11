@@ -42,5 +42,3 @@ To compile the code you will need [Unity platform (2018.2.21f)](https://unity3d.
 4) [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2018-4-32351)
 5) [Skybox Series Free](https://assetstore.unity.com/packages/2d/textures-materials/sky/skybox-series-free-103633)
 6) [UnitySimpleFileBrowser](https://github.com/yasirkula/UnitySimpleFileBrowser/)
-
-Remember to exit and relaunch the project in the Unity Editor after installing the plugins the first time.
