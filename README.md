@@ -3,9 +3,8 @@
 ## **About**  
 GeaVR is an open source software that allows the user to experience a wide range of geological and geomorphological sites in virtual reality. 
 Developed thanks to the contribution of following projects:
-- [ACPR15T4_ 00098 “Agreement between the University of Milan Bicocca and the Cometa Consortium for the experimentation of cutting-edge interactive technologies for the improvement of science teaching and dissemination” of Italian Ministry of Education, University and Research (ARGO3D)](https://argo3d.unimib.it/)
 - [Erasmus+ Key Action 2 2017-1-UK01-KA203- 036719 “3DTeLC – Bringing the 3D-world into the classroom: a new approach to Teaching, Learning and Communicating the science of geohazards in terrestrial and marine environments”](https://www.3dtelc.com/)
-
+- [ACPR15T4_ 00098 “Agreement between the University of Milan Bicocca and the Cometa Consortium for the experimentation of cutting-edge interactive technologies for the improvement of science teaching and dissemination” of Italian Ministry of Education, University and Research (ARGO3D)](https://argo3d.unimib.it/)
 
 It is distributed for research use only under the GNU General Public License v3.0. 
 
