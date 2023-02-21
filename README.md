@@ -8,7 +8,19 @@ Developed thanks to the contribution of following projects:
 
 It is distributed for research use only under the GNU General Public License v3.0. 
 
-## **Credit**
+## **Credits**
+**Authors:** Fabio Vitello<sup>3</sup> , Fabio Luca Bonali<sup>1,2</sup>), Martin Kearl<sup>4</sup>
+<br>**Contributors:** Alessandro Tibaldi<sup>1,2</sup>, Malcolm Whitworth<sup>5</sup>, Varvara Antoniou<sup>6</sup>, Elena Russo<sup>1,2</sup>, Emmanuel Delage<sup>7</sup>, Paraskevi Nomikou<sup>6</sup>, Ugo Becciani<sup>8</sup>, Benjamin Van Wyk de Vries<sup>7</sup>, Mel Krokos<sup>4</sup> 
+
+<sup>1</sup>Department of Earth and Environmental Sciences, University of Milan-Bicocca, 20126 Milan, Italy
+<br><sup>2</sup>CRUST-Interuniversity Center for 3D Seismotectonics with Territorial Applications, 66100 Chieti Scalo, Italy
+<br><sup>3</sup>National Institute of Astrophysics, Bologna, Italy
+<br><sup>4</sup>School of Creative Technologies, University of Portsmouth, Portsmouth, UK
+<br><sup>5</sup>School of the Environment, Geography and Geosciences, University of Portsmouth, Portsmouth, UK
+<br><sup>6</sup>Faculty of Geology and Geoenvironment, National and Kapodistrian University of Athens, Athens, Greece
+<br><sup>7</sup>Observatoire du Physique du Globe de Clermont, University Clermont Auvergne, Clermont-Ferrand, France
+<br><sup>8</sup>National Institute of Astrophysics, Catania, Italy
+
 If you use GeaVR for your research, please acknowledge it by citing the following paper.
 
 **Publications related to the software**
