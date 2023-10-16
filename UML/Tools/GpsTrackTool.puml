@@ -1,0 +1,12 @@
+@startuml
+class GpsTrackTool {
+    + {static} shouldStopStoring : bool
+    + <<override>> ToolCoroutine() : IEnumerator
+    + StopGPSTracking(notify:bool) : void
+    + CancelButton() : void
+    + StartGPSTracking() : void
+    trackGPS() : IEnumerator
+    ShowNotification(message:string, delay:float) : IEnumerator
+}
+Tool <|-- GpsTrackTool
+@enduml

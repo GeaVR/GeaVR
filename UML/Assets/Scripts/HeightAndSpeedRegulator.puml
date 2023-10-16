@@ -1,0 +1,22 @@
+@startuml
+class HeightAndSpeedRegulator {
+    + MAX_HEIGHT : int = 200
+    + MIN_HEIGHT : int = 50
+    + step : int = 10
+    + SPEED_OFFSET : int = 200
+    + SPEED_OFFSET_PERCENT : float = 0.2f
+    Start() : void
+    Update() : void
+    + IncreaseSpeed() : void
+    + DecreaseSpeed() : void
+}
+MonoBehaviour <|-- HeightAndSpeedRegulator
+HeightAndSpeedRegulator o-> "KEY_HEIGHT_REGULATOR_PLUS" KeyCode
+HeightAndSpeedRegulator o-> "KEY_HEIGHT_REGULATOR_MINUS" KeyCode
+HeightAndSpeedRegulator o-> "KEY_SPEED_REGULATOR_PLUS" KeyCode
+HeightAndSpeedRegulator o-> "KEY_SPEED_REGULATOR_MINUS" KeyCode
+HeightAndSpeedRegulator --> "fpc" CustomFPCharacter
+HeightAndSpeedRegulator --> "dpc" DroneModeController
+HeightAndSpeedRegulator --> "tpc" TopCameraControlller
+HeightAndSpeedRegulator --> "speedText" Text
+@enduml

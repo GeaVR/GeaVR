@@ -1,0 +1,14 @@
+@startuml
+class MapCameraBehaviour {
+    + HEIGHT : float = 0
+    min : float
+    max : float
+    zoomVal : float
+    Start() : void
+    Update() : void
+    + ZoomEdit() : void
+}
+MonoBehaviour <|-- MapCameraBehaviour
+MapCameraBehaviour --> "target" GameObject
+MapCameraBehaviour --> "targetPointer" GameObject
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+class ViewController {
+    + oculusCanvasDistance : float = 1000.0f
+    + oculusCanvasScale : float = 1.0f
+    + ExperimentalOculusUI : bool = false
+    Start() : void
+    Update() : void
+    ShowNotification(message:string, delay:float) : IEnumerator
+    UpdateStateView() : void
+}
+MonoBehaviour <|-- ViewController
+ViewController --> "ModeController" GameObject
+ViewController --> "WalkingModeObj" GameObject
+ViewController --> "FlightModeObj" GameObject
+ViewController --> "DroneModeObj" GameObject
+ViewController --> "Mode3DVPWalking" GameObject
+ViewController --> "Mode3DVPFlight" GameObject
+ViewController --> "Mode3DVPDrone" GameObject
+ViewController --> "Mode2DWalking" GameObject
+ViewController --> "Mode2DFlight" GameObject
+ViewController --> "Mode2DDrone" GameObject
+ViewController --> "ModeOculusWalking" GameObject
+ViewController --> "ModeOculusFlight" GameObject
+ViewController --> "ModeOculusDrone" GameObject
+ViewController --> "OculusTouchLeft" GameObject
+ViewController --> "OculusTouchRight" GameObject
+ViewController --> "Canvas" GameObject
+ViewController --> "CanvasL" GameObject
+ViewController --> "CanvasR" GameObject
+ViewController --> "CanvasOculus" GameObject
+ViewController o-> "MODE2D_KEY" KeyCode
+ViewController o-> "MODE3DVP_KEY" KeyCode
+ViewController o-> "MODEOCULUS_KEY" KeyCode
+@enduml

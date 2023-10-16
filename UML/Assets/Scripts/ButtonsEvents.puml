@@ -1,0 +1,8 @@
+@startuml
+class ButtonsEvents {
+    Start() : void
+    ChangeState() : void
+}
+MonoBehaviour <|-- ButtonsEvents
+ButtonsEvents --> "FatherController" GameObject
+@enduml

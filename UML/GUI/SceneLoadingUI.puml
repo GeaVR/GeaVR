@@ -1,0 +1,42 @@
+@startuml
+class SceneLoadingUI {
+    firstFolderPathIndex : int = 0
+    selectedFolderIndex : int
+    currentScenePath : string
+    Start() : void
+    Update() : void
+    + SetSelection(index:int) : void
+    + SetAndLoadScene() : void
+    SceneLoader() : IEnumerator
+    + UpdateButtons() : void
+    + SelectionUp() : void
+    + SelectionDown() : void
+    + BrowseFileSystem() : void
+    ShowLoadDialogCoroutine() : IEnumerator
+    + PasteFromClipboard() : void
+    + AddNewScene() : void
+    + SaveSceneListToFile() : void
+    + LoadSceneListFromFile() : void
+    + ClearIndex(index:int) : void
+    + ClearList() : void
+    + ExitToOS() : void
+    + LoadSceneData() : void
+    + SaveSceneData() : void
+    + ClearSceneData() : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- SceneLoadingUI
+SceneLoadingUI o-> "folderPaths<string>" "List`1"
+SceneLoadingUI --> "terrainLoader" TerrainLoader
+SceneLoadingUI --> "TMProInputField" TMP_InputField
+SceneLoadingUI --> "button1" GameObject
+SceneLoadingUI --> "button2" GameObject
+SceneLoadingUI --> "button3" GameObject
+SceneLoadingUI --> "goButton" GameObject
+SceneLoadingUI --> "longitudeTextbox" TMP_InputField
+SceneLoadingUI --> "latitudeTextbox" TMP_InputField
+SceneLoadingUI --> "altitudeTextbox" TMP_InputField
+SceneLoadingUI --> "altitudeOffsetTextbox" TMP_InputField
+SceneLoadingUI --> "modelScaleTextbox" TMP_InputField
+@enduml

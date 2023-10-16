@@ -1,0 +1,18 @@
+@startuml
+class StreamedObjData {
+    + name : string = "Mesh"
+    + texturePath : string
+    + textureWidth : int
+    + textureHeight : int
+    + generateCollider : bool = true
+    + StreamedObjData()
+}
+class "List`1"<T> {
+}
+StreamedObjData --> "translation" Vector3
+StreamedObjData --> "positions<Vector3>" "List`1"
+StreamedObjData --> "texcoords<Vector2>" "List`1"
+StreamedObjData --> "triangles<int>" "List`1"
+StreamedObjData --> "physPositions<List<Vector3>>" "List`1"
+StreamedObjData --> "physTriangles<List<int>>" "List`1"
+@enduml

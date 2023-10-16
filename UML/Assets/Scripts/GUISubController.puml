@@ -1,0 +1,6 @@
+@startuml
+class GUISubController {
+    Update() : void
+}
+MonoBehaviour <|-- GUISubController
+@enduml

@@ -1,0 +1,77 @@
+@startuml
+class PhotoEntry {
+}
+class ToolController {
+    + MarkerScale : float = 1f
+    + WorldUIScale : float = 0.2f
+    + {static} ToolIsCurrentlyRunning : bool = false
+    + {static} ToolControllerInterfaceIsCurrentlyRunning : bool = false
+    + WaypointNameforSession : string = ""
+    + PhotoDatabaseFile : string = ""
+    + actualPhoto : int
+    + Start() : void
+    + GetOculusCanvas() : void
+    + GetMaster() : Transform
+    + GetDirectionMaster() : Transform
+    + updateGUIMenus(_Title:string, _Text:string, _Notes:string) : void
+    + CreateToolInstance(_Title:string, _Text:string, _Desc:string, _ToolType:Tool.toolType, Values:Dictionary<string, decimal>, Placemarks:List<GameObject>, creationDate:DateTime, DestroyOnClose:bool, hasGraph:bool, ShowWorldMenu:bool, localID:int, globalID:string, showToolSummaryUI:bool) : GameObject
+    + ShowMessage(message:string, delay:float) : IEnumerator
+}
+class "List`1"<T> {
+}
+PhotoEntry --> "Id" String
+PhotoEntry --> "Path" String
+PhotoEntry --> "PhotoName" String
+PhotoEntry --> "MetadataName" String
+PhotoEntry --> "Lat" String
+PhotoEntry --> "Lon" String
+PhotoEntry --> "Z" String
+PhotoEntry --> "Note" String
+MonoBehaviour <|-- ToolController
+ToolController --> "PlacemarkObject" GameObject
+ToolController --> "ToolMenuPrefab" GameObject
+ToolController --> "ToolGraphPrefab" GameObject
+ToolController --> "NotesMenuPrefab" GameObject
+ToolController --> "ToolInstancePrefab" GameObject
+ToolController --> "WalkingMasterObject" GameObject
+ToolController --> "FlyingMasterObject" GameObject
+ToolController --> "DroneMasterObject" GameObject
+ToolController --> "OculusMasterObject" GameObject
+ToolController --> "OculusDirectionMasterObject" GameObject
+ToolController --> "ViewControllerGameObject" GameObject
+ToolController --> "VirtualMeterGameObject" GameObject
+ToolController o-> "ToolInfoMenu" GameObject
+ToolController o-> "OculusCanvas" GameObject
+ToolController o-> "OculusToolInfoMenu" GameObject
+ToolController o-> "OculusHandToolInfoMenu" GameObject
+ToolController o-> "globalToolControllerObject" ToolController
+ToolController o-> "PlacemarkScrollView" GameObject
+ToolController o-> "TopographicGraph" GameObject
+ToolController o-> "OculusTopographicGraph" GameObject
+ToolController --> "LineMaterial" Material
+ToolController --> "PolyMaterial" Material
+ToolController --> "MeasurementMaterial" Material
+ToolController --> "PlacemarkObject2" GameObject
+ToolController --> "PlacemarkObject3" GameObject
+ToolController --> "SurfaceToolObject" GameObject
+ToolController --> "ToolMenuInstance" GameObject
+ToolController o-> "CameraControlUI" GameObject
+ToolController o-> "OculusCameraControlUI" GameObject
+ToolController o-> "spriteImageInitial" Sprite
+ToolController o-> "MeasurementControlUI" GameObject
+ToolController o-> "GpsTrackControlUI" GameObject
+ToolController o-> "GpsStopControlButton" GameObject
+ToolController o-> "GpsStartControlButton" GameObject
+ToolController o-> "WaypointMenu" GameObject
+ToolController o-> "WaypointIdCounter" GameObject
+ToolController o-> "WaypointCorrdinatesText" GameObject
+ToolController o-> "WaypointText" GameObject
+ToolController o-> "WaypointNote" GameObject
+ToolController o-> "WaypointPicture" GameObject
+ToolController o-> "WaypointPictureImage" GameObject
+ToolController o-> "NotificationText" GameObject
+ToolController o-> "NotificationPanel" GameObject
+ToolController o-> "LocationOnMapTool" GameObject
+ToolController o-> "NotesMenu" GameObject
+ToolController --> "ListPhoto<PhotoEntry>" "List`1"
+@enduml

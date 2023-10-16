@@ -1,0 +1,29 @@
+@startuml
+class CameraControllerTool {
+    isPlayVideo : bool
+    width : int
+    height : int
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + CancelButtonStopTool() : void
+    + CancelButtonPhotoView() : void
+    + ViewNextPhoto() : void
+    + ViewPreviousPhoto() : void
+    + ScreenCapture() : void
+    + TakePhoto() : void
+    + TakePhotoForWaypoint() : void
+    makeScreenshotForWaypoint() : IEnumerator
+    makeScreenshot() : IEnumerator
+    ShowNotification(message:string, delay:float) : IEnumerator
+    + SavePhotoNoteToFile() : void
+    + ViewPhoto(lastPhoto:PhotoEntry) : void
+    + ActivateViewer() : void
+    + UpdateCSVFile() : void
+    + DeleteSinglePhoto() : void
+    + ClearAll() : void
+    + LoadPNG(filePath:string, width:int, height:int) : Texture2D
+}
+Tool <|-- CameraControllerTool
+CameraControllerTool --> "oldpositionL" Vector3
+CameraControllerTool --> "oldpositionR" Vector3
+@enduml

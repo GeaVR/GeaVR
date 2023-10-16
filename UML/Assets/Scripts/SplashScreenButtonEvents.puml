@@ -1,0 +1,9 @@
+@startuml
+class SplashScreenButtonEvents {
+    Start() : void
+    ChangeState() : void
+    SceneLoaderWithLoadingBar() : IEnumerator
+}
+MonoBehaviour <|-- SplashScreenButtonEvents
+SplashScreenButtonEvents --> "LoadingObj" Text
+@enduml

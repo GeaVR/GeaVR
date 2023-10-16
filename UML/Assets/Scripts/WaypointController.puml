@@ -1,0 +1,9 @@
+@startuml
+class WaypointController {
+    Start() : void
+    Update() : void
+    OnDestroy() : void
+}
+MonoBehaviour <|-- WaypointController
+WaypointController --> "NorthingEtc" Text
+@enduml

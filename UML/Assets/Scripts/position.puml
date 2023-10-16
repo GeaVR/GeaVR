@@ -1,0 +1,7 @@
+@startuml
+class position {
+    Start() : void
+}
+MonoBehaviour <|-- position
+position --> "pos" Vector3
+@enduml

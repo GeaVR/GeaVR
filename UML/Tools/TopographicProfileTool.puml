@@ -1,0 +1,13 @@
+@startuml
+class TopographicProfileTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + {static} SaveToFile(FilePath:string, PlacemarkList:List<GameObject>) : void
+    + CancelButton() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- TopographicProfileTool
+TopographicProfileTool o-> "instanceList<GameObject>" "List`1"
+TopographicProfileTool o-> "lr" LineRenderer
+@enduml

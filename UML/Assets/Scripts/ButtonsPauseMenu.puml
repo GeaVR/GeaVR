@@ -1,0 +1,58 @@
+@startuml
+class ButtonsPauseMenu {
+    screenshot : bool = false
+    Start() : void
+    ExitToTitle() : void
+    Exit() : void
+    Menu() : void
+    Settings() : void
+    GPS2() : void
+    GPS_INFO_ON_MAP() : void
+    Help() : void
+    Placemark() : void
+    Screenshot() : void
+    TopographicProfile() : void
+    Ruler() : void
+    GPS1() : void
+    WalkMode() : void
+    FlightMode() : void
+    DroneMode() : void
+    PlacemarkTeleport() : void
+    ScreenshotForWaypoint() : void
+    ShowSons(value:bool) : void
+    Show(gb:GameObject, value:bool) : void
+    + OculusTriggerButton() : void
+    + OculusTriggerButtonOn() : void
+}
+enum Action {
+    ExitToTitle,
+    Exit,
+    Menu,
+    Settings,
+    Help,
+    Placemark,
+    PolyLine,
+    Polygon,
+    TopographicProfile,
+    Ruler,
+    Compass,
+    Notebook,
+    Screenshot,
+    GPS1,
+    GPS2,
+    GPS3,
+    GPS_INFO_ON_MAP,
+    WalkMode,
+    FlightMode,
+    DroneMode,
+    PlacemarkTeleport,
+    ScreenshotForWaypoint,
+}
+MonoBehaviour <|-- ButtonsPauseMenu
+ButtonsPauseMenu --> "actionEnum" Action
+ButtonsPauseMenu --> "MenuGuiToShow" GameObject
+ButtonsPauseMenu --> "OculusTouchTrigger" UnityEvent
+ButtonsPauseMenu --> "OculusTouchTriggerOn" UnityEvent
+ButtonsPauseMenu --> "GuiToHidePauseScreenshot" GameObject
+ButtonsPauseMenu +-- Action
+@enduml

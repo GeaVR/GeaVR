@@ -1,0 +1,8 @@
+@startuml
+class ControlWithMouse {
+    + SPEEDROT : float = 50
+    + MAX_ROTATION_ANGLE : float = 75
+    Update() : void
+}
+MonoBehaviour <|-- ControlWithMouse
+@enduml

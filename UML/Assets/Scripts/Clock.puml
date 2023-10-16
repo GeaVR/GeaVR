@@ -1,0 +1,11 @@
+@startuml
+class Clock {
+    + showSeconds : bool
+    Start() : void
+    FixedUpdate() : void
+    UpdateText() : void
+}
+MonoBehaviour <|-- Clock
+Clock --> "clockText" Text
+Clock --> "DateText" Text
+@enduml

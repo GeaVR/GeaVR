@@ -1,0 +1,42 @@
+@startuml
+class Vector3Decimal <<struct>> {
+    + x : decimal
+    + y : decimal
+    + z : decimal
+    + Vector3Decimal(x:decimal, y:decimal, z:decimal)
+    + {static} Parse(v:Vector3) : Vector3Decimal
+    + <<override>> Equals(o:object) : bool
+    + {static} Distance(a:Vector3Decimal, b:Vector3Decimal) : decimal
+    + {static} Magnitude(v:Vector3Decimal) : decimal
+    + <<override>> ToString() : string
+    + ToString(format:string) : string
+}
+class PositionController {
+    + tileFileName : string
+    Start() : void
+    Update() : void
+    + {static} CalculateHeadingFromPositions(Pos1:Vector3, Pos2:Vector3) : float
+    + {static} CalculateHeading(DirectionVector:Vector3) : float
+    + {static} CalculateInclinationFromPositions(Pos1:Vector3, Pos2:Vector3) : float
+    + {static} CalculateInclination(DirectionVector:Vector3) : float
+    + {static} CalculateRealPositionOfPoint(point:Vector3) : Vector3Decimal
+    + {static} CalculateGPSPosition(point:Vector3) : Vector3Decimal
+    + {static} CalculateRealDistance(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateRealDistance2D(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateRealDistance(point1:Vector3Decimal, point2:Vector3Decimal) : decimal
+    + {static} CalculateUnityPosition(point:Vector3Decimal) : Vector3Decimal
+    + {static} CalculateVerticalRealDistance2D(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateVerticalRealDistance2D(point1:Vector3Decimal, point2:Vector3Decimal) : decimal
+    + {static} CalculateGroundDistance(start:Vector3, end:Vector3, lineRenderer:LineRenderer, maxRays:int, linearStep:float) : decimal
+    + {static} SetStaticGPSLatLonAltBox(_west_dd:Decimal, _east_dd:Decimal, _south_dd:Decimal, _north_dd:Decimal, _west_uu:Decimal, _east_uu:Decimal, _south_uu:Decimal, _north_uu:Decimal, _alt_min_dd:Decimal, _alt_max_dd:Decimal, _alt_min_uu:Decimal, _alt_max_uu:Decimal, _offset_alt:Decimal) : void
+}
+class "List`1"<T> {
+}
+Vector3Decimal o-> "zero" Vector3Decimal
+MonoBehaviour <|-- PositionController
+PositionController --> "playerRealPosition" Vector3Decimal
+PositionController --> "tilesColliding<GameObject>" "List`1"
+PositionController --> "tileObject" TileObject
+PositionController --> "td" TileData
+PositionController --> "refTile" GameObject
+@enduml

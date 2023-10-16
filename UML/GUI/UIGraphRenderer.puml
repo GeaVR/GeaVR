@@ -1,0 +1,14 @@
+@startuml
+class UIGraphRenderer {
+    + LineWidth : float = 3.0f
+    + backgroundLineWorldHeight : float = 10.0f
+    + AddPoint(Point:Vector2) : void
+    + ClearPoints() : void
+}
+Graphic <|-- UIGraphRenderer
+UIGraphRenderer --> "xAxisMax" Text
+UIGraphRenderer --> "yAxisMax" Text
+UIGraphRenderer --> "xAxisMin" Text
+UIGraphRenderer --> "yAxisMin" Text
+UIGraphRenderer o-> "axesColour" Color
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+class PolylineTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + DeleteAllInstances() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- PolylineTool
+PolylineTool o-> "instanceList<GameObject>" "List`1"
+PolylineTool o-> "LineMap<string>" "List`1"
+@enduml

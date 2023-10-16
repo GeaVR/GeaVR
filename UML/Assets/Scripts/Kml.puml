@@ -1,0 +1,10 @@
+@startuml
+class Kml {
+}
+class Document {
+    + Name : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+Kml --> "document<Document>" "List`1"
+@enduml

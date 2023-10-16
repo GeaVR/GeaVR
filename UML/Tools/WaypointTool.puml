@@ -1,0 +1,10 @@
+@startuml
+class WaypointTool {
+    counter : int = 001
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + SaveButton() : void
+}
+Tool <|-- WaypointTool
+WaypointTool o-> "spriteImageInitial" Sprite
+@enduml

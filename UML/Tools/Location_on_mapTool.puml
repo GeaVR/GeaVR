@@ -1,0 +1,9 @@
+@startuml
+class Location_on_mapTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + ZoomIn() : void
+    + ZoomOut() : void
+}
+Tool <|-- Location_on_mapTool
+@enduml

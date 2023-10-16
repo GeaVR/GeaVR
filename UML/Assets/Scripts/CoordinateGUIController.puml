@@ -1,0 +1,13 @@
+@startuml
+class CoordinateGUIController {
+    n : float
+    rotationGap : float
+    Update() : void
+}
+MonoBehaviour <|-- CoordinateGUIController
+CoordinateGUIController --> "northing" Text
+CoordinateGUIController --> "altitude" Text
+CoordinateGUIController --> "orientation" Text
+CoordinateGUIController --> "elevation" Text
+CoordinateGUIController --> "compass" Image
+@enduml

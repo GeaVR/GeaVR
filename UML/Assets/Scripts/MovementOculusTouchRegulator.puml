@@ -1,0 +1,8 @@
+@startuml
+class MovementOculusTouchRegulator {
+    Start() : void
+    Update() : void
+}
+MonoBehaviour <|-- MovementOculusTouchRegulator
+MovementOculusTouchRegulator --> "RightOculusTouch" GameObject
+@enduml

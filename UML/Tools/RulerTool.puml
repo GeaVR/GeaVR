@@ -1,0 +1,26 @@
+@startuml
+class RulerTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + DeleteAllInstances() : void
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "List`1"<T> {
+}
+Tool <|-- RulerTool
+RulerTool --> "dictionary<string,decimal>" "Dictionary`2"
+RulerTool o-> "instanceList<GameObject>" "List`1"
+RulerTool o-> "RulerMap<string>" "List`1"
+@enduml

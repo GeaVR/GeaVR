@@ -1,0 +1,8 @@
+@startuml
+class PositionSingleton <<static>> {
+    + {static} playerRealElevation : decimal
+}
+PositionSingleton --> "playerContinousPosition" Vector3
+PositionSingleton --> "playerContinousRotation" Vector3
+PositionSingleton --> "playerRealPosition" Vector3Decimal
+@enduml

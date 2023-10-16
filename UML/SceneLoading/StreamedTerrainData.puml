@@ -1,0 +1,41 @@
+@startuml
+class StreamedTerrainCellData <<struct>> {
+    + Name : string
+    + Hash : string
+    + Path : string
+    + isLoaded : bool
+    + isLoading : bool
+}
+class StreamedTerrainData {
+    + gridSize : float = 512
+    + IsUsingLegacyLoading() : bool
+    + GetDeepCopy() : StreamedTerrainData
+    + LoadDocKML(importLocation:string) : void
+    + LoadTilesXML(importLocation:string) : void
+    + LoadSceneXML(importLocation:string, filename:string) : void
+    + UpdateStaticGPSLatLonAltBox() : void
+    + SetLoaded(index:int, isLoaded:bool) : void
+    + SetLoading(index:int, isLoading:bool) : void
+    + SortCellList(centrePoint:Vector3) : void
+    + StaticGPSLatLonAltDebugMessage() : void
+    + {static} LoadStreamedTerrainData(importLocation:string) : StreamedTerrainData
+}
+class "List`1"<T> {
+}
+StreamedTerrainCellData --> "Position" Vector3
+StreamedTerrainData o-> "west_dd" Decimal
+StreamedTerrainData o-> "east_dd" Decimal
+StreamedTerrainData o-> "south_dd" Decimal
+StreamedTerrainData o-> "north_dd" Decimal
+StreamedTerrainData o-> "west_uu" Decimal
+StreamedTerrainData o-> "east_uu" Decimal
+StreamedTerrainData o-> "south_uu" Decimal
+StreamedTerrainData o-> "north_uu" Decimal
+StreamedTerrainData o-> "alt_min_dd" Decimal
+StreamedTerrainData o-> "alt_max_dd" Decimal
+StreamedTerrainData o-> "alt_min_uu" Decimal
+StreamedTerrainData o-> "alt_max_uu" Decimal
+StreamedTerrainData o-> "offset_alt" Decimal
+StreamedTerrainData o-> "CellList<StreamedTerrainCellData>" "List`1"
+StreamedTerrainData o-> "startPosition" Vector3
+@enduml

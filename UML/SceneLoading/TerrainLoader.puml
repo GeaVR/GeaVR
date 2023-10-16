@@ -1,0 +1,33 @@
+@startuml
+class TerrainLoader {
+    + importFolder : string = ""
+    + {static} importLocation : string = ""
+    + numberOfThreads : int
+    + autoRun : bool = false
+    + generateColliders : bool = false
+    + onlyGenerateSimpleColliders : bool = false
+    + blockOnLoad : bool = false
+    + hideBoxOnAwaken : bool = true
+    + loadedGridDistance : int = 5
+    + runCount : int = 0
+    Awake() : void
+    applyLODs() : void
+    + CalculateAvailableCores() : int
+    PlacePlayer() : void
+    OBJLoaded(loader:ThreadedOBJLoader) : void
+    OBJLoaded_Legacy(loader:ThreadedOBJLoader) : void
+    + Run() : void
+    + ClearAllLoadedOBJS() : void
+    + DoRun_Coroutine() : IEnumerator
+}
+class "Queue`1"<T> {
+}
+MonoBehaviour <|-- TerrainLoader
+TerrainLoader --> "positionController" PositionController
+TerrainLoader o-> "player" GameObject
+TerrainLoader o-> "LoadingIcon" GameObject
+TerrainLoader o-> "playerStart" Vector3
+TerrainLoader o-> "threadedOBJLoadersHighPriority<ThreadedOBJLoader>" "Queue`1"
+TerrainLoader o-> "threadedOBJLoadersLowPriority<ThreadedOBJLoader>" "Queue`1"
+TerrainLoader --> "terrainData" StreamedTerrainData
+@enduml

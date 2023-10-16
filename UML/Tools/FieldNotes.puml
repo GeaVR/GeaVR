@@ -1,0 +1,19 @@
+@startuml
+class FieldNotes {
+    + outputString : string = null
+    + setOutputField(outputField:InputField) : void
+    + setOutputString(outputString:string) : void
+    + setMenuToHide(menuToHide:GameObject) : void
+    + <<new>> OnDirectUse() : void
+    + <<new>> OnUse() : void
+    + OnClose() : void
+    + OnUpdateString(_newNotes:string) : void
+    + sendTextToOutput() : void
+    + SaveNotesToTXT() : void
+    + MenuCoroutine() : IEnumerator
+}
+Tool <|-- FieldNotes
+FieldNotes o-> "Notes" String
+FieldNotes o-> "outputField" InputField
+FieldNotes o-> "menuToHide" GameObject
+@enduml

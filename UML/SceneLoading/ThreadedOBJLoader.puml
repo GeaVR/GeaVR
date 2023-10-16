@@ -1,0 +1,27 @@
+@startuml
+class ThreadedOBJLoader {
+    + loadingCompleted : bool = false
+    + filePath : string = ""
+    + autoRun : bool = false
+    + generateColliders : bool = false
+    + blockOnLoad : bool = false
+    + ShouldDelete : bool = false
+    + lodLevel : int = 0
+    + modelIndex : int = 0
+    +  <<event>> OBJLoadedEvent : Action<ThreadedOBJLoader> 
+    Start() : void
+    Update() : void
+    + IsValid() : bool
+    + DestroyLoader() : bool
+    + Run() : void
+    + LoadDataFromSOBJFile() : void
+    + LoadTextureFromFile(DiffuseTextureMapName:string, folderPath:string) : void
+    + CreateGameObjectsFromDataLegacy_Coroutine() : IEnumerator
+    + CreateGameObjectsFromData_Coroutine() : IEnumerator
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- ThreadedOBJLoader
+ThreadedOBJLoader o-> "meshObjects<GameObject>" "List`1"
+ThreadedOBJLoader o-> "colliderObjects<GameObject>" "List`1"
+@enduml

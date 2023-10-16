@@ -1,0 +1,19 @@
+@startuml
+class ModeController {
+    + playerHalfHeight : float = 50
+    + droneStartHeightOffset : float = 400
+    + Start() : void
+    Update() : void
+    FixedUpdate() : void
+    UpdateStateModeFarlocco() : void
+    + UpdateStateMode() : void
+}
+MonoBehaviour <|-- ModeController
+ModeController --> "WalkingModeObj" GameObject
+ModeController --> "FlightModeObj" GameObject
+ModeController --> "DroneModeObj" GameObject
+ModeController --> "MapCameraObj" GameObject
+ModeController o-> "WALKING_MODE_KEY" KeyCode
+ModeController o-> "FLIGHT_MODE_KEY" KeyCode
+ModeController o-> "DRONE_MODE_KEY" KeyCode
+@enduml

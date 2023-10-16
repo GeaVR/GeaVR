@@ -1,0 +1,7 @@
+@startuml
+class PlacemarkData {
+}
+MonoBehaviour <|-- PlacemarkData
+PlacemarkData --> "position" Vector3
+PlacemarkData --> "realPosition" Vector3Decimal
+@enduml

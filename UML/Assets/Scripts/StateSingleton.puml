@@ -1,0 +1,22 @@
+@startuml
+class StateSingleton <<static>> {
+    {static} StateSingleton()
+}
+enum StateView {
+    UNSET,
+    MODE2D,
+    MODE2D_PLUS_3DVP,
+    MODE2D_PLUS_OCULUS,
+    MODE2D_PLUS_3DVP_PLUS_OCULUS,
+}
+enum StateMode {
+    UNSET,
+    WALKING,
+    FLIGHT,
+    DRONE,
+}
+StateSingleton --> "stateView" StateView
+StateSingleton --> "stateMode" StateMode
+StateSingleton +-- StateView
+StateSingleton +-- StateMode
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+class TileObject {
+    + CellExtentInWorldX : string
+    + CellExtentInWorldY : string
+    + RasterExtentInWorldX : string
+    + RasterExtentInWorldY : string
+    + MaxAlt : string
+    + MinAlt : string
+    + AltDifference : string
+    + PixelSize : string
+    + RasterInterpretation : string
+    + ColumnsStartFrom : string
+    + RowsStartFrom : string
+    + TransformationType : string
+    + CoordinateSystemType : string
+    + TileObject()
+    + <<override>> ToString() : string
+}
+@enduml

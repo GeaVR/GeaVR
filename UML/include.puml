@@ -1,0 +1,1038 @@
+@startuml
+class TileObject {
+    + CellExtentInWorldX : string
+    + CellExtentInWorldY : string
+    + RasterExtentInWorldX : string
+    + RasterExtentInWorldY : string
+    + MaxAlt : string
+    + MinAlt : string
+    + AltDifference : string
+    + PixelSize : string
+    + RasterInterpretation : string
+    + ColumnsStartFrom : string
+    + RowsStartFrom : string
+    + TransformationType : string
+    + CoordinateSystemType : string
+    + TileObject()
+    + <<override>> ToString() : string
+}
+class MyOVRTrackedRemote {
+    + RayOffset : float
+    OnEnable() : void
+    FixedUpdate() : void
+    Update() : void
+    + Initialize(y:float, z:float, optionalYRotation:float) : void
+    ChangeState() : void
+}
+MonoBehaviour <|-- MyOVRTrackedRemote
+MyOVRTrackedRemote --> "target" GameObject
+MyOVRTrackedRemote --> "WalkingModeObj" GameObject
+MyOVRTrackedRemote --> "FlightModeObj" GameObject
+MyOVRTrackedRemote --> "DroneModeObj" GameObject
+MyOVRTrackedRemote --> "targetCamera" GameObject
+MyOVRTrackedRemote --> "WalkingModeObjCamera" GameObject
+MyOVRTrackedRemote --> "FlightModeObjCamera" GameObject
+MyOVRTrackedRemote --> "DroneModeObjCamera" GameObject
+MyOVRTrackedRemote --> "Anchor" GameObject
+MyOVRTrackedRemote --> "WalkingModeAnchor" GameObject
+MyOVRTrackedRemote --> "FlightModeAnchor" GameObject
+MyOVRTrackedRemote --> "DroneModeAnchor" GameObject
+MyOVRTrackedRemote --> "startOffsetRotation" Vector3
+MyOVRTrackedRemote --> "pointer" GameObject
+class MapCameraBehaviour {
+    + HEIGHT : float = 0
+    min : float
+    max : float
+    zoomVal : float
+    Start() : void
+    Update() : void
+    + ZoomEdit() : void
+}
+MonoBehaviour <|-- MapCameraBehaviour
+MapCameraBehaviour --> "target" GameObject
+MapCameraBehaviour --> "targetPointer" GameObject
+class PlacemarkData {
+}
+MonoBehaviour <|-- PlacemarkData
+PlacemarkData --> "position" Vector3
+PlacemarkData --> "realPosition" Vector3Decimal
+class CoordinateGUIController {
+    n : float
+    rotationGap : float
+    Update() : void
+}
+MonoBehaviour <|-- CoordinateGUIController
+CoordinateGUIController --> "northing" Text
+CoordinateGUIController --> "altitude" Text
+CoordinateGUIController --> "orientation" Text
+CoordinateGUIController --> "elevation" Text
+CoordinateGUIController --> "compass" Image
+class PauseMenuButtonsMouseOver {
+    Start() : void
+    Update() : void
+}
+MonoBehaviour <|-- PauseMenuButtonsMouseOver
+class WaypointController {
+    Start() : void
+    Update() : void
+    OnDestroy() : void
+}
+MonoBehaviour <|-- WaypointController
+WaypointController --> "NorthingEtc" Text
+class ModeController {
+    + playerHalfHeight : float = 50
+    + droneStartHeightOffset : float = 400
+    + Start() : void
+    Update() : void
+    FixedUpdate() : void
+    UpdateStateModeFarlocco() : void
+    + UpdateStateMode() : void
+}
+MonoBehaviour <|-- ModeController
+ModeController --> "WalkingModeObj" GameObject
+ModeController --> "FlightModeObj" GameObject
+ModeController --> "DroneModeObj" GameObject
+ModeController --> "MapCameraObj" GameObject
+ModeController o-> "WALKING_MODE_KEY" KeyCode
+ModeController o-> "FLIGHT_MODE_KEY" KeyCode
+ModeController o-> "DRONE_MODE_KEY" KeyCode
+class SettingsMenuController {
+    Start() : void
+    Update() : void
+    + QuitApplication() : void
+    + LoadNewModel() : void
+    + IncreaseSpeed() : void
+    + DecreaseSpeed() : void
+}
+MonoBehaviour <|-- SettingsMenuController
+SettingsMenuController --> "WalkingModeObj" GameObject
+SettingsMenuController --> "FlightModeObj" GameObject
+SettingsMenuController --> "DroneModeObj" GameObject
+class HeightAndSpeedRegulator {
+    + MAX_HEIGHT : int = 200
+    + MIN_HEIGHT : int = 50
+    + step : int = 10
+    + SPEED_OFFSET : int = 200
+    + SPEED_OFFSET_PERCENT : float = 0.2f
+    Start() : void
+    Update() : void
+    + IncreaseSpeed() : void
+    + DecreaseSpeed() : void
+}
+MonoBehaviour <|-- HeightAndSpeedRegulator
+HeightAndSpeedRegulator o-> "KEY_HEIGHT_REGULATOR_PLUS" KeyCode
+HeightAndSpeedRegulator o-> "KEY_HEIGHT_REGULATOR_MINUS" KeyCode
+HeightAndSpeedRegulator o-> "KEY_SPEED_REGULATOR_PLUS" KeyCode
+HeightAndSpeedRegulator o-> "KEY_SPEED_REGULATOR_MINUS" KeyCode
+HeightAndSpeedRegulator --> "fpc" CustomFPCharacter
+HeightAndSpeedRegulator --> "dpc" DroneModeController
+HeightAndSpeedRegulator --> "tpc" TopCameraControlller
+HeightAndSpeedRegulator --> "speedText" Text
+class DroneModeController {
+    + SPEED : float = 10
+    + SPEEDROT : float = 1
+    + MAX_ROTATION_ANGLE : float = 75
+    + SPEEDZ : int = 100
+    + VRSPEEDROT : float = 1.0f
+    + STARTHEIGHT : int = 10000
+    + MAXHEIGHT : int = 10000
+    + MINHEIGHT : int = 100
+    + ROTATIONSMOOTHINGSCALINGFACTOR : float = 3.0f
+    + ROTATIONSMOOTHINGTIME : float = 0.5F
+    + ROTATIONCAP : float = 360.0f
+    + joystickDeadzone : float = 0.3f
+    + isPPCCrunning : bool = false
+    + isMTPCrunning : bool = false
+    + isRWTCrunning : bool = false
+    + distance : float = 0
+    Start() : void
+    FixedUpdate() : void
+    MoveVertical(step:float) : void
+    PreventPlaneCrashCoroutine(point:Vector3) : IEnumerator
+    + LinePointer() : void
+    MoveToPointCoroutine(target:Vector3, minAngle:float) : IEnumerator
+    RotateWithTriggerCoroutine() : IEnumerator
+}
+MonoBehaviour <|-- DroneModeController
+DroneModeController o-> "KEYUP" KeyCode
+DroneModeController o-> "KEYDOWN" KeyCode
+DroneModeController o-> "KEY_SPEED_REGULATOR_PLUS" KeyCode
+DroneModeController o-> "KEY_SPEED_REGULATOR_MINUS" KeyCode
+DroneModeController --> "camera" GameObject
+DroneModeController --> "player" GameObject
+DroneModeController --> "lr" LineRenderer
+DroneModeController --> "pos" GameObject
+DroneModeController --> "OculusTouchRight" GameObject
+DroneModeController --> "OculusTouchLeft" GameObject
+class Kml {
+}
+class Document {
+    + Name : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+Kml --> "document<Document>" "List`1"
+class TopCameraControlller {
+    + SPEEDXZ : int = 10
+    + SPEEDZ : int = 10
+    + SPEEDROTATION : int = 10
+    + STARTHEIGHT : int = 10000
+    + MAXHEIGHT : int = 10000
+    + MINHEIGHT : int = 100
+    + ROTATIONSMOOTHINGSCALINGFACTOR : float = 3.0f
+    + ROTATIONSMOOTHINGTIME : float = 0.5F
+    + ROTATIONCAP : float = 360.0f
+    + VRSPEEDROT : float = 1.0f
+    Start() : void
+    Update() : void
+    MoveVertical(step:float) : void
+}
+MonoBehaviour <|-- TopCameraControlller
+TopCameraControlller o-> "KEYUP" KeyCode
+TopCameraControlller o-> "KEYDOWN" KeyCode
+TopCameraControlller o-> "KEY_SPEED_REGULATOR_PLUS" KeyCode
+TopCameraControlller o-> "KEY_SPEED_REGULATOR_MINUS" KeyCode
+TopCameraControlller --> "camera" GameObject
+TopCameraControlller --> "player" GameObject
+TopCameraControlller --> "OculusTouchRight" GameObject
+class ControlWithMouse {
+    + SPEEDROT : float = 50
+    + MAX_ROTATION_ANGLE : float = 75
+    Update() : void
+}
+MonoBehaviour <|-- ControlWithMouse
+class ButtonsEvents {
+    Start() : void
+    ChangeState() : void
+}
+MonoBehaviour <|-- ButtonsEvents
+ButtonsEvents --> "FatherController" GameObject
+class Clock {
+    + showSeconds : bool
+    Start() : void
+    FixedUpdate() : void
+    UpdateText() : void
+}
+MonoBehaviour <|-- Clock
+Clock --> "clockText" Text
+Clock --> "DateText" Text
+class WeatherController {
+    + speed : float
+    Start() : void
+    LateUpdate() : void
+}
+MonoBehaviour <|-- WeatherController
+class UIRenderInFront {
+    + apply : bool = true
+}
+MonoBehaviour <|-- UIRenderInFront
+class PositionSingleton <<static>> {
+    + {static} playerRealElevation : decimal
+}
+PositionSingleton --> "playerContinousPosition" Vector3
+PositionSingleton --> "playerContinousRotation" Vector3
+PositionSingleton --> "playerRealPosition" Vector3Decimal
+class MovementOculusTouchRegulator {
+    Start() : void
+    Update() : void
+}
+MonoBehaviour <|-- MovementOculusTouchRegulator
+MovementOculusTouchRegulator --> "RightOculusTouch" GameObject
+class TileData {
+    + tileFileName : string
+    + globalScaleFactor : decimal
+    + globalHeightScaleFactor : decimal
+    + totalNumberOfTiles : int
+    Start() : void
+    Update() : void
+}
+MonoBehaviour <|-- TileData
+TileData --> "tileRealPosition" Vector3Decimal
+TileData --> "tileObject" TileObject
+TileData --> "terrainSize" Vector3
+TileData --> "terrainPosition" Vector3
+class CustomFPCharacter {
+    + m_WalkSpeed : float
+    + m_RunSpeed : float
+    + HEIGHT : int = 0
+    + isOculusTouch : bool = false
+    + flySpeed : float = 100.0f
+    + flyYVectorTrigger : float = 0.3f
+    + maxFlyHeight : float = 3.0f
+    + ROTATIONSMOOTHINGSCALINGFACTOR : float = 3.0f
+    + ROTATIONSMOOTHINGTIME : float = 0.5F
+    + ROTATIONCAP : float = 360.0f
+    + ROTATION_SPEED_VALUE : float = 1
+    + isRWTCrunning : bool = false
+    + joystickDeadzone : float = 0.2f
+    + Start() : void
+    RotateWithTriggerCoroutine() : IEnumerator
+}
+MonoBehaviour <|-- CustomFPCharacter
+CustomFPCharacter --> "m_Input" Vector2
+CustomFPCharacter --> "m_OriginalCameraPosition" Vector3
+CustomFPCharacter --> "pos" Vector3
+CustomFPCharacter --> "OculusTouchRight" GameObject
+CustomFPCharacter --> "OculusTouchLeft" GameObject
+CustomFPCharacter --> "desiredMove" Vector3
+class VirtualMeter {
+    Start() : void
+    + {static} CalculateHeadingFromPositions(Pos1:Vector3, Pos2:Vector3) : float
+    + {static} CalculateHeading(DirectionVector:Vector3) : float
+    + {static} CalculateInclinationFromPositions(Pos1:Vector3, Pos2:Vector3) : float
+    + {static} CalculateInclination(DirectionVector:Vector3) : float
+    + {static} CalculateRealPositionOfPoint(point:Vector3) : Vector3Decimal
+    + {static} CalculateGPSPosition(point:Vector3) : Vector3Decimal
+    + {static} CalculateRealDistance(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateRealDistance2D(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateRealDistance(point1:Vector3Decimal, point2:Vector3Decimal) : decimal
+    + {static} CalculateGroundDistance(start:Vector3, end:Vector3, lineRenderer:LineRenderer, maxRays:int) : decimal
+    + {static} CalculateVerticalRealDistance2D(point1:Vector3, point2:Vector3) : decimal
+    + {static} SetStaticGPSLatLonAltBox(_west_dd:Decimal, _east_dd:Decimal, _south_dd:Decimal, _north_dd:Decimal, _west_uu:Decimal, _east_uu:Decimal, _south_uu:Decimal, _north_uu:Decimal, _alt_min_dd:Decimal, _alt_max_dd:Decimal, _alt_min_uu:Decimal, _alt_max_uu:Decimal, _offset_alt:Decimal) : void
+}
+MonoBehaviour <|-- VirtualMeter
+VirtualMeter --> "WalkingMasterObject" GameObject
+VirtualMeter --> "FlyingMasterObject" GameObject
+VirtualMeter --> "DroneMasterObject" GameObject
+class ViewController {
+    + oculusCanvasDistance : float = 1000.0f
+    + oculusCanvasScale : float = 1.0f
+    + ExperimentalOculusUI : bool = false
+    Start() : void
+    Update() : void
+    ShowNotification(message:string, delay:float) : IEnumerator
+    UpdateStateView() : void
+}
+MonoBehaviour <|-- ViewController
+ViewController --> "ModeController" GameObject
+ViewController --> "WalkingModeObj" GameObject
+ViewController --> "FlightModeObj" GameObject
+ViewController --> "DroneModeObj" GameObject
+ViewController --> "Mode3DVPWalking" GameObject
+ViewController --> "Mode3DVPFlight" GameObject
+ViewController --> "Mode3DVPDrone" GameObject
+ViewController --> "Mode2DWalking" GameObject
+ViewController --> "Mode2DFlight" GameObject
+ViewController --> "Mode2DDrone" GameObject
+ViewController --> "ModeOculusWalking" GameObject
+ViewController --> "ModeOculusFlight" GameObject
+ViewController --> "ModeOculusDrone" GameObject
+ViewController --> "OculusTouchLeft" GameObject
+ViewController --> "OculusTouchRight" GameObject
+ViewController --> "Canvas" GameObject
+ViewController --> "CanvasL" GameObject
+ViewController --> "CanvasR" GameObject
+ViewController --> "CanvasOculus" GameObject
+ViewController o-> "MODE2D_KEY" KeyCode
+ViewController o-> "MODE3DVP_KEY" KeyCode
+ViewController o-> "MODEOCULUS_KEY" KeyCode
+class PauseAndGUIBehaviour {
+    + isBTCoroutineRunning : bool = false
+    + {static} isPause : bool = false
+    + {static} isSettingsMenu : bool = false
+    + {static} isModeMenu : bool = false
+    + {static} isToolMenu : bool = false
+    + {static} isCoordinate : bool = false
+    + {static} isPlacemark : bool = false
+    + {static} isTopographicGraph : bool = false
+    + {static} isGPS2 : bool = false
+    + {static} isGpsInfoOnMap : bool = false
+    + {static} isGuiCameraControlUI : bool = false
+    + isMePause : bool = true
+    + isMeCoordinate : bool = true
+    + isMeSettingsMenu : bool = true
+    + isMeModeMenu : bool = true
+    + isMeToolMenu : bool = true
+    + isMePlacemark : bool = true
+    + isMeTopographicGraph : bool = true
+    + isMeGpsInfoOnMap : bool = true
+    + {static} isMeGuiCameraControlUI : bool = true
+    + {static} isMeGPS2 : bool = false
+    + {static} isScreenshot : bool
+    Start() : void
+    Update() : void
+    + PauseforScreenshot(value:bool) : void
+    + Pause(value:bool) : void
+    + SettingsMenu(value:bool) : void
+    + ModeMenu(value:bool) : void
+    + GuiCameraControlUIMenu(value:bool) : void
+    + ToolMenu(value:bool) : void
+    + Placemark(value:bool) : void
+    BlinkText(t:GameObject, keys:KeyCode[]) : IEnumerator
+}
+MonoBehaviour <|-- PauseAndGUIBehaviour
+PauseAndGUIBehaviour --> "textToBlink1" GameObject
+PauseAndGUIBehaviour --> "speedTextPanel" GameObject
+PauseAndGUIBehaviour --> "GuiGpsInfoOnMap" GameObject
+PauseAndGUIBehaviour --> "GuiCameraControlUI" GameObject
+PauseAndGUIBehaviour --> "NotificationText" GameObject
+PauseAndGUIBehaviour --> "NotificationPanel" GameObject
+class GUISubController {
+    Update() : void
+}
+MonoBehaviour <|-- GUISubController
+class Vector3Decimal <<struct>> {
+    + x : decimal
+    + y : decimal
+    + z : decimal
+    + Vector3Decimal(x:decimal, y:decimal, z:decimal)
+    + {static} Parse(v:Vector3) : Vector3Decimal
+    + <<override>> Equals(o:object) : bool
+    + {static} Distance(a:Vector3Decimal, b:Vector3Decimal) : decimal
+    + {static} Magnitude(v:Vector3Decimal) : decimal
+    + <<override>> ToString() : string
+    + ToString(format:string) : string
+}
+class PositionController {
+    + tileFileName : string
+    Start() : void
+    Update() : void
+    + {static} CalculateHeadingFromPositions(Pos1:Vector3, Pos2:Vector3) : float
+    + {static} CalculateHeading(DirectionVector:Vector3) : float
+    + {static} CalculateInclinationFromPositions(Pos1:Vector3, Pos2:Vector3) : float
+    + {static} CalculateInclination(DirectionVector:Vector3) : float
+    + {static} CalculateRealPositionOfPoint(point:Vector3) : Vector3Decimal
+    + {static} CalculateGPSPosition(point:Vector3) : Vector3Decimal
+    + {static} CalculateRealDistance(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateRealDistance2D(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateRealDistance(point1:Vector3Decimal, point2:Vector3Decimal) : decimal
+    + {static} CalculateUnityPosition(point:Vector3Decimal) : Vector3Decimal
+    + {static} CalculateVerticalRealDistance2D(point1:Vector3, point2:Vector3) : decimal
+    + {static} CalculateVerticalRealDistance2D(point1:Vector3Decimal, point2:Vector3Decimal) : decimal
+    + {static} CalculateGroundDistance(start:Vector3, end:Vector3, lineRenderer:LineRenderer, maxRays:int, linearStep:float) : decimal
+    + {static} SetStaticGPSLatLonAltBox(_west_dd:Decimal, _east_dd:Decimal, _south_dd:Decimal, _north_dd:Decimal, _west_uu:Decimal, _east_uu:Decimal, _south_uu:Decimal, _north_uu:Decimal, _alt_min_dd:Decimal, _alt_max_dd:Decimal, _alt_min_uu:Decimal, _alt_max_uu:Decimal, _offset_alt:Decimal) : void
+}
+class "List`1"<T> {
+}
+Vector3Decimal o-> "zero" Vector3Decimal
+MonoBehaviour <|-- PositionController
+PositionController --> "playerRealPosition" Vector3Decimal
+PositionController --> "tilesColliding<GameObject>" "List`1"
+PositionController --> "tileObject" TileObject
+PositionController --> "td" TileData
+PositionController --> "refTile" GameObject
+class StateSingleton <<static>> {
+    {static} StateSingleton()
+}
+enum StateView {
+    UNSET,
+    MODE2D,
+    MODE2D_PLUS_3DVP,
+    MODE2D_PLUS_OCULUS,
+    MODE2D_PLUS_3DVP_PLUS_OCULUS,
+}
+enum StateMode {
+    UNSET,
+    WALKING,
+    FLIGHT,
+    DRONE,
+}
+StateSingleton --> "stateView" StateView
+StateSingleton --> "stateMode" StateMode
+StateSingleton +-- StateView
+StateSingleton +-- StateMode
+class SplashScreenButtonEvents {
+    Start() : void
+    ChangeState() : void
+    SceneLoaderWithLoadingBar() : IEnumerator
+}
+MonoBehaviour <|-- SplashScreenButtonEvents
+SplashScreenButtonEvents --> "LoadingObj" Text
+class position {
+    Start() : void
+}
+MonoBehaviour <|-- position
+position --> "pos" Vector3
+class ButtonsPauseMenu {
+    screenshot : bool = false
+    Start() : void
+    ExitToTitle() : void
+    Exit() : void
+    Menu() : void
+    Settings() : void
+    GPS2() : void
+    GPS_INFO_ON_MAP() : void
+    Help() : void
+    Placemark() : void
+    Screenshot() : void
+    TopographicProfile() : void
+    Ruler() : void
+    GPS1() : void
+    WalkMode() : void
+    FlightMode() : void
+    DroneMode() : void
+    PlacemarkTeleport() : void
+    ScreenshotForWaypoint() : void
+    ShowSons(value:bool) : void
+    Show(gb:GameObject, value:bool) : void
+    + OculusTriggerButton() : void
+    + OculusTriggerButtonOn() : void
+}
+enum Action {
+    ExitToTitle,
+    Exit,
+    Menu,
+    Settings,
+    Help,
+    Placemark,
+    PolyLine,
+    Polygon,
+    TopographicProfile,
+    Ruler,
+    Compass,
+    Notebook,
+    Screenshot,
+    GPS1,
+    GPS2,
+    GPS3,
+    GPS_INFO_ON_MAP,
+    WalkMode,
+    FlightMode,
+    DroneMode,
+    PlacemarkTeleport,
+    ScreenshotForWaypoint,
+}
+MonoBehaviour <|-- ButtonsPauseMenu
+ButtonsPauseMenu --> "actionEnum" Action
+ButtonsPauseMenu --> "MenuGuiToShow" GameObject
+ButtonsPauseMenu --> "OculusTouchTrigger" UnityEvent
+ButtonsPauseMenu --> "OculusTouchTriggerOn" UnityEvent
+ButtonsPauseMenu --> "GuiToHidePauseScreenshot" GameObject
+ButtonsPauseMenu +-- Action
+class UpdatePositionSingleton {
+    rotationGap : int
+    Update() : void
+}
+MonoBehaviour <|-- UpdatePositionSingleton
+class GPSInfoTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    ShowNotification(message:string, delay:float) : IEnumerator
+}
+Tool <|-- GPSInfoTool
+class Location_on_mapTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + ZoomIn() : void
+    + ZoomOut() : void
+}
+Tool <|-- Location_on_mapTool
+class WaypointTool {
+    counter : int = 001
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + SaveButton() : void
+}
+Tool <|-- WaypointTool
+WaypointTool o-> "spriteImageInitial" Sprite
+class ToolInstance {
+    + {static} StaticID : int = 1
+    + ID : string
+    + Notes : string
+    + ToolTitle : string
+    + ToolText : string
+    + CustomTxt : string
+    + ShouldDestroyOnClose : bool = false
+    + ShouldShowWorldMenu : bool = true
+    Start() : void
+    + PostStart(_toolController:ToolController, _Title:string, _Text:string, _Desc:string, _ToolType:Tool.toolType, Values:Dictionary<string, decimal>, Placemarks:List<GameObject>, _creationDate:DateTime, DestroyOnClose:bool, hasGraph:bool, ShowWorldMenu:bool, localID:int, globalID:string, showToolSummaryUI:bool) : void
+    + GetID() : string
+    + UpdateGraphs(lr:LineRenderer) : void
+    + OnUpdateString(_newNotes:string) : void
+    + enableNotes() : void
+    + ShowNotes() : void
+    + HideNotes() : void
+    + SaveOutput() : void
+    + SaveTopographicGraphToCSV() : void
+    + SaveNotesToTXT() : void
+    + DestroySingleInstance() : void
+    + DestroyInstance() : void
+    + ConfirmMeasure() : void
+    + MenuCoroutine() : IEnumerator
+    ShowNotificationInLabel(message:string, delay:float) : IEnumerator
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- ToolInstance
+ToolInstance --> "PlacemarkList<GameObject>" "List`1"
+ToolInstance --> "PolylineList<GameObject>" "List`1"
+ToolInstance --> "PolygonList<GameObject>" "List`1"
+ToolInstance --> "RulerList<GameObject>" "List`1"
+ToolInstance --> "ProfileList<GameObject>" "List`1"
+ToolInstance --> "SurfaceList<GameObject>" "List`1"
+ToolInstance --> "ValueDict<string,decimal>" "Dictionary`2"
+ToolInstance --> "WorldMenu" GameObject
+ToolInstance --> "OculusMenu" GameObject
+ToolInstance --> "GUIMenu" GameObject
+ToolInstance --> "NotesMenu" GameObject
+ToolInstance --> "creationDate" DateTime
+class SurfaceTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + DeleteAllInstances() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- SurfaceTool
+SurfaceTool o-> "instanceList<GameObject>" "List`1"
+SurfaceTool o-> "surfaceMap<string>" "List`1"
+class PlacemarkTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + DeleteAllInstances() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- PlacemarkTool
+PlacemarkTool o-> "instanceList<GameObject>" "List`1"
+PlacemarkTool o-> "PlacemarkMap<string>" "List`1"
+class TopographicProfileTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + {static} SaveToFile(FilePath:string, PlacemarkList:List<GameObject>) : void
+    + CancelButton() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- TopographicProfileTool
+TopographicProfileTool o-> "instanceList<GameObject>" "List`1"
+TopographicProfileTool o-> "lr" LineRenderer
+class GpsTrackTool {
+    + {static} shouldStopStoring : bool
+    + <<override>> ToolCoroutine() : IEnumerator
+    + StopGPSTracking(notify:bool) : void
+    + CancelButton() : void
+    + StartGPSTracking() : void
+    trackGPS() : IEnumerator
+    ShowNotification(message:string, delay:float) : IEnumerator
+}
+Tool <|-- GpsTrackTool
+class RulerTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + DeleteAllInstances() : void
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "List`1"<T> {
+}
+Tool <|-- RulerTool
+RulerTool --> "dictionary<string,decimal>" "Dictionary`2"
+RulerTool o-> "instanceList<GameObject>" "List`1"
+RulerTool o-> "RulerMap<string>" "List`1"
+class PhotoVisualizerTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + LoadPNG(filePath:string, width:int, height:int) : Texture2D
+}
+class "List`1"<T> {
+}
+Tool <|-- PhotoVisualizerTool
+PhotoVisualizerTool o-> "instanceList<GameObject>" "List`1"
+class FieldNotes {
+    + outputString : string = null
+    + setOutputField(outputField:InputField) : void
+    + setOutputString(outputString:string) : void
+    + setMenuToHide(menuToHide:GameObject) : void
+    + <<new>> OnDirectUse() : void
+    + <<new>> OnUse() : void
+    + OnClose() : void
+    + OnUpdateString(_newNotes:string) : void
+    + sendTextToOutput() : void
+    + SaveNotesToTXT() : void
+    + MenuCoroutine() : IEnumerator
+}
+Tool <|-- FieldNotes
+FieldNotes o-> "Notes" String
+FieldNotes o-> "outputField" InputField
+FieldNotes o-> "menuToHide" GameObject
+class PolygonTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    {static} TriangulatePlacemarkLine(placemarks:List<GameObject>) : Mesh
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + DeleteAllInstances() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- PolygonTool
+PolygonTool o-> "instanceList<GameObject>" "List`1"
+PolygonTool o-> "PolygonMap<string>" "List`1"
+class CameraControllerTool {
+    isPlayVideo : bool
+    width : int
+    height : int
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + CancelButtonStopTool() : void
+    + CancelButtonPhotoView() : void
+    + ViewNextPhoto() : void
+    + ViewPreviousPhoto() : void
+    + ScreenCapture() : void
+    + TakePhoto() : void
+    + TakePhotoForWaypoint() : void
+    makeScreenshotForWaypoint() : IEnumerator
+    makeScreenshot() : IEnumerator
+    ShowNotification(message:string, delay:float) : IEnumerator
+    + SavePhotoNoteToFile() : void
+    + ViewPhoto(lastPhoto:PhotoEntry) : void
+    + ActivateViewer() : void
+    + UpdateCSVFile() : void
+    + DeleteSinglePhoto() : void
+    + ClearAll() : void
+    + LoadPNG(filePath:string, width:int, height:int) : Texture2D
+}
+Tool <|-- CameraControllerTool
+CameraControllerTool --> "oldpositionL" Vector3
+CameraControllerTool --> "oldpositionR" Vector3
+class Tool {
+    + isImporter : bool = false
+    Start() : void
+    + OnUse() : void
+    + <<virtual>> ToolCoroutine() : IEnumerator
+    + {static} checkIfToolShouldQuit() : bool
+    + <<virtual>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + {static} SaveMultiInstance() : void
+    + {static} DeleteAllInstances() : void
+    + {static} ShowNotification(message:string, delay:float) : IEnumerator
+    + {static} ShowNotificationLabelForMesuring(message:string, delay:float) : IEnumerator
+}
+enum toolType {
+    PLACEMARK,
+    POLYGON,
+    LINE,
+    PROFILE,
+    RULER,
+    SURFACE,
+    OTHER,
+}
+MonoBehaviour <|-- Tool
+Tool --> "toolController" GameObject
+Tool --> "OculusTouchTrigger" UnityEvent
+Tool --> "OculusTouchTriggerOn" UnityEvent
+Tool +-- toolType
+class PolylineTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + DeleteAllInstances() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- PolylineTool
+PolylineTool o-> "instanceList<GameObject>" "List`1"
+PolylineTool o-> "LineMap<string>" "List`1"
+class PhotoEntry {
+}
+class ToolController {
+    + MarkerScale : float = 1f
+    + WorldUIScale : float = 0.2f
+    + {static} ToolIsCurrentlyRunning : bool = false
+    + {static} ToolControllerInterfaceIsCurrentlyRunning : bool = false
+    + WaypointNameforSession : string = ""
+    + PhotoDatabaseFile : string = ""
+    + actualPhoto : int
+    + Start() : void
+    + GetOculusCanvas() : void
+    + GetMaster() : Transform
+    + GetDirectionMaster() : Transform
+    + updateGUIMenus(_Title:string, _Text:string, _Notes:string) : void
+    + CreateToolInstance(_Title:string, _Text:string, _Desc:string, _ToolType:Tool.toolType, Values:Dictionary<string, decimal>, Placemarks:List<GameObject>, creationDate:DateTime, DestroyOnClose:bool, hasGraph:bool, ShowWorldMenu:bool, localID:int, globalID:string, showToolSummaryUI:bool) : GameObject
+    + ShowMessage(message:string, delay:float) : IEnumerator
+}
+class "List`1"<T> {
+}
+PhotoEntry --> "Id" String
+PhotoEntry --> "Path" String
+PhotoEntry --> "PhotoName" String
+PhotoEntry --> "MetadataName" String
+PhotoEntry --> "Lat" String
+PhotoEntry --> "Lon" String
+PhotoEntry --> "Z" String
+PhotoEntry --> "Note" String
+MonoBehaviour <|-- ToolController
+ToolController --> "PlacemarkObject" GameObject
+ToolController --> "ToolMenuPrefab" GameObject
+ToolController --> "ToolGraphPrefab" GameObject
+ToolController --> "NotesMenuPrefab" GameObject
+ToolController --> "ToolInstancePrefab" GameObject
+ToolController --> "WalkingMasterObject" GameObject
+ToolController --> "FlyingMasterObject" GameObject
+ToolController --> "DroneMasterObject" GameObject
+ToolController --> "OculusMasterObject" GameObject
+ToolController --> "OculusDirectionMasterObject" GameObject
+ToolController --> "ViewControllerGameObject" GameObject
+ToolController --> "VirtualMeterGameObject" GameObject
+ToolController o-> "ToolInfoMenu" GameObject
+ToolController o-> "OculusCanvas" GameObject
+ToolController o-> "OculusToolInfoMenu" GameObject
+ToolController o-> "OculusHandToolInfoMenu" GameObject
+ToolController o-> "globalToolControllerObject" ToolController
+ToolController o-> "PlacemarkScrollView" GameObject
+ToolController o-> "TopographicGraph" GameObject
+ToolController o-> "OculusTopographicGraph" GameObject
+ToolController --> "LineMaterial" Material
+ToolController --> "PolyMaterial" Material
+ToolController --> "MeasurementMaterial" Material
+ToolController --> "PlacemarkObject2" GameObject
+ToolController --> "PlacemarkObject3" GameObject
+ToolController --> "SurfaceToolObject" GameObject
+ToolController --> "ToolMenuInstance" GameObject
+ToolController o-> "CameraControlUI" GameObject
+ToolController o-> "OculusCameraControlUI" GameObject
+ToolController o-> "spriteImageInitial" Sprite
+ToolController o-> "MeasurementControlUI" GameObject
+ToolController o-> "GpsTrackControlUI" GameObject
+ToolController o-> "GpsStopControlButton" GameObject
+ToolController o-> "GpsStartControlButton" GameObject
+ToolController o-> "WaypointMenu" GameObject
+ToolController o-> "WaypointIdCounter" GameObject
+ToolController o-> "WaypointCorrdinatesText" GameObject
+ToolController o-> "WaypointText" GameObject
+ToolController o-> "WaypointNote" GameObject
+ToolController o-> "WaypointPicture" GameObject
+ToolController o-> "WaypointPictureImage" GameObject
+ToolController o-> "NotificationText" GameObject
+ToolController o-> "NotificationPanel" GameObject
+ToolController o-> "LocationOnMapTool" GameObject
+ToolController o-> "NotesMenu" GameObject
+ToolController --> "ListPhoto<PhotoEntry>" "List`1"
+class UIGraphRenderer {
+    + LineWidth : float = 3.0f
+    + backgroundLineWorldHeight : float = 10.0f
+    + AddPoint(Point:Vector2) : void
+    + ClearPoints() : void
+}
+Graphic <|-- UIGraphRenderer
+UIGraphRenderer --> "xAxisMax" Text
+UIGraphRenderer --> "yAxisMax" Text
+UIGraphRenderer --> "xAxisMin" Text
+UIGraphRenderer --> "yAxisMin" Text
+UIGraphRenderer o-> "axesColour" Color
+class SceneLoadingUI {
+    firstFolderPathIndex : int = 0
+    selectedFolderIndex : int
+    currentScenePath : string
+    Start() : void
+    Update() : void
+    + SetSelection(index:int) : void
+    + SetAndLoadScene() : void
+    SceneLoader() : IEnumerator
+    + UpdateButtons() : void
+    + SelectionUp() : void
+    + SelectionDown() : void
+    + BrowseFileSystem() : void
+    ShowLoadDialogCoroutine() : IEnumerator
+    + PasteFromClipboard() : void
+    + AddNewScene() : void
+    + SaveSceneListToFile() : void
+    + LoadSceneListFromFile() : void
+    + ClearIndex(index:int) : void
+    + ClearList() : void
+    + ExitToOS() : void
+    + LoadSceneData() : void
+    + SaveSceneData() : void
+    + ClearSceneData() : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- SceneLoadingUI
+SceneLoadingUI o-> "folderPaths<string>" "List`1"
+SceneLoadingUI --> "terrainLoader" TerrainLoader
+SceneLoadingUI --> "TMProInputField" TMP_InputField
+SceneLoadingUI --> "button1" GameObject
+SceneLoadingUI --> "button2" GameObject
+SceneLoadingUI --> "button3" GameObject
+SceneLoadingUI --> "goButton" GameObject
+SceneLoadingUI --> "longitudeTextbox" TMP_InputField
+SceneLoadingUI --> "latitudeTextbox" TMP_InputField
+SceneLoadingUI --> "altitudeTextbox" TMP_InputField
+SceneLoadingUI --> "altitudeOffsetTextbox" TMP_InputField
+SceneLoadingUI --> "modelScaleTextbox" TMP_InputField
+class WorldRebaser {
+    + bounds : float = 16384.0f
+    Update() : void
+}
+MonoBehaviour <|-- WorldRebaser
+WorldRebaser o-> "accumulatedOffset" Vector3
+class TerrainLoader {
+    + importFolder : string = ""
+    + {static} importLocation : string = ""
+    + numberOfThreads : int
+    + autoRun : bool = false
+    + generateColliders : bool = false
+    + onlyGenerateSimpleColliders : bool = false
+    + blockOnLoad : bool = false
+    + hideBoxOnAwaken : bool = true
+    + loadedGridDistance : int = 5
+    + runCount : int = 0
+    Awake() : void
+    applyLODs() : void
+    + CalculateAvailableCores() : int
+    PlacePlayer() : void
+    OBJLoaded(loader:ThreadedOBJLoader) : void
+    OBJLoaded_Legacy(loader:ThreadedOBJLoader) : void
+    + Run() : void
+    + ClearAllLoadedOBJS() : void
+    + DoRun_Coroutine() : IEnumerator
+}
+class "Queue`1"<T> {
+}
+MonoBehaviour <|-- TerrainLoader
+TerrainLoader --> "positionController" PositionController
+TerrainLoader o-> "player" GameObject
+TerrainLoader o-> "LoadingIcon" GameObject
+TerrainLoader o-> "playerStart" Vector3
+TerrainLoader o-> "threadedOBJLoadersHighPriority<ThreadedOBJLoader>" "Queue`1"
+TerrainLoader o-> "threadedOBJLoadersLowPriority<ThreadedOBJLoader>" "Queue`1"
+TerrainLoader --> "terrainData" StreamedTerrainData
+class StreamedTerrainCellData <<struct>> {
+    + Name : string
+    + Hash : string
+    + Path : string
+    + isLoaded : bool
+    + isLoading : bool
+}
+class StreamedTerrainData {
+    + gridSize : float = 512
+    + IsUsingLegacyLoading() : bool
+    + GetDeepCopy() : StreamedTerrainData
+    + LoadDocKML(importLocation:string) : void
+    + LoadTilesXML(importLocation:string) : void
+    + LoadSceneXML(importLocation:string, filename:string) : void
+    + UpdateStaticGPSLatLonAltBox() : void
+    + SetLoaded(index:int, isLoaded:bool) : void
+    + SetLoading(index:int, isLoading:bool) : void
+    + SortCellList(centrePoint:Vector3) : void
+    + StaticGPSLatLonAltDebugMessage() : void
+    + {static} LoadStreamedTerrainData(importLocation:string) : StreamedTerrainData
+}
+class "List`1"<T> {
+}
+StreamedTerrainCellData --> "Position" Vector3
+StreamedTerrainData o-> "west_dd" Decimal
+StreamedTerrainData o-> "east_dd" Decimal
+StreamedTerrainData o-> "south_dd" Decimal
+StreamedTerrainData o-> "north_dd" Decimal
+StreamedTerrainData o-> "west_uu" Decimal
+StreamedTerrainData o-> "east_uu" Decimal
+StreamedTerrainData o-> "south_uu" Decimal
+StreamedTerrainData o-> "north_uu" Decimal
+StreamedTerrainData o-> "alt_min_dd" Decimal
+StreamedTerrainData o-> "alt_max_dd" Decimal
+StreamedTerrainData o-> "alt_min_uu" Decimal
+StreamedTerrainData o-> "alt_max_uu" Decimal
+StreamedTerrainData o-> "offset_alt" Decimal
+StreamedTerrainData o-> "CellList<StreamedTerrainCellData>" "List`1"
+StreamedTerrainData o-> "startPosition" Vector3
+class ThreadedOBJLoader {
+    + loadingCompleted : bool = false
+    + filePath : string = ""
+    + autoRun : bool = false
+    + generateColliders : bool = false
+    + blockOnLoad : bool = false
+    + ShouldDelete : bool = false
+    + lodLevel : int = 0
+    + modelIndex : int = 0
+    +  <<event>> OBJLoadedEvent : Action<ThreadedOBJLoader> 
+    Start() : void
+    Update() : void
+    + IsValid() : bool
+    + DestroyLoader() : bool
+    + Run() : void
+    + LoadDataFromSOBJFile() : void
+    + LoadTextureFromFile(DiffuseTextureMapName:string, folderPath:string) : void
+    + CreateGameObjectsFromDataLegacy_Coroutine() : IEnumerator
+    + CreateGameObjectsFromData_Coroutine() : IEnumerator
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- ThreadedOBJLoader
+ThreadedOBJLoader o-> "meshObjects<GameObject>" "List`1"
+ThreadedOBJLoader o-> "colliderObjects<GameObject>" "List`1"
+class StreamedObjData {
+    + name : string = "Mesh"
+    + texturePath : string
+    + textureWidth : int
+    + textureHeight : int
+    + generateCollider : bool = true
+    + StreamedObjData()
+}
+class "List`1"<T> {
+}
+StreamedObjData --> "translation" Vector3
+StreamedObjData --> "positions<Vector3>" "List`1"
+StreamedObjData --> "texcoords<Vector2>" "List`1"
+StreamedObjData --> "triangles<int>" "List`1"
+StreamedObjData --> "physPositions<List<Vector3>>" "List`1"
+StreamedObjData --> "physTriangles<List<int>>" "List`1"
+class DistanceBasedTerrainLoader {
+    + isLow : bool = false
+    + shouldLoop : bool = true
+    {static} modelIndex : int = 0
+    + Run() : void
+    + ClearAllLoadedOBJS() : void
+    + CheckCellExists(cellHash:string) : bool
+    + Run_Coroutine() : IEnumerator
+}
+MonoBehaviour <|-- DistanceBasedTerrainLoader
+DistanceBasedTerrainLoader o-> "terrainLoader" TerrainLoader
+DistanceBasedTerrainLoader o-> "terrainData" StreamedTerrainData
+DistanceBasedTerrainLoader o-> "sisterLoader" DistanceBasedTerrainLoader
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+class Tool {
+    + isImporter : bool = false
+    Start() : void
+    + OnUse() : void
+    + <<virtual>> ToolCoroutine() : IEnumerator
+    + {static} checkIfToolShouldQuit() : bool
+    + <<virtual>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + {static} SaveMultiInstance() : void
+    + {static} DeleteAllInstances() : void
+    + {static} ShowNotification(message:string, delay:float) : IEnumerator
+    + {static} ShowNotificationLabelForMesuring(message:string, delay:float) : IEnumerator
+}
+enum toolType {
+    PLACEMARK,
+    POLYGON,
+    LINE,
+    PROFILE,
+    RULER,
+    SURFACE,
+    OTHER,
+}
+MonoBehaviour <|-- Tool
+Tool --> "toolController" GameObject
+Tool --> "OculusTouchTrigger" UnityEvent
+Tool --> "OculusTouchTriggerOn" UnityEvent
+Tool +-- toolType
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+class PhotoVisualizerTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    + LoadPNG(filePath:string, width:int, height:int) : Texture2D
+}
+class "List`1"<T> {
+}
+Tool <|-- PhotoVisualizerTool
+PhotoVisualizerTool o-> "instanceList<GameObject>" "List`1"
+@enduml

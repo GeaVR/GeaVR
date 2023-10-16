@@ -1,0 +1,24 @@
+@startuml
+class PolygonTool {
+    + {static} localID : int = 0
+    oldNote : string = ""
+    {static} TriangulatePlacemarkLine(placemarks:List<GameObject>) : Mesh
+    + <<override>> ToolCoroutine() : IEnumerator
+    + startToolInterface() : void
+    + GetInsertedNotes() : void
+    + CancelButton() : void
+    + ImportData() : void
+    + <<override>> LoadFromFile(FilePath:string) : GameObject
+    + {static} SaveSingleInstance(instance:ToolInstance) : void
+    + SaveMultiInstance() : void
+    + DeleteAllInstances() : void
+    + ShowHide() : void
+    + OnPointerExit() : void
+    + OnPointerEnter() : void
+}
+class "List`1"<T> {
+}
+Tool <|-- PolygonTool
+PolygonTool o-> "instanceList<GameObject>" "List`1"
+PolygonTool o-> "PolygonMap<string>" "List`1"
+@enduml

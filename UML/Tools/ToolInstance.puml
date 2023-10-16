@@ -1,0 +1,45 @@
+@startuml
+class ToolInstance {
+    + {static} StaticID : int = 1
+    + ID : string
+    + Notes : string
+    + ToolTitle : string
+    + ToolText : string
+    + CustomTxt : string
+    + ShouldDestroyOnClose : bool = false
+    + ShouldShowWorldMenu : bool = true
+    Start() : void
+    + PostStart(_toolController:ToolController, _Title:string, _Text:string, _Desc:string, _ToolType:Tool.toolType, Values:Dictionary<string, decimal>, Placemarks:List<GameObject>, _creationDate:DateTime, DestroyOnClose:bool, hasGraph:bool, ShowWorldMenu:bool, localID:int, globalID:string, showToolSummaryUI:bool) : void
+    + GetID() : string
+    + UpdateGraphs(lr:LineRenderer) : void
+    + OnUpdateString(_newNotes:string) : void
+    + enableNotes() : void
+    + ShowNotes() : void
+    + HideNotes() : void
+    + SaveOutput() : void
+    + SaveTopographicGraphToCSV() : void
+    + SaveNotesToTXT() : void
+    + DestroySingleInstance() : void
+    + DestroyInstance() : void
+    + ConfirmMeasure() : void
+    + MenuCoroutine() : IEnumerator
+    ShowNotificationInLabel(message:string, delay:float) : IEnumerator
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- ToolInstance
+ToolInstance --> "PlacemarkList<GameObject>" "List`1"
+ToolInstance --> "PolylineList<GameObject>" "List`1"
+ToolInstance --> "PolygonList<GameObject>" "List`1"
+ToolInstance --> "RulerList<GameObject>" "List`1"
+ToolInstance --> "ProfileList<GameObject>" "List`1"
+ToolInstance --> "SurfaceList<GameObject>" "List`1"
+ToolInstance --> "ValueDict<string,decimal>" "Dictionary`2"
+ToolInstance --> "WorldMenu" GameObject
+ToolInstance --> "OculusMenu" GameObject
+ToolInstance --> "GUIMenu" GameObject
+ToolInstance --> "NotesMenu" GameObject
+ToolInstance --> "creationDate" DateTime
+@enduml

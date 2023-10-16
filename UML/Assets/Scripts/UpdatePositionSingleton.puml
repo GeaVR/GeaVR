@@ -1,0 +1,7 @@
+@startuml
+class UpdatePositionSingleton {
+    rotationGap : int
+    Update() : void
+}
+MonoBehaviour <|-- UpdatePositionSingleton
+@enduml

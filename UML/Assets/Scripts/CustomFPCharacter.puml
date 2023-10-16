@@ -1,0 +1,26 @@
+@startuml
+class CustomFPCharacter {
+    + m_WalkSpeed : float
+    + m_RunSpeed : float
+    + HEIGHT : int = 0
+    + isOculusTouch : bool = false
+    + flySpeed : float = 100.0f
+    + flyYVectorTrigger : float = 0.3f
+    + maxFlyHeight : float = 3.0f
+    + ROTATIONSMOOTHINGSCALINGFACTOR : float = 3.0f
+    + ROTATIONSMOOTHINGTIME : float = 0.5F
+    + ROTATIONCAP : float = 360.0f
+    + ROTATION_SPEED_VALUE : float = 1
+    + isRWTCrunning : bool = false
+    + joystickDeadzone : float = 0.2f
+    + Start() : void
+    RotateWithTriggerCoroutine() : IEnumerator
+}
+MonoBehaviour <|-- CustomFPCharacter
+CustomFPCharacter --> "m_Input" Vector2
+CustomFPCharacter --> "m_OriginalCameraPosition" Vector3
+CustomFPCharacter --> "pos" Vector3
+CustomFPCharacter --> "OculusTouchRight" GameObject
+CustomFPCharacter --> "OculusTouchLeft" GameObject
+CustomFPCharacter --> "desiredMove" Vector3
+@enduml

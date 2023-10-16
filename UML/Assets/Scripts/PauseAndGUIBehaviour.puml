@@ -1,0 +1,43 @@
+@startuml
+class PauseAndGUIBehaviour {
+    + isBTCoroutineRunning : bool = false
+    + {static} isPause : bool = false
+    + {static} isSettingsMenu : bool = false
+    + {static} isModeMenu : bool = false
+    + {static} isToolMenu : bool = false
+    + {static} isCoordinate : bool = false
+    + {static} isPlacemark : bool = false
+    + {static} isTopographicGraph : bool = false
+    + {static} isGPS2 : bool = false
+    + {static} isGpsInfoOnMap : bool = false
+    + {static} isGuiCameraControlUI : bool = false
+    + isMePause : bool = true
+    + isMeCoordinate : bool = true
+    + isMeSettingsMenu : bool = true
+    + isMeModeMenu : bool = true
+    + isMeToolMenu : bool = true
+    + isMePlacemark : bool = true
+    + isMeTopographicGraph : bool = true
+    + isMeGpsInfoOnMap : bool = true
+    + {static} isMeGuiCameraControlUI : bool = true
+    + {static} isMeGPS2 : bool = false
+    + {static} isScreenshot : bool
+    Start() : void
+    Update() : void
+    + PauseforScreenshot(value:bool) : void
+    + Pause(value:bool) : void
+    + SettingsMenu(value:bool) : void
+    + ModeMenu(value:bool) : void
+    + GuiCameraControlUIMenu(value:bool) : void
+    + ToolMenu(value:bool) : void
+    + Placemark(value:bool) : void
+    BlinkText(t:GameObject, keys:KeyCode[]) : IEnumerator
+}
+MonoBehaviour <|-- PauseAndGUIBehaviour
+PauseAndGUIBehaviour --> "textToBlink1" GameObject
+PauseAndGUIBehaviour --> "speedTextPanel" GameObject
+PauseAndGUIBehaviour --> "GuiGpsInfoOnMap" GameObject
+PauseAndGUIBehaviour --> "GuiCameraControlUI" GameObject
+PauseAndGUIBehaviour --> "NotificationText" GameObject
+PauseAndGUIBehaviour --> "NotificationPanel" GameObject
+@enduml

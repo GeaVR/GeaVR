@@ -1,0 +1,8 @@
+@startuml
+class WorldRebaser {
+    + bounds : float = 16384.0f
+    Update() : void
+}
+MonoBehaviour <|-- WorldRebaser
+WorldRebaser o-> "accumulatedOffset" Vector3
+@enduml

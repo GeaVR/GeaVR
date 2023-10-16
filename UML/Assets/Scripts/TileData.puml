@@ -1,0 +1,15 @@
+@startuml
+class TileData {
+    + tileFileName : string
+    + globalScaleFactor : decimal
+    + globalHeightScaleFactor : decimal
+    + totalNumberOfTiles : int
+    Start() : void
+    Update() : void
+}
+MonoBehaviour <|-- TileData
+TileData --> "tileRealPosition" Vector3Decimal
+TileData --> "tileObject" TileObject
+TileData --> "terrainSize" Vector3
+TileData --> "terrainPosition" Vector3
+@enduml

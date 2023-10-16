@@ -1,0 +1,8 @@
+@startuml
+class GPSInfoTool {
+    + <<override>> ToolCoroutine() : IEnumerator
+    + CancelButton() : void
+    ShowNotification(message:string, delay:float) : IEnumerator
+}
+Tool <|-- GPSInfoTool
+@enduml

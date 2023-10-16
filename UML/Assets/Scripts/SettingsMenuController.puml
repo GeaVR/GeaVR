@@ -1,0 +1,14 @@
+@startuml
+class SettingsMenuController {
+    Start() : void
+    Update() : void
+    + QuitApplication() : void
+    + LoadNewModel() : void
+    + IncreaseSpeed() : void
+    + DecreaseSpeed() : void
+}
+MonoBehaviour <|-- SettingsMenuController
+SettingsMenuController --> "WalkingModeObj" GameObject
+SettingsMenuController --> "FlightModeObj" GameObject
+SettingsMenuController --> "DroneModeObj" GameObject
+@enduml

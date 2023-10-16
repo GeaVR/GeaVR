@@ -1,0 +1,8 @@
+@startuml
+class WeatherController {
+    + speed : float
+    Start() : void
+    LateUpdate() : void
+}
+MonoBehaviour <|-- WeatherController
+@enduml

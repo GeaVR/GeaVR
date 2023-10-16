@@ -1,0 +1,25 @@
+@startuml
+class MyOVRTrackedRemote {
+    + RayOffset : float
+    OnEnable() : void
+    FixedUpdate() : void
+    Update() : void
+    + Initialize(y:float, z:float, optionalYRotation:float) : void
+    ChangeState() : void
+}
+MonoBehaviour <|-- MyOVRTrackedRemote
+MyOVRTrackedRemote --> "target" GameObject
+MyOVRTrackedRemote --> "WalkingModeObj" GameObject
+MyOVRTrackedRemote --> "FlightModeObj" GameObject
+MyOVRTrackedRemote --> "DroneModeObj" GameObject
+MyOVRTrackedRemote --> "targetCamera" GameObject
+MyOVRTrackedRemote --> "WalkingModeObjCamera" GameObject
+MyOVRTrackedRemote --> "FlightModeObjCamera" GameObject
+MyOVRTrackedRemote --> "DroneModeObjCamera" GameObject
+MyOVRTrackedRemote --> "Anchor" GameObject
+MyOVRTrackedRemote --> "WalkingModeAnchor" GameObject
+MyOVRTrackedRemote --> "FlightModeAnchor" GameObject
+MyOVRTrackedRemote --> "DroneModeAnchor" GameObject
+MyOVRTrackedRemote --> "startOffsetRotation" Vector3
+MyOVRTrackedRemote --> "pointer" GameObject
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+class DistanceBasedTerrainLoader {
+    + isLow : bool = false
+    + shouldLoop : bool = true
+    {static} modelIndex : int = 0
+    + Run() : void
+    + ClearAllLoadedOBJS() : void
+    + CheckCellExists(cellHash:string) : bool
+    + Run_Coroutine() : IEnumerator
+}
+MonoBehaviour <|-- DistanceBasedTerrainLoader
+DistanceBasedTerrainLoader o-> "terrainLoader" TerrainLoader
+DistanceBasedTerrainLoader o-> "terrainData" StreamedTerrainData
+DistanceBasedTerrainLoader o-> "sisterLoader" DistanceBasedTerrainLoader
+@enduml

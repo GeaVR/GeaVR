@@ -1,0 +1,38 @@
+@startuml
+class DroneModeController {
+    + SPEED : float = 10
+    + SPEEDROT : float = 1
+    + MAX_ROTATION_ANGLE : float = 75
+    + SPEEDZ : int = 100
+    + VRSPEEDROT : float = 1.0f
+    + STARTHEIGHT : int = 10000
+    + MAXHEIGHT : int = 10000
+    + MINHEIGHT : int = 100
+    + ROTATIONSMOOTHINGSCALINGFACTOR : float = 3.0f
+    + ROTATIONSMOOTHINGTIME : float = 0.5F
+    + ROTATIONCAP : float = 360.0f
+    + joystickDeadzone : float = 0.3f
+    + isPPCCrunning : bool = false
+    + isMTPCrunning : bool = false
+    + isRWTCrunning : bool = false
+    + distance : float = 0
+    Start() : void
+    FixedUpdate() : void
+    MoveVertical(step:float) : void
+    PreventPlaneCrashCoroutine(point:Vector3) : IEnumerator
+    + LinePointer() : void
+    MoveToPointCoroutine(target:Vector3, minAngle:float) : IEnumerator
+    RotateWithTriggerCoroutine() : IEnumerator
+}
+MonoBehaviour <|-- DroneModeController
+DroneModeController o-> "KEYUP" KeyCode
+DroneModeController o-> "KEYDOWN" KeyCode
+DroneModeController o-> "KEY_SPEED_REGULATOR_PLUS" KeyCode
+DroneModeController o-> "KEY_SPEED_REGULATOR_MINUS" KeyCode
+DroneModeController --> "camera" GameObject
+DroneModeController --> "player" GameObject
+DroneModeController --> "lr" LineRenderer
+DroneModeController --> "pos" GameObject
+DroneModeController --> "OculusTouchRight" GameObject
+DroneModeController --> "OculusTouchLeft" GameObject
+@enduml

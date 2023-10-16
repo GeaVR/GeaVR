@@ -1,0 +1,25 @@
+@startuml
+class TopCameraControlller {
+    + SPEEDXZ : int = 10
+    + SPEEDZ : int = 10
+    + SPEEDROTATION : int = 10
+    + STARTHEIGHT : int = 10000
+    + MAXHEIGHT : int = 10000
+    + MINHEIGHT : int = 100
+    + ROTATIONSMOOTHINGSCALINGFACTOR : float = 3.0f
+    + ROTATIONSMOOTHINGTIME : float = 0.5F
+    + ROTATIONCAP : float = 360.0f
+    + VRSPEEDROT : float = 1.0f
+    Start() : void
+    Update() : void
+    MoveVertical(step:float) : void
+}
+MonoBehaviour <|-- TopCameraControlller
+TopCameraControlller o-> "KEYUP" KeyCode
+TopCameraControlller o-> "KEYDOWN" KeyCode
+TopCameraControlller o-> "KEY_SPEED_REGULATOR_PLUS" KeyCode
+TopCameraControlller o-> "KEY_SPEED_REGULATOR_MINUS" KeyCode
+TopCameraControlller --> "camera" GameObject
+TopCameraControlller --> "player" GameObject
+TopCameraControlller --> "OculusTouchRight" GameObject
+@enduml
