@@ -1,3 +1,0 @@
-A simple way to attach grabbing functionality to Avatar SDK hands.
-
-
